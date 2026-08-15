@@ -287,6 +287,9 @@ export interface Dict {
     noData: string;
     thrustLabel: string;
     breadcrumb: string;
+    howItWorks: string;
+    howItWorksDesc: string;
+    howItWorksCta: string;
   };
 
   lab: {
@@ -665,6 +668,10 @@ const zh: Dict = {
     noData: "该型号暂无公开数据",
     thrustLabel: "单台推力",
     breadcrumb: "发动机",
+    howItWorks: "发动机是怎么工作的",
+    howItWorksDesc:
+      "可交互剖面图拆解每个部件、六种动力循环的流程图对比，以及比冲、扩张比、节流这些反复出现的概念。",
+    howItWorksCta: "读原理讲解",
   },
 
   lab: {
@@ -1060,6 +1067,10 @@ const en: Dict = {
     noData: "No public data",
     thrustLabel: "Thrust per engine",
     breadcrumb: "Engines",
+    howItWorks: "How a rocket engine works",
+    howItWorksDesc:
+      "An interactive cutaway of every component, flow diagrams comparing the six engine cycles, and the recurring quantities — specific impulse, expansion ratio, throttling.",
+    howItWorksCta: "Read the explainer",
   },
 
   lab: {

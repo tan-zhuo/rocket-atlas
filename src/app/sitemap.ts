@@ -26,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/rockets",
     "/engines",
+    "/engines/anatomy",
     "/compare",
     "/principles",
     "/timeline",

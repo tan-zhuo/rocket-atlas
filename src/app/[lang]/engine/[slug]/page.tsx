@@ -12,6 +12,8 @@ import { Silhouette } from "@/components/rocket/silhouette";
 import { getLang, getServerDict } from "@/i18n/server";
 import { localizeRocket } from "@/i18n/localize";
 import { CYCLE_EXPLAIN, CYCLE_LABEL, PROPELLANT_LABEL, PROPELLANT_TRADEOFF } from "@/i18n/terms";
+import { ANATOMY_COPY, type DiagramCycle } from "@/data/engine-anatomy";
+import { CycleDiagram } from "@/components/engine/cycle-diagram";
 import { force, meters, num, year } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -44,6 +46,10 @@ export default async function EnginePage(props: PageProps<"/[lang]/engine/[slug]
   const name = lang === "en" ? entry.detail.displayEn : entry.detail.displayZh;
   const country = lang === "en" ? entry.detail.country : entry.detail.countryZh;
   const cycleLabel = CYCLE_LABEL[lang][spec.cycle];
+  const anatomy = ANATOMY_COPY[lang];
+  // 固体与未公开循环没有泵系统流程图可画
+  const diagramCycle: DiagramCycle | null =
+    spec.cycle === "solid" || spec.cycle === "hybrid-unknown" ? null : spec.cycle;
   const propLabel = PROPELLANT_LABEL[lang][spec.propellant];
 
   // 装在哪些火箭上：带级名与台数
@@ -181,9 +187,20 @@ export default async function EnginePage(props: PageProps<"/[lang]/engine/[slug]
                   {t.engines.cycleSection}
                 </p>
                 <p className="mt-1.5 text-[14px] font-medium text-fg">{cycleLabel}</p>
+                {diagramCycle ? (
+                  <div className="mt-2.5 rounded-lg border border-border-base bg-panel p-2">
+                    <CycleDiagram cycle={diagramCycle} labels={anatomy.nodes} />
+                  </div>
+                ) : null}
                 <p className="mt-2 text-[13px] leading-relaxed text-fg-muted">
                   {CYCLE_EXPLAIN[lang][spec.cycle]}
                 </p>
+                <L
+                  href="/engines/anatomy"
+                  className="mt-2.5 inline-block text-[12px] text-accent hover:underline"
+                >
+                  {t.engines.howItWorksCta} →
+                </L>
               </div>
               <div className="rounded-xl border border-border-base bg-bg-sunken p-4">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
