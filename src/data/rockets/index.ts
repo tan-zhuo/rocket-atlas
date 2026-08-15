@@ -14,6 +14,23 @@ import { zhuque2 } from "./zhuque-2";
 import { starship } from "./starship";
 import { vulcanCentaur } from "./vulcan-centaur";
 import { newGlenn } from "./new-glenn";
+import { spaceShuttle } from "./space-shuttle";
+import { atlasV } from "./atlas-v";
+import { falconHeavy } from "./falcon-heavy";
+import { n1 } from "./n1";
+import { sls } from "./sls";
+import { protonM } from "./proton-m";
+import { angaraA5 } from "./angara-a5";
+import { energia } from "./energia";
+import { ariane6 } from "./ariane-6";
+import { hIIA } from "./h-iia";
+import { h3 } from "./h3";
+import { lvm3 } from "./lvm3";
+import { pslv } from "./pslv";
+import { longMarch3B } from "./long-march-3b";
+import { longMarch7 } from "./long-march-7";
+import { vegaC } from "./vega-c";
+import { nuri } from "./nuri";
 
 /** 全部火箭，按首飞时间升序。 */
 export const ROCKETS: Rocket[] = [
@@ -31,6 +48,23 @@ export const ROCKETS: Rocket[] = [
   starship,
   vulcanCentaur,
   newGlenn,
+  spaceShuttle,
+  atlasV,
+  falconHeavy,
+  n1,
+  sls,
+  protonM,
+  angaraA5,
+  energia,
+  ariane6,
+  hIIA,
+  h3,
+  lvm3,
+  pslv,
+  longMarch3B,
+  longMarch7,
+  vegaC,
+  nuri,
 ].sort((a, b) => a.firstFlight.localeCompare(b.firstFlight));
 
 const BY_SLUG = new Map(ROCKETS.map((r) => [r.slug, r]));

@@ -1,10 +1,11 @@
 import type { Family } from "./types";
+import { FAMILIES_MORE } from "./families-more";
 
 /**
  * 火箭家族 —— 谱系视角的组织单位。
  * `lineage` 可以包含本站尚未收录的型号（无 slug），以保持演进链条完整。
  */
-export const FAMILIES: Family[] = [
+const FAMILIES_CORE: Family[] = [
   {
     slug: "a-series",
     name: "Aggregat (A-series)",
@@ -259,6 +260,9 @@ Ariane 1–4 是渐进演化的可贮存推进剂火箭；Ariane 5 是一次彻�
     related: ["falcon", "long-march-new", "electron"],
   },
 ];
+
+/** 两批谱系合并成同一张表；拆文件只是为了不让单文件过长。 */
+export const FAMILIES: Family[] = [...FAMILIES_CORE, ...FAMILIES_MORE];
 
 const BY_SLUG = new Map(FAMILIES.map((f) => [f.slug, f]));
 

@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/config";
 import { ENGINE_DETAIL_EN } from "./en/engines";
+import { ENGINE_DETAIL_MORE } from "./engines-more";
 
 /**
  * 发动机知识库。
@@ -53,7 +54,7 @@ export interface EngineDetail {
   nozzleExtension?: boolean;
 }
 
-export const ENGINE_DETAIL: Record<string, EngineDetail> = {
+const ENGINE_DETAIL_CORE: Record<string, EngineDetail> = {
   /* ── 煤油 / 液氧 ─────────────────────────────────────── */
   "F-1": {
     expansionRatio: 16,
@@ -929,6 +930,12 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
       "Cert-2 飞行中曾发生喷管脱落——烧蚀喷管在 90 s 的高热流下工作，裕度并不宽裕",
     ],
   },
+};
+
+/** 两批知识库合并成同一张表；拆文件只是为了不让单文件过长。 */
+export const ENGINE_DETAIL: Record<string, EngineDetail> = {
+  ...ENGINE_DETAIL_CORE,
+  ...ENGINE_DETAIL_MORE,
 };
 
 /** 名字可能带括号后缀（如「YF-20B (YF-21C 机组)」「Raptor 2 (海平面)」），做一次归一化 */

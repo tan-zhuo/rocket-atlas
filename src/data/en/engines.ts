@@ -1,9 +1,10 @@
 import type { EngineDetail } from "../engines";
+import { ENGINE_DETAIL_EN_MORE } from "./engines-more";
 
 /**
  * 发动机知识库的英文覆盖层。缺失的字段回落到中文条目。
  */
-export const ENGINE_DETAIL_EN: Record<string, Partial<EngineDetail>> = {
+const ENGINE_DETAIL_EN_CORE: Record<string, Partial<EngineDetail>> = {
   "F-1": {
     propellantZh: "RP-1 kerosene / liquid oxygen",
     fuel: "RP-1 refined kerosene",
@@ -536,4 +537,10 @@ export const ENGINE_DETAIL_EN: Record<string, Partial<EngineDetail>> = {
       "A nozzle detached in flight on Cert-2 — an ablative nozzle working through 90 s of high heat flux does not have generous margin",
     ],
   },
+};
+
+/** 两批英文覆盖层合并成同一张表。 */
+export const ENGINE_DETAIL_EN: Record<string, Partial<EngineDetail>> = {
+  ...ENGINE_DETAIL_EN_CORE,
+  ...ENGINE_DETAIL_EN_MORE,
 };

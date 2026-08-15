@@ -14,6 +14,23 @@ import { electronEn } from "./electron";
 import { zhuque2En } from "./zhuque-2";
 import { vulcanCentaurEn } from "./vulcan-centaur";
 import { newGlennEn } from "./new-glenn";
+import { spaceShuttleEn } from "./space-shuttle";
+import { atlasVEn } from "./atlas-v";
+import { falconHeavyEn } from "./falcon-heavy";
+import { n1En } from "./n1";
+import { slsEn } from "./sls";
+import { protonMEn } from "./proton-m";
+import { angaraA5En } from "./angara-a5";
+import { energiaEn } from "./energia";
+import { ariane6En } from "./ariane-6";
+import { hIIAEn } from "./h-iia";
+import { h3En } from "./h3";
+import { lvm3En } from "./lvm3";
+import { pslvEn } from "./pslv";
+import { longMarch3BEn } from "./long-march-3b";
+import { longMarch7En } from "./long-march-7";
+import { vegaCEn } from "./vega-c";
+import { nuriEn } from "./nuri";
 
 /**
  * 火箭内容的英文覆盖层。
@@ -34,4 +51,21 @@ export const ROCKET_EN: Record<string, RocketOverlay> = {
   "zhuque-2": zhuque2En,
   "vulcan-centaur": vulcanCentaurEn,
   "new-glenn": newGlennEn,
+  "space-shuttle": spaceShuttleEn,
+  "atlas-v": atlasVEn,
+  "falcon-heavy": falconHeavyEn,
+  n1: n1En,
+  sls: slsEn,
+  "proton-m": protonMEn,
+  "angara-a5": angaraA5En,
+  energia: energiaEn,
+  "ariane-6": ariane6En,
+  "h-iia": hIIAEn,
+  h3: h3En,
+  lvm3: lvm3En,
+  pslv: pslvEn,
+  "long-march-3b": longMarch3BEn,
+  "long-march-7": longMarch7En,
+  "vega-c": vegaCEn,
+  nuri: nuriEn,
 };
