@@ -5,6 +5,7 @@ import { Check, GitCompare, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MAX_COMPARE, useCompare } from "@/lib/store";
 import { useHydrated } from "@/lib/client-hooks";
+import { useI18n } from "@/i18n/provider";
 
 /**
  * 加入/移出对比。列表卡片用 icon 形态，详情页用 button 形态。
@@ -22,11 +23,16 @@ export function CompareToggle({
   const slugs = useCompare((s) => s.slugs);
   const toggle = useCompare((s) => s.toggle);
   const mounted = useHydrated();
+  const { t } = useI18n();
 
   const selected = mounted && slugs.includes(slug);
   const full = mounted && !selected && slugs.length >= MAX_COMPARE;
 
-  const label = selected ? "已在对比中" : full ? `最多对比 ${MAX_COMPARE} 个` : "加入对比";
+  const label = selected
+    ? t.detail.inCompare
+    : full
+      ? t.detail.compareFull(MAX_COMPARE)
+      : t.detail.addToCompare;
 
   if (variant === "button") {
     return (
@@ -44,7 +50,7 @@ export function CompareToggle({
         )}
       >
         {selected ? <Check className="size-3.5" /> : <GitCompare className="size-3.5" />}
-        {selected ? "已加入对比" : "加入对比"}
+        {selected ? t.detail.inCompare : t.detail.addToCompare}
       </button>
     );
   }

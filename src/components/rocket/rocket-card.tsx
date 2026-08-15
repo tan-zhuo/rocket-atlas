@@ -1,14 +1,19 @@
-import Link from "next/link";
+"use client";
+
+import { L } from "@/components/ui/link";
 import { Users, Recycle } from "lucide-react";
 import type { RocketSummary } from "@/lib/summary";
 import { StatusBadge } from "@/components/ui/badge";
 import { Silhouette } from "./silhouette";
 import { CompareToggle } from "./compare-toggle";
 import { Flag } from "@/components/ui/flag";
-import { PROPELLANT_META } from "@/lib/filters";
+import { useI18n } from "@/i18n/provider";
+import { PROPELLANT_LABEL } from "@/i18n/terms";
 import { cn, mass as fmtMass, meters, year } from "@/lib/utils";
 
 export function RocketCard({ r, className }: { r: RocketSummary; className?: string }) {
+  const { t, lang } = useI18n();
+  const P = PROPELLANT_LABEL[lang];
   return (
     <div
       className={cn(
@@ -20,7 +25,7 @@ export function RocketCard({ r, className }: { r: RocketSummary; className?: str
         <CompareToggle slug={r.slug} />
       </div>
 
-      <Link href={`/rocket/${r.slug}`} className="flex flex-1 flex-col">
+      <L href={`/rocket/${r.slug}`} className="flex flex-1 flex-col">
         <div
           className="relative flex h-44 items-end justify-center overflow-hidden px-6 pb-3 pt-6"
           style={{
@@ -31,7 +36,7 @@ export function RocketCard({ r, className }: { r: RocketSummary; className?: str
           <Silhouette
             geometry={r.geometry}
             className="h-full w-auto max-w-[80%] opacity-90 transition-transform duration-500 group-hover:scale-[1.04]"
-            title={`${r.nameZh} 等比剪影`}
+            title={r.nameZh}
           />
           <span className="absolute bottom-2 right-3 text-[10px] text-fg-subtle tabular">
             {meters(r.height)}
@@ -54,9 +59,12 @@ export function RocketCard({ r, className }: { r: RocketSummary; className?: str
           </p>
 
           <dl className="mt-3.5 grid grid-cols-3 gap-2 border-t border-border-base pt-3 text-center">
-            <Stat label="首飞" value={year(r.firstFlight)} />
-            <Stat label="LEO 载荷" value={r.payloadLEO ? fmtMass(r.payloadLEO) : "—"} />
-            <Stat label="起飞质量" value={fmtMass(r.mass)} />
+            <Stat label={t.spec.firstFlight} value={year(r.firstFlight)} />
+            <Stat
+              label={t.spec.payloadLEO}
+              value={r.payloadLEO ? fmtMass(r.payloadLEO) : t.common.na}
+            />
+            <Stat label={t.spec.mass} value={fmtMass(r.mass)} />
           </dl>
 
           <div className="mt-3 flex flex-wrap items-center gap-1.5">
@@ -71,27 +79,27 @@ export function RocketCard({ r, className }: { r: RocketSummary; className?: str
               >
                 <span
                   className="size-1.5 rounded-full"
-                  style={{ background: PROPELLANT_META[p].color }}
+                  style={{ background: P[p].color }}
                   aria-hidden
                 />
-                {PROPELLANT_META[p].short}
+                {P[p].short}
               </span>
             ))}
             {r.reusable ? (
               <span className="flex items-center gap-1 rounded border border-accent/30 bg-accent-soft px-1.5 py-0.5 text-[10px] text-accent">
                 <Recycle className="size-2.5" />
-                可回收
+                {t.list.reusable}
               </span>
             ) : null}
             {r.humanRated ? (
               <span className="flex items-center gap-1 rounded border border-border-base px-1.5 py-0.5 text-[10px] text-fg-muted">
                 <Users className="size-2.5" />
-                载人
+                {t.list.humanRated}
               </span>
             ) : null}
           </div>
         </div>
-      </Link>
+      </L>
     </div>
   );
 }

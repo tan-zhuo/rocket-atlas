@@ -1,4 +1,5 @@
-import type { EngineCycle, PropellantType } from "./types";
+import type { Locale } from "@/i18n/config";
+import { ENGINE_DETAIL_EN } from "./en/engines";
 
 /**
  * 发动机知识库。
@@ -599,31 +600,15 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
 };
 
 /** 名字可能带括号后缀（如「YF-20B (YF-21C 机组)」「Raptor 2 (海平面)」），做一次归一化 */
-export function getEngineDetail(name: string): EngineDetail | undefined {
-  if (ENGINE_DETAIL[name]) return ENGINE_DETAIL[name];
-  const base = name.split(/[(（]/)[0].trim();
-  return ENGINE_DETAIL[base];
+function normalize(name: string) {
+  return ENGINE_DETAIL[name] ? name : name.split(/[(（]/)[0].trim();
 }
 
-export const CYCLE_EXPLAIN: Record<EngineCycle, string> = {
-  "gas-generator": "一小部分推进剂在燃气发生器中燃烧驱动涡轮，废气直接排出箭体，损失约 2–5% 流量。结构简单、易调试。",
-  "staged-combustion":
-    "预燃室中富燃或富氧燃烧的燃气驱动涡轮后全部注入主燃烧室，没有推进剂被浪费。比冲更高，但涡轮工作环境苛刻。",
-  "full-flow-staged-combustion":
-    "燃料与氧化剂各有一个预燃室，两路燃气全部进主燃烧室。涡轮温度低、寿命长，是复用发动机的理想循环，也是研制难度最高的。",
-  expander:
-    "推进剂在冷却推力室时吸热汽化，直接驱动涡轮泵。没有燃气发生器与预燃室，最简单可靠，但推力受换热面积限制。",
-  "electric-pump": "电机驱动泵，电池供电。删掉了涡轮与燃气回路，但电池是死重，存在明确的推力上限。",
-  "pressure-fed": "靠高压气体把推进剂挤入燃烧室。没有转动部件，但贮箱必须承受燃烧室压力，因而笨重。",
-  solid: "推进剂预先浇筑成药柱，点火后按预定推力曲线燃烧到底。推力密度高，但不可关机、不可节流。",
-  "hybrid-unknown": "混合式或公开信息不足。",
-};
-
-export const PROPELLANT_TRADEOFF: Record<PropellantType, string> = {
-  kerolox: "密度高、常温、便宜、基础设施成熟；比冲中等，燃烧会积碳，对复用不够友好。",
-  hydrolox: "比冲最高（440–465 s）；但密度只有 71 kg/m³，贮箱巨大，需要 −253 °C 深冷与厚重绝热。",
-  methalox: "比冲与密度居中，燃烧洁净不积碳，与液氧温差小便于共底贮箱——近十年可回收火箭的共同选择。",
-  hypergolic: "接触即自燃、常温可长期贮存、可反复启停；代价是剧毒、致癌与偏低的比冲。",
-  solid: "推力密度最高、结构最简单、可贮存数年；但比冲最低，且点火后无法关机或节流。",
-  alcolox: "燃烧温度低、易冷却、可用农产品发酵获得；比冲很低，只在早期火箭上使用。",
-};
+export function getEngineDetail(name: string, lang: Locale = "zh"): EngineDetail | undefined {
+  const key = normalize(name);
+  const zh = ENGINE_DETAIL[key];
+  if (lang === "zh") return zh;
+  const en = ENGINE_DETAIL_EN[key];
+  if (!en) return zh;
+  return zh ? { ...zh, ...en } : (en as EngineDetail);
+}

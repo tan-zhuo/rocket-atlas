@@ -1,7 +1,7 @@
 "use client";
 
+import { L } from "@/components/ui/link";
 import * as React from "react";
-import Link from "next/link";
 import { Plus, X, RotateCcw } from "lucide-react";
 import type { RocketSummary } from "@/lib/summary";
 import { MAX_COMPARE, useCompare } from "@/lib/store";
@@ -10,7 +10,9 @@ import { Silhouette } from "@/components/rocket/silhouette";
 import { StatusBadge } from "@/components/ui/badge";
 import { Flag } from "@/components/ui/flag";
 import { Check } from "lucide-react";
-import { PROPELLANT_META } from "@/lib/filters";
+import { useI18n } from "@/i18n/provider";
+import { PROPELLANT_LABEL } from "@/i18n/terms";
+import type { Dict } from "@/i18n/dict";
 import { cn, force, mass, meters, num, year } from "@/lib/utils";
 
 const SERIES_COLOR = ["#ff7a2f", "#4fd1ff", "#5fd68a", "#c792ea"];
@@ -25,43 +27,64 @@ interface Metric {
   note?: string;
 }
 
-const METRICS: Metric[] = [
-  { key: "height", label: "全长", unit: "m", get: (r) => r.height, fmt: (v) => meters(v) },
-  { key: "diameter", label: "芯级直径", unit: "m", get: (r) => r.diameter, fmt: (v) => meters(v) },
-  { key: "mass", label: "起飞质量", unit: "kg", get: (r) => r.mass, fmt: (v) => mass(v) },
-  {
-    key: "thrust",
-    label: "起飞推力",
-    unit: "kN",
-    get: (r) => r.liftoffThrust || undefined,
-    fmt: (v) => force(v),
-  },
-  {
-    key: "twr",
-    label: "起飞推重比",
-    unit: "",
-    get: (r) => (r.liftoffThrust ? (r.liftoffThrust * 1000) / (r.mass * 9.81) : undefined),
-    fmt: (v) => num(v, 2),
-    note: "小于 1.2 时重力损失显著上升",
-  },
-  { key: "leo", label: "LEO 载荷", unit: "kg", get: (r) => r.payloadLEO, fmt: (v) => mass(v) },
-  { key: "gto", label: "GTO 载荷", unit: "kg", get: (r) => r.payloadGTO, fmt: (v) => mass(v) },
-  {
-    key: "ratio",
-    label: "载荷比",
-    unit: "%",
-    get: (r) => (r.payloadLEO ? (r.payloadLEO / r.mass) * 100 : undefined),
-    fmt: (v) => `${num(v, 2)}%`,
-    note: "LEO 载荷 / 起飞质量，衡量整体效率",
-  },
-  {
-    key: "success",
-    label: "发射成功率",
-    unit: "%",
-    get: (r) => (r.launches && r.launches.total ? (r.launches.success / r.launches.total) * 100 : undefined),
-    fmt: (v) => `${num(v, 1)}%`,
-  },
-];
+function buildMetrics(t: Dict): Metric[] {
+  return [
+    { key: "height", label: t.spec.height, unit: "m", get: (r) => r.height, fmt: (v) => meters(v) },
+    {
+      key: "diameter",
+      label: t.spec.diameter,
+      unit: "m",
+      get: (r) => r.diameter,
+      fmt: (v) => meters(v),
+    },
+    { key: "mass", label: t.spec.mass, unit: "kg", get: (r) => r.mass, fmt: (v) => mass(v) },
+    {
+      key: "thrust",
+      label: t.spec.liftoffThrust,
+      unit: "kN",
+      get: (r) => r.liftoffThrust || undefined,
+      fmt: (v) => force(v),
+    },
+    {
+      key: "twr",
+      label: t.spec.twr,
+      unit: "",
+      get: (r) => (r.liftoffThrust ? (r.liftoffThrust * 1000) / (r.mass * 9.81) : undefined),
+      fmt: (v) => num(v, 2),
+      note: t.spec.twrNote,
+    },
+    {
+      key: "leo",
+      label: t.spec.payloadLEO,
+      unit: "kg",
+      get: (r) => r.payloadLEO,
+      fmt: (v) => mass(v),
+    },
+    {
+      key: "gto",
+      label: t.spec.payloadGTO,
+      unit: "kg",
+      get: (r) => r.payloadGTO,
+      fmt: (v) => mass(v),
+    },
+    {
+      key: "ratio",
+      label: t.spec.payloadRatio,
+      unit: "%",
+      get: (r) => (r.payloadLEO ? (r.payloadLEO / r.mass) * 100 : undefined),
+      fmt: (v) => `${num(v, 2)}%`,
+      note: t.spec.payloadRatioNote,
+    },
+    {
+      key: "success",
+      label: t.spec.successRate,
+      unit: "%",
+      get: (r) =>
+        r.launches && r.launches.total ? (r.launches.success / r.launches.total) * 100 : undefined,
+      fmt: (v) => `${num(v, 1)}%`,
+    },
+  ];
+}
 
 export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
   const slugs = useCompare((s) => s.slugs);
@@ -70,6 +93,9 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
   const setSlugs = useCompare((s) => s.set);
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const mounted = useHydrated();
+  const { t, lang } = useI18n();
+  const P = PROPELLANT_LABEL[lang];
+  const METRICS = React.useMemo(() => buildMetrics(t), [t]);
 
   const byId = React.useMemo(
     () => new Map(rockets.map((r) => [r.slug, r])),
@@ -86,13 +112,9 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
   if (selected.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-border-base py-16 text-center">
-        <p className="text-sm text-fg-muted">还没有选择任何火箭</p>
+        <p className="text-sm text-fg-muted">{t.compare.empty}</p>
         <p className="mx-auto mt-2 max-w-md text-[13px] text-fg-subtle">
-          最多可同时对比 {MAX_COMPARE} 个型号。你可以在这里挑选，也可以在
-          <Link href="/rockets" className="mx-1 text-accent hover:underline">
-            火箭列表
-          </Link>
-          里点击卡片右上角的「+」。
+{t.compare.emptyHint}
         </p>
         <div className="mt-5">
           <PresetButtons onPick={setSlugs} />
@@ -103,7 +125,7 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
           className="mt-5 inline-flex h-9 items-center gap-2 rounded-md bg-accent px-4 text-[13px] font-medium text-accent-fg"
         >
           <Plus className="size-3.5" />
-          添加火箭
+          {t.compare.pick}
         </button>
         {pickerOpen ? (
           <Picker rockets={rockets} selected={slugs} onClose={() => setPickerOpen(false)} />
@@ -133,7 +155,7 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
             <button
               type="button"
               onClick={() => removeSlug(r.slug)}
-              aria-label={`移除 ${r.nameZh}`}
+              aria-label={t.compare.remove(r.nameZh)}
               className="text-fg-subtle hover:text-danger"
             >
               <X className="size-3.5" />
@@ -147,7 +169,7 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
             className="flex h-8 items-center gap-1.5 rounded-md border border-dashed border-border-strong px-2.5 text-[13px] text-fg-muted hover:border-accent hover:text-accent"
           >
             <Plus className="size-3.5" />
-            添加
+            {t.common.add}
           </button>
         ) : null}
         <button
@@ -156,7 +178,7 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
           className="ml-auto flex h-8 items-center gap-1.5 px-2 text-[12px] text-fg-subtle hover:text-fg"
         >
           <RotateCcw className="size-3" />
-          清空
+          {t.common.clear}
         </button>
       </div>
 
@@ -167,8 +189,8 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
       {/* 等比剪影 */}
       <section className="mt-8">
         <SectionTitle
-          title="真实比例"
-          desc="同一 y 轴刻度绘制的等比侧视图——尺寸差异一眼可见。"
+          title={t.compare.scaleTitle}
+          desc={t.compare.scaleDesc}
         />
         <div className="mt-5 overflow-x-auto rounded-xl border border-border-base bg-bg-sunken p-6">
           <div className="flex min-h-[320px] items-end justify-around gap-8">
@@ -202,8 +224,8 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
       {/* 指标条形对比 */}
       <section className="mt-10">
         <SectionTitle
-          title="关键性能"
-          desc="每个指标独立归一化：最长的条 = 该指标的最大值。"
+          title={t.compare.metricsTitle}
+          desc={t.compare.metricsDesc}
         />
         <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {METRICS.map((m) => {
@@ -250,23 +272,21 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
 
       {/* 参数表 */}
       <section className="mt-10">
-        <SectionTitle title="规格对照" />
+        <SectionTitle title={t.compare.tableTitle} />
         <div className="mt-5 overflow-x-auto rounded-xl border border-border-base">
           <table className="w-full min-w-[640px] border-collapse text-[13px]">
             <thead>
               <tr className="border-b border-border-base bg-bg-sunken">
-                <th className="w-36 px-4 py-3 text-left text-[11px] font-medium uppercase tracking-wider text-fg-subtle">
-                  指标
-                </th>
+                <th className="w-36 px-4 py-3 text-left text-[11px] font-medium uppercase tracking-wider text-fg-subtle" />
                 {selected.map((r, i) => (
                   <th key={r.slug} className="px-4 py-3 text-left">
-                    <Link
+                    <L
                       href={`/rocket/${r.slug}`}
                       className="font-medium hover:underline"
                       style={{ color: SERIES_COLOR[i] }}
                     >
                       {r.nameZh}
-                    </Link>
+                    </L>
                     <span className="mt-1 block text-[11px] font-normal text-fg-subtle">
                       {r.name}
                     </span>
@@ -276,7 +296,7 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
             </thead>
             <tbody>
               <Row
-                label="国家 / 地区"
+                label={t.spec.country}
                 cells={selected.map((r) => (
                   <Flag key={r.slug} country={r.countryZh} withName />
                 ))}
@@ -285,10 +305,13 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
                 label="状态"
                 cells={selected.map((r) => <StatusBadge key={r.slug} status={r.status} />)}
               />
-              <Row label="首飞" cells={selected.map((r) => year(r.firstFlight))} />
-              <Row label="级数" cells={selected.map((r) => `${r.stageCount} 级`)} />
+              <Row label={t.spec.firstFlight} cells={selected.map((r) => year(r.firstFlight))} />
               <Row
-                label="推进剂"
+                label={t.spec.stageCount}
+                cells={selected.map((r) => `${r.stageCount}`)}
+              />
+              <Row
+                label={t.list.propellant}
                 cells={selected.map((r) => (
                   <span key={r.slug} className="flex flex-wrap gap-1">
                     {r.propellants.map((p) => (
@@ -296,17 +319,23 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
                         key={p}
                         className="rounded border border-border-base px-1.5 py-0.5 text-[10px] text-fg-muted"
                       >
-                        {PROPELLANT_META[p].short}
+                        {P[p].short}
                       </span>
                     ))}
                   </span>
                 ))}
               />
-              <Row label="可回收" cells={selected.map((r) => (r.reusable ? "是" : "否"))} />
-              <Row label="载人认证" cells={selected.map((r) => (r.humanRated ? "是" : "否"))} />
               <Row
-                label="发射次数"
-                cells={selected.map((r) => (r.launches ? num(r.launches.total) : "—"))}
+                label={t.spec.reusable}
+                cells={selected.map((r) => (r.reusable ? t.spec.yes : t.spec.no))}
+              />
+              <Row
+                label={t.spec.humanRated}
+                cells={selected.map((r) => (r.humanRated ? t.spec.yes : t.spec.no))}
+              />
+              <Row
+                label={t.spec.launches}
+                cells={selected.map((r) => (r.launches ? num(r.launches.total) : t.common.na))}
               />
             </tbody>
           </table>
@@ -316,8 +345,8 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
       {/* 设计哲学并置 */}
       <section className="mt-10">
         <SectionTitle
-          title="设计哲学"
-          desc="同样的物理约束，不同的取舍。点进详情页可以看到完整的权衡问答。"
+          title={t.compare.philosophyTitle}
+          desc={t.compare.philosophyDesc}
         />
         <div
           className={cn(
@@ -333,12 +362,12 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
             >
               <h3 className="text-[15px] font-semibold text-fg">{r.nameZh}</h3>
               <p className="mt-3 text-[13px] leading-relaxed text-fg-muted">{r.designLead}</p>
-              <Link
+              <L
                 href={`/rocket/${r.slug}#design`}
                 className="mt-4 inline-block text-[12px] text-accent hover:underline"
               >
-                完整设计逻辑 →
-              </Link>
+                {t.compare.fullDesign}
+              </L>
             </article>
           ))}
         </div>
@@ -369,24 +398,37 @@ function SectionTitle({ title, desc }: { title: string; desc?: string }) {
   );
 }
 
-const PRESETS: { label: string; slugs: string[] }[] = [
-  { label: "重型三代对比", slugs: ["saturn-v", "delta-iv-heavy", "starship"] },
-  { label: "可回收 vs 一次性", slugs: ["falcon-9", "ariane-5", "vulcan-centaur"] },
-  { label: "中国现役", slugs: ["long-march-5", "long-march-2f", "zhuque-2"] },
-  { label: "载人火箭", slugs: ["saturn-v", "soyuz-2", "long-march-2f", "falcon-9"] },
+const PRESETS: { label: Record<"zh" | "en", string>; slugs: string[] }[] = [
+  {
+    label: { zh: "三代重型对比", en: "Three generations of heavy lift" },
+    slugs: ["saturn-v", "delta-iv-heavy", "starship"],
+  },
+  {
+    label: { zh: "可回收 vs 一次性", en: "Reusable vs expendable" },
+    slugs: ["falcon-9", "ariane-5", "vulcan-centaur"],
+  },
+  {
+    label: { zh: "中国现役", en: "China, in service" },
+    slugs: ["long-march-5", "long-march-2f", "zhuque-2"],
+  },
+  {
+    label: { zh: "载人火箭", en: "Human-rated vehicles" },
+    slugs: ["saturn-v", "soyuz-2", "long-march-2f", "falcon-9"],
+  },
 ];
 
 function PresetButtons({ onPick }: { onPick: (slugs: string[]) => void }) {
+  const { lang } = useI18n();
   return (
     <div className="flex flex-wrap justify-center gap-2">
       {PRESETS.map((p) => (
         <button
-          key={p.label}
+          key={p.label.en}
           type="button"
           onClick={() => onPick(p.slugs)}
           className="rounded-md border border-border-base bg-panel px-3 py-1.5 text-[12px] text-fg-muted transition-colors hover:border-accent hover:text-accent"
         >
-          {p.label}
+          {p.label[lang]}
         </button>
       ))}
     </div>
@@ -403,6 +445,7 @@ function Picker({
   onClose: () => void;
 }) {
   const toggle = useCompare((s) => s.toggle);
+  const { t } = useI18n();
   const [q, setQ] = React.useState("");
   const list = rockets.filter(
     (r) =>
@@ -428,10 +471,10 @@ function Picker({
             autoFocus
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="搜索型号…"
+            placeholder={t.compare.searchPlaceholder}
             className="h-12 w-full bg-transparent text-sm text-fg outline-none placeholder:text-fg-subtle"
           />
-          <button type="button" onClick={onClose} aria-label="关闭" className="text-fg-subtle">
+          <button type="button" onClick={onClose} aria-label={t.common.close} className="text-fg-subtle">
             <X className="size-4" />
           </button>
         </div>
@@ -470,7 +513,7 @@ function Picker({
           })}
         </ul>
         <div className="border-t border-border-base px-4 py-2.5 text-[11px] text-fg-subtle">
-          已选 {selected.length} / {MAX_COMPARE}
+          {t.compare.selected(selected.length, MAX_COMPARE)}
         </div>
       </div>
     </div>

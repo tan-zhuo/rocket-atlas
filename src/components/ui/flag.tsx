@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 type FlagKey = "us" | "cn" | "su" | "ru" | "de" | "eu" | "nz" | "fr" | "jp" | "gb" | "in";
 
-/** 中文国名/地区名 → 旗帜。复合名（「新西兰 / 美国」）会拆成多面旗。 */
+/** 国名（中英）→ 旗帜。复合名（「新西兰 / 美国」）会拆成多面旗。 */
 const NAME_TO_FLAG: Record<string, FlagKey> = {
   美国: "us",
   中国: "cn",
@@ -24,6 +24,19 @@ const NAME_TO_FLAG: Record<string, FlagKey> = {
   日本: "jp",
   英国: "gb",
   印度: "in",
+  "United States": "us",
+  USA: "us",
+  China: "cn",
+  "Soviet Union": "su",
+  USSR: "su",
+  Russia: "ru",
+  Germany: "de",
+  Europe: "eu",
+  "New Zealand": "nz",
+  France: "fr",
+  Japan: "jp",
+  "United Kingdom": "gb",
+  India: "in",
 };
 
 const FLAG_LABEL: Record<FlagKey, string> = {

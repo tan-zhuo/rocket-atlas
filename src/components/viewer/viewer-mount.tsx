@@ -47,7 +47,7 @@ function ViewerSkeleton({ className }: { className?: string }) {
             />
           ))}
         </div>
-        <p className="text-[12px]">加载 3D 查看器…</p>
+        <p className="text-[12px]">3D</p>
       </div>
     </div>
   );

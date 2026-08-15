@@ -20,31 +20,19 @@ import {
   Info,
   Ruler,
 } from "lucide-react";
-import type { RocketGeometry, RocketPart } from "@/data/types";
+import type { RocketGeometry } from "@/data/types";
 import { GROUP_COLOR } from "@/data/geometry";
 import { RocketModel } from "./rocket-model";
 import { StudioEnvironment } from "./environment";
 import { Silhouette } from "@/components/rocket/silhouette";
 import { cn, meters } from "@/lib/utils";
 import { useHydrated, useMediaQuery } from "@/lib/client-hooks";
-
-const GROUP_LABEL: Record<RocketPart["group"], string> = {
-  payload: "载荷 / 整流罩",
-  "stage-3": "三级",
-  "stage-2": "二级",
-  "stage-1": "一级",
-  core: "芯级",
-  booster: "助推器",
-};
+import { useI18n } from "@/i18n/provider";
+import { GROUP_LABEL } from "@/i18n/terms";
 
 type PresetId = "full" | "engines" | "upper" | "nose";
 
-const PRESETS: { id: PresetId; label: string }[] = [
-  { id: "full", label: "整体" },
-  { id: "engines", label: "发动机段" },
-  { id: "upper", label: "上面级" },
-  { id: "nose", label: "整流罩" },
-];
+const PRESET_IDS: PresetId[] = ["full", "engines", "upper", "nose"];
 
 const FOV = 38;
 /** 竖直方向要装下 `size` 米所需的相机距离（留 12% 余量） */
@@ -150,6 +138,8 @@ export function RocketViewer({
   const mode: "3d" | "2d" = modeOverride ?? (isSmall ? "2d" : "3d");
   const setMode = setModeOverride;
   const wrapRef = React.useRef<HTMLDivElement>(null);
+  const { t, lang } = useI18n();
+  const groupLabel = GROUP_LABEL[lang];
 
   const selected = geo.parts.find((p) => p.id === selectedId) ?? null;
   const hovered = geo.parts.find((p) => p.id === hoverId) ?? null;
@@ -185,42 +175,45 @@ export function RocketViewer({
       {/* 顶部工具条 */}
       <div className="flex items-center justify-between gap-2 border-b border-border-base/60 px-3 py-2">
         <div className="flex items-center gap-1">
-          {PRESETS.map((p) => (
+          {PRESET_IDS.map((id) => (
             <button
-              key={p.id}
+              key={id}
               type="button"
               onClick={() => {
                 setMode("3d");
-                setPreset(p.id);
+                setPreset(id);
               }}
               className={cn(
                 "rounded px-2 py-1 text-[12px] transition-colors",
-                mode === "3d" && preset === p.id
+                mode === "3d" && preset === id
                   ? "bg-accent-soft text-accent"
                   : "text-fg-muted hover:bg-bg-elevated hover:text-fg",
               )}
             >
-              {p.label}
+              {t.viewer.presets[id]}
             </button>
           ))}
         </div>
         <div className="flex items-center gap-1">
           <IconBtn
-            label={mode === "3d" ? "切换到等比剪影" : "切换到 3D"}
+            label={mode === "3d" ? t.viewer.toSilhouette : t.viewer.to3d}
             active={mode === "2d"}
             onClick={() => setMode(mode === "3d" ? "2d" : "3d")}
           >
             <Ruler className="size-3.5" />
           </IconBtn>
           <IconBtn
-            label={spin ? "停止自动旋转" : "自动旋转"}
+            label={spin ? t.viewer.stopRotate : t.viewer.autoRotate}
             active={spin}
             onClick={() => setSpin((v) => !v)}
             disabled={mode === "2d"}
           >
             <RotateCw className="size-3.5" />
           </IconBtn>
-          <IconBtn label={fullscreen ? "退出全屏" : "全屏"} onClick={toggleFullscreen}>
+          <IconBtn
+            label={fullscreen ? t.viewer.exitFullscreen : t.viewer.fullscreen}
+            onClick={toggleFullscreen}
+          >
             {fullscreen ? <Minimize2 className="size-3.5" /> : <Maximize2 className="size-3.5" />}
           </IconBtn>
         </div>
@@ -307,7 +300,7 @@ export function RocketViewer({
         {hovered && !selected && mode === "3d" ? (
           <div className="pointer-events-none absolute left-3 top-3 rounded-md border border-border-base bg-panel/90 px-2.5 py-1.5 text-[12px] text-fg backdrop-blur">
             {hovered.name}
-            <span className="ml-2 text-fg-subtle">点击查看说明</span>
+            <span className="ml-2 text-fg-subtle">{t.viewer.clickForInfo}</span>
           </div>
         ) : null}
 
@@ -317,7 +310,7 @@ export function RocketViewer({
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-[11px] uppercase tracking-[0.12em] text-fg-subtle">
-                  {GROUP_LABEL[selected.group]}
+                  {groupLabel[selected.group]}
                 </p>
                 <h4 className="mt-0.5 text-sm font-semibold text-fg">{selected.name}</h4>
                 {selected.nameEn ? (
@@ -327,18 +320,26 @@ export function RocketViewer({
               <button
                 type="button"
                 onClick={() => setSelectedId(null)}
-                aria-label="关闭部件说明"
+                aria-label={t.viewer.closePart}
                 className="shrink-0 text-fg-subtle hover:text-fg"
               >
                 <X className="size-4" />
               </button>
             </div>
             <dl className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-fg-subtle">
-              <span className="tabular">高度 {meters(selected.height)}</span>
-              <span className="tabular">直径 {meters(selected.radius * 2)}</span>
-              <span className="tabular">距底 {meters(selected.bottom)}</span>
+              <span className="tabular">
+                {t.viewer.partHeight} {meters(selected.height)}
+              </span>
+              <span className="tabular">
+                {t.viewer.partDiameter} {meters(selected.radius * 2)}
+              </span>
+              <span className="tabular">
+                {t.viewer.partBottom} {meters(selected.bottom)}
+              </span>
               {selected.cluster ? (
-                <span className="tabular">数量 ×{selected.cluster.count}</span>
+                <span className="tabular">
+                  {t.viewer.partCount} ×{selected.cluster.count}
+                </span>
               ) : null}
             </dl>
             <p className="mt-3 text-[13px] leading-relaxed text-fg-muted">
@@ -351,7 +352,7 @@ export function RocketViewer({
         <div className="pointer-events-none absolute bottom-3 left-3 flex max-w-[46%] items-start gap-1.5 text-[10px] leading-snug text-fg-subtle">
           <Info className="mt-px size-3 shrink-0" />
           <span>
-            {geo.fidelity === "schematic" ? "示意模型" : "细节模型"} ·{" "}
+            {geo.fidelity === "schematic" ? t.viewer.schematic : t.viewer.detailed} ·{" "}
             {geo.modelNote.slice(0, 64)}
             {geo.modelNote.length > 64 ? "…" : ""}
           </span>
@@ -363,7 +364,7 @@ export function RocketViewer({
         <div className="flex items-center gap-3">
           <Boxes className="size-3.5 shrink-0 text-fg-subtle" />
           <label htmlFor="explode" className="shrink-0 text-[12px] text-fg-muted">
-            爆炸视图
+            {t.viewer.explode}
           </label>
           <input
             id="explode"
@@ -390,7 +391,7 @@ export function RocketViewer({
                 style={{ background: GROUP_COLOR[g] }}
                 aria-hidden
               />
-              {GROUP_LABEL[g]}
+              {groupLabel[g]}
             </span>
           ))}
         </div>
@@ -434,7 +435,7 @@ function Loader() {
     <Html center>
       <div className="flex items-center gap-2 rounded-md border border-border-base bg-panel/90 px-3 py-2 text-[12px] text-fg-muted backdrop-blur">
         <span className="size-2 animate-pulse rounded-full bg-accent" />
-        正在构建几何…
+        {"…"}
       </div>
     </Html>
   );

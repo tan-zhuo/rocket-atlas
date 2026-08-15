@@ -1,9 +1,10 @@
 "use client";
 
+import { L } from "@/components/ui/link";
 import * as React from "react";
-import Link from "next/link";
 import type { TimelineEvent } from "@/data/types";
 import { TIMELINE_KIND_META } from "@/data/timeline";
+import { useI18n } from "@/i18n/provider";
 import { Badge } from "@/components/ui/badge";
 import { Flag } from "@/components/ui/flag";
 import { cn, dateZh } from "@/lib/utils";
@@ -13,6 +14,7 @@ type Kind = TimelineEvent["kind"];
 export function TimelineView({ events }: { events: TimelineEvent[] }) {
   const [kinds, setKinds] = React.useState<Kind[]>([]);
   const [countries, setCountries] = React.useState<string[]>([]);
+  const { t } = useI18n();
 
   const allCountries = React.useMemo(
     () => Array.from(new Set(events.map((e) => e.countryZh))).sort(),
@@ -46,17 +48,17 @@ export function TimelineView({ events }: { events: TimelineEvent[] }) {
     <div>
       <div className="flex flex-wrap gap-4 rounded-xl border border-border-base bg-panel p-4">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.12em] text-fg-subtle">事件类型</p>
+          <p className="text-[11px] uppercase tracking-[0.12em] text-fg-subtle">{t.timeline.eventType}</p>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {(Object.keys(TIMELINE_KIND_META) as Kind[]).map((k) => (
               <Chip key={k} on={kinds.includes(k)} onClick={() => toggleKind(k)}>
-                {TIMELINE_KIND_META[k].label}
+                {t.timeline.kinds[k]}
               </Chip>
             ))}
           </div>
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] uppercase tracking-[0.12em] text-fg-subtle">国家 / 地区</p>
+          <p className="text-[11px] uppercase tracking-[0.12em] text-fg-subtle">{t.timeline.country}</p>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {allCountries.map((c) => (
               <Chip key={c} on={countries.includes(c)} onClick={() => toggleCountry(c)}>
@@ -69,7 +71,7 @@ export function TimelineView({ events }: { events: TimelineEvent[] }) {
       </div>
 
       <p className="mt-4 text-[12px] text-fg-subtle tabular">
-        {filtered.length} / {events.length} 个事件
+        {t.timeline.count(filtered.length, events.length)}
       </p>
 
       <div className="mt-8">
@@ -78,7 +80,9 @@ export function TimelineView({ events }: { events: TimelineEvent[] }) {
             <div className="sticky top-16 z-10 -mx-1 bg-bg/90 px-1 py-2 backdrop-blur">
               <h2 className="text-[13px] font-semibold text-fg-subtle tabular">
                 {decade}s
-                <span className="ml-2 font-normal text-fg-subtle">{list.length} 个事件</span>
+                <span className="ml-2 font-normal text-fg-subtle">
+                  {t.timeline.eventsIn(list.length)}
+                </span>
               </h2>
             </div>
 
@@ -89,7 +93,7 @@ export function TimelineView({ events }: { events: TimelineEvent[] }) {
                   <div className="rounded-xl border border-border-base bg-panel p-4 transition-colors hover:border-accent">
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                       <span className="text-[12px] text-fg-subtle tabular">{dateZh(e.date)}</span>
-                      <Badge tone={meta.tone}>{meta.label}</Badge>
+                      <Badge tone={meta.tone}>{t.timeline.kinds[e.kind]}</Badge>
                       <span className="flex items-center gap-1.5 rounded border border-border-base px-1.5 py-0.5 text-[10px] text-fg-muted">
                         <Flag country={e.countryZh} flagClassName="h-2.5 w-[15px]" />
                         {e.countryZh}
@@ -99,7 +103,7 @@ export function TimelineView({ events }: { events: TimelineEvent[] }) {
                     <p className="mt-1.5 text-[13px] leading-relaxed text-fg-muted">{e.note}</p>
                     {e.rocket ? (
                       <span className="mt-2.5 inline-block text-[12px] text-accent">
-                        查看型号详情 →
+                        {t.timeline.viewRocket}
                       </span>
                     ) : null}
                   </div>
@@ -116,7 +120,7 @@ export function TimelineView({ events }: { events: TimelineEvent[] }) {
                             : "bg-border-strong",
                       )}
                     />
-                    {e.rocket ? <Link href={`/rocket/${e.rocket}`}>{body}</Link> : body}
+                    {e.rocket ? <L href={`/rocket/${e.rocket}`}>{body}</L> : body}
                   </li>
                 );
               })}

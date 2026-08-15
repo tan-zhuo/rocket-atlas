@@ -8,6 +8,7 @@ import type { RocketGeometry } from "@/data/types";
 import { RocketModel } from "./rocket-model";
 import { StudioEnvironment } from "./environment";
 import { cn, mass, meters } from "@/lib/utils";
+import { useI18n } from "@/i18n/provider";
 
 export interface ShowcaseItem {
   slug: string;
@@ -54,6 +55,7 @@ function Framing({ height }: { height: number }) {
  * 预设视角这些操作性控件——首页只需要「一眼看出这是真的 3D，可以拖」。
  */
 export function HeroShowcase({ items }: { items: ShowcaseItem[] }) {
+  const { t } = useI18n();
   const [idx, setIdx] = React.useState(0);
   const current = items[idx];
 
@@ -132,7 +134,7 @@ export function HeroShowcase({ items }: { items: ShowcaseItem[] }) {
               {current.name} · {meters(current.height)} · {mass(current.mass)}
             </p>
           </div>
-          <p className="text-[10px] text-fg-subtle">拖动可旋转</p>
+          <p className="text-[10px] text-fg-subtle">{t.home.dragToRotate}</p>
         </div>
       </div>
 

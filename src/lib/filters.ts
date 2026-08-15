@@ -34,23 +34,7 @@ export const EMPTY_FILTERS: FilterState = {
   sort: "firstFlight",
 };
 
-export const PROPELLANT_META: Record<PropellantType, { label: string; short: string; color: string }> =
-  {
-    kerolox: { label: "煤油 / 液氧", short: "煤油", color: "#f0a04b" },
-    hydrolox: { label: "液氢 / 液氧", short: "氢氧", color: "#4fd1ff" },
-    methalox: { label: "甲烷 / 液氧", short: "甲烷", color: "#5fd68a" },
-    hypergolic: { label: "自燃推进剂", short: "自燃", color: "#c792ea" },
-    solid: { label: "固体", short: "固体", color: "#9aa4b6" },
-    alcolox: { label: "乙醇 / 液氧", short: "乙醇", color: "#e5c07b" },
-  };
-
-export const SORT_META: Record<SortKey, string> = {
-  firstFlight: "首飞时间",
-  payload: "LEO 载荷",
-  height: "高度",
-  mass: "起飞质量",
-  name: "名称",
-};
+export const SORT_KEYS: SortKey[] = ["firstFlight", "payload", "height", "mass", "name"];
 
 /** 该火箭涉及的全部推进剂类型（含助推器与上面级） */
 export function rocketPropellants(r: Rocket): PropellantType[] {

@@ -1,6 +1,8 @@
 import { ROCKETS } from "@/data/rockets";
 import { FAMILIES } from "@/data/families";
 import { PRINCIPLES } from "@/data/principles";
+import type { Locale } from "@/i18n/config";
+import { localizeFamily, localizePrinciple, localizeRocket } from "@/i18n/localize";
 
 export interface SearchDoc {
   kind: "rocket" | "family" | "principle";
@@ -16,8 +18,8 @@ export interface SearchDoc {
  * 全站搜索索引 —— 只包含标题级信息，不含正文。
  * 在服务端构建、以 props 传给客户端搜索框，避免把上百 KB 的长文打进 bundle。
  */
-export function buildSearchIndex(): SearchDoc[] {
-  const rockets: SearchDoc[] = ROCKETS.map((r) => ({
+export function buildSearchIndex(lang: Locale = "zh"): SearchDoc[] {
+  const rockets: SearchDoc[] = ROCKETS.map((raw) => localizeRocket(raw, lang)).map((r) => ({
     kind: "rocket",
     slug: r.slug,
     title: r.nameZh,
@@ -34,27 +36,33 @@ export function buildSearchIndex(): SearchDoc[] {
     ]
       .join(" ")
       .toLowerCase(),
-    href: `/rocket/${r.slug}`,
+    href: `/${lang}/rocket/${r.slug}`,
   }));
 
-  const families: SearchDoc[] = FAMILIES.map((f) => ({
+  const families: SearchDoc[] = FAMILIES.map((raw) => localizeFamily(raw, lang)).map((f) => ({
     kind: "family",
     slug: f.slug,
     title: f.nameZh,
-    subtitle: `家族 · ${f.countryZh} · ${f.lineage.length} 个型号`,
+    subtitle:
+      lang === "zh"
+        ? `家族 · ${f.countryZh} · ${f.lineage.length} 个型号`
+        : `Family · ${f.countryZh} · ${f.lineage.length} vehicles`,
     terms: [f.name, f.nameZh, f.slug, f.countryZh, ...f.lineage.map((l) => l.name)]
       .join(" ")
       .toLowerCase(),
-    href: `/family/${f.slug}`,
+    href: `/${lang}/family/${f.slug}`,
   }));
 
-  const principles: SearchDoc[] = PRINCIPLES.map((p) => ({
+  const principles: SearchDoc[] = PRINCIPLES.map((raw) => localizePrinciple(raw, lang)).map((p) => ({
     kind: "principle",
     slug: p.slug,
     title: p.title,
-    subtitle: `原理专题 · 约 ${p.readingMinutes} 分钟`,
+    subtitle:
+      lang === "zh"
+        ? `原理专题 · 约 ${p.readingMinutes} 分钟`
+        : `Principle · ${p.readingMinutes} min read`,
     terms: [p.title, p.titleEn, p.slug, p.summary].join(" ").toLowerCase(),
-    href: `/principles/${p.slug}`,
+    href: `/${lang}/principles/${p.slug}`,
   }));
 
   return [...rockets, ...families, ...principles];

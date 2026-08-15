@@ -32,10 +32,23 @@ export function meters(m: number | undefined | null, digits = 1): string {
   return `${num(m, digits)} m`;
 }
 
-/** "1967-11-09" → "1967年11月9日"; "1967" → "1967年" */
-export function dateZh(iso: string | undefined | null): string {
+const EN_MONTH = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+/**
+ * "1967-11-09" → 中文「1967年11月9日」/ 英文「9 Nov 1967」。
+ * 数据里有的日期只精确到年或月，格式化要能优雅降级。
+ */
+export function dateZh(iso: string | undefined | null, lang: "zh" | "en" = "zh"): string {
   if (!iso) return "—";
   const [y, m, d] = iso.split("-");
+  if (lang === "en") {
+    if (!m) return y;
+    const mon = EN_MONTH[Number(m) - 1] ?? m;
+    return d ? `${Number(d)} ${mon} ${y}` : `${mon} ${y}`;
+  }
   if (!m) return `${y}年`;
   if (!d) return `${y}年${Number(m)}月`;
   return `${y}年${Number(m)}月${Number(d)}日`;

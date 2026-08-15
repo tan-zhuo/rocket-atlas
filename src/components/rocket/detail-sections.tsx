@@ -1,22 +1,24 @@
-import Link from "next/link";
+import { L } from "@/components/ui/link";
 import { Check, ExternalLink, Flame, Minus, ShieldCheck, TriangleAlert } from "lucide-react";
 import type { Engine, Rocket, Source, Stage } from "@/data/types";
 import { Card, CardBody, CardHeader, CardTitle, SpecRow } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Markdown } from "@/components/md/markdown";
-import { PROPELLANT_META } from "@/lib/filters";
-import { CYCLE_EXPLAIN, PROPELLANT_TRADEOFF, getEngineDetail } from "@/data/engines";
+import { getEngineDetail } from "@/data/engines";
+import type { Locale } from "@/i18n/config";
+import type { Dict } from "@/i18n/dict";
+import { CYCLE_EXPLAIN, PROPELLANT_LABEL, PROPELLANT_TRADEOFF } from "@/i18n/terms";
 import { dateZh, force, mass, meters, num } from "@/lib/utils";
 
 /* ── 概览 ─────────────────────────────────────────────── */
 
-export function OverviewTab({ r }: { r: Rocket }) {
+export function OverviewTab({ r, t }: { r: Rocket; t: Dict }) {
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
       <div className="min-w-0">
         <p className="text-[15px] leading-relaxed text-fg">{r.description}</p>
         <h3 className="mt-8 text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-          历史背景
+          {t.detail.history}
         </h3>
         <Markdown className="mt-4">{r.history}</Markdown>
       </div>
@@ -24,7 +26,7 @@ export function OverviewTab({ r }: { r: Rocket }) {
       <aside className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>关键里程碑</CardTitle>
+            <CardTitle>{t.detail.milestones}</CardTitle>
           </CardHeader>
           <CardBody className="space-y-3.5">
             {r.milestones.map((m) => (
@@ -41,7 +43,7 @@ export function OverviewTab({ r }: { r: Rocket }) {
 
         <Card>
           <CardHeader>
-            <CardTitle>标签</CardTitle>
+            <CardTitle>{t.detail.tags}</CardTitle>
           </CardHeader>
           <CardBody className="flex flex-wrap gap-1.5">
             {r.tags.map((t) => (
@@ -56,18 +58,18 @@ export function OverviewTab({ r }: { r: Rocket }) {
 
 /* ── 设计逻辑 ─────────────────────────────────────────── */
 
-export async function DesignTab({ r }: { r: Rocket }) {
+export function DesignTab({ r, lang, t }: { r: Rocket; lang: Locale; t: Dict }) {
   return (
     <div className="max-w-[74ch]">
       <div className="rounded-xl border border-accent/30 bg-accent-soft/40 p-5">
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">
-          设计总纲
+          {t.detail.designSummary}
         </p>
         <Markdown className="mt-3">{r.designPhilosophy}</Markdown>
       </div>
 
       <h3 className="mt-12 text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-        设计权衡 · {r.tradeoffs.length} 个问题
+        {t.detail.tradeoffs(r.tradeoffs.length)}
       </h3>
 
       <div className="mt-5 space-y-10">
@@ -87,7 +89,7 @@ export async function DesignTab({ r }: { r: Rocket }) {
       {r.contemporaries ? (
         <section className="mt-14 border-t border-border-base pt-8">
           <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-            与同时代火箭的对比思考
+            {t.detail.contemporaries}
           </h3>
           <Markdown className="mt-4">{r.contemporaries}</Markdown>
         </section>
@@ -95,16 +97,16 @@ export async function DesignTab({ r }: { r: Rocket }) {
 
       {r.principles.length ? (
         <section className="mt-12 rounded-xl border border-border-base bg-bg-sunken p-5">
-          <p className="text-[12px] text-fg-muted">相关原理专题</p>
+          <p className="text-[12px] text-fg-muted">{t.detail.relatedPrinciples}</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {r.principles.map((p) => (
-              <Link
+              <L
                 key={p}
                 href={`/principles/${p}`}
                 className="rounded-md border border-border-base bg-panel px-3 py-1.5 text-[13px] text-fg-muted transition-colors hover:border-accent hover:text-accent"
               >
-                {PRINCIPLE_TITLES[p] ?? p} →
-              </Link>
+                {PRINCIPLE_TITLES[lang][p] ?? p} →
+              </L>
             ))}
           </div>
         </section>
@@ -113,12 +115,21 @@ export async function DesignTab({ r }: { r: Rocket }) {
   );
 }
 
-const PRINCIPLE_TITLES: Record<string, string> = {
-  "staging-and-rocket-equation": "火箭方程与分级优化",
-  "propellants-and-cycles": "推进剂与动力循环",
-  reusability: "可回收技术的演进与经济学",
-  "structures-and-materials": "结构与材料",
-  "guidance-and-control": "制导、导航与控制概览",
+const PRINCIPLE_TITLES: Record<Locale, Record<string, string>> = {
+  zh: {
+    "staging-and-rocket-equation": "火箭方程与分级优化",
+    "propellants-and-cycles": "推进剂与动力循环",
+    reusability: "可回收技术的演进与经济学",
+    "structures-and-materials": "结构与材料",
+    "guidance-and-control": "制导、导航与控制概览",
+  },
+  en: {
+    "staging-and-rocket-equation": "The rocket equation and staging",
+    "propellants-and-cycles": "Propellants and engine cycles",
+    reusability: "Reusability: technology and economics",
+    "structures-and-materials": "Structures and materials",
+    "guidance-and-control": "Guidance, navigation and control",
+  },
 };
 
 /* ── 动力系统 ─────────────────────────────────────────── */
@@ -128,7 +139,7 @@ const PRINCIPLE_TITLES: Record<string, string> = {
  * 涡轮的废气去了哪里——这三个问题基本决定了一枚火箭能做什么、不能做什么。
  * 所以这里不只列参数，而是逐台讲清楚「换来了什么 / 代价是什么」。
  */
-export function PropulsionTab({ r }: { r: Rocket }) {
+export function PropulsionTab({ r, lang, t }: { r: Rocket; lang: Locale; t: Dict }) {
   // 同名发动机（如一级与助推器共用）只讲一次，但记下它出现在哪些级上
   const seen = new Map<string, { engine: Engine; stages: string[] }>();
   for (const st of r.stages) {
@@ -146,11 +157,11 @@ export function PropulsionTab({ r }: { r: Rocket }) {
       {/* 推进剂总览 */}
       <section>
         <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-          这枚火箭烧什么
+          {t.detail.burnsWhat}
         </h3>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {propellants.map((p) => {
-            const meta = PROPELLANT_META[p];
+            const meta = PROPELLANT_LABEL[lang][p];
             const stages = r.stages.filter((s) => s.propellant === p);
             return (
               <div key={p} className="rounded-xl border border-border-base bg-panel p-4">
@@ -163,10 +174,10 @@ export function PropulsionTab({ r }: { r: Rocket }) {
                   <p className="text-[14px] font-semibold text-fg">{meta.label}</p>
                 </div>
                 <p className="mt-1 text-[11px] text-fg-subtle">
-                  用于：{stages.map((s) => s.nameZh).join("、")}
+                  {t.detail.usedBy}: {stages.map((s) => s.nameZh).join(" / ")}
                 </p>
                 <p className="mt-2.5 text-[13px] leading-relaxed text-fg-muted">
-                  {PROPELLANT_TRADEOFF[p]}
+                  {PROPELLANT_TRADEOFF[lang][p]}
                 </p>
               </div>
             );
@@ -177,11 +188,11 @@ export function PropulsionTab({ r }: { r: Rocket }) {
       {/* 逐台发动机 */}
       <section>
         <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-          发动机 · {entries.length} 型
+          {t.detail.engineCount(entries.length)}
         </h3>
         <div className="mt-4 space-y-4">
           {entries.map(({ engine, stages }) => (
-            <EngineCard key={engine.name} e={engine} stages={stages} />
+            <EngineCard key={engine.name} e={engine} stages={stages} lang={lang} t={t} />
           ))}
         </div>
       </section>
@@ -189,11 +200,21 @@ export function PropulsionTab({ r }: { r: Rocket }) {
   );
 }
 
-function EngineCard({ e, stages }: { e: Engine; stages: string[] }) {
-  const d = getEngineDetail(e.name);
+function EngineCard({
+  e,
+  stages,
+  lang,
+  t,
+}: {
+  e: Engine;
+  stages: string[];
+  lang: Locale;
+  t: Dict;
+}) {
+  const d = getEngineDetail(e.name, lang);
   const pros = e.pros ?? d?.pros ?? [];
   const cons = e.cons ?? d?.cons ?? [];
-  const meta = PROPELLANT_META[e.propellant];
+  const meta = PROPELLANT_LABEL[lang][e.propellant];
 
   return (
     <article className="overflow-hidden rounded-xl border border-border-base bg-panel">
@@ -202,7 +223,7 @@ function EngineCard({ e, stages }: { e: Engine; stages: string[] }) {
           <div className="flex flex-wrap items-center gap-2.5">
             <h4 className="text-[16px] font-semibold text-fg">{e.name}</h4>
             <Badge tone="neutral">×{e.count}</Badge>
-            {d?.since ? <Badge tone="neutral">{d.since} 年首飞</Badge> : null}
+            {d?.since ? <Badge tone="neutral">{d.since}</Badge> : null}
           </div>
           <p className="mt-1 text-[12px] text-fg-subtle">
             {stages.join(" / ")}
@@ -211,7 +232,7 @@ function EngineCard({ e, stages }: { e: Engine; stages: string[] }) {
         </div>
         <span
           className="flex items-center gap-1.5 rounded-md border border-border-base px-2 py-1 text-[11px] text-fg-muted"
-          title={CYCLE_EXPLAIN[e.cycle]}
+          title={CYCLE_EXPLAIN[lang][e.cycle]}
         >
           <span
             className="size-1.5 rounded-full"
@@ -226,27 +247,33 @@ function EngineCard({ e, stages }: { e: Engine; stages: string[] }) {
         {/* 燃料与参数 */}
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-            推进剂
+            {t.detail.propellantSection}
           </p>
           <div className="mt-2.5 space-y-2">
-            <FuelRow label="燃料" value={d?.fuel ?? e.propellantZh ?? meta.label} />
-            <FuelRow label="氧化剂" value={d?.oxidizer ?? "—"} />
-            {d?.mixtureRatio ? <FuelRow label="混合比" value={d.mixtureRatio} /> : null}
+            <FuelRow label={t.detail.fuel} value={d?.fuel ?? e.propellantZh ?? meta.label} />
+            <FuelRow label={t.detail.oxidizer} value={d?.oxidizer ?? t.common.na} />
+            {d?.mixtureRatio ? (
+              <FuelRow label={t.detail.mixtureRatio} value={d.mixtureRatio} />
+            ) : null}
           </div>
 
           <dl className="mt-4 border-t border-border-base pt-1">
-            <SpecRow label="单台推力" value={force(e.thrust)} />
+            <SpecRow label={t.spec.perEngineThrust} value={force(e.thrust)} />
             {e.thrustSeaLevel ? (
-              <SpecRow label="海平面推力" value={force(e.thrustSeaLevel)} />
+              <SpecRow label={t.spec.thrustSL} value={force(e.thrustSeaLevel)} />
             ) : null}
-            {e.thrustVacuum ? <SpecRow label="真空推力" value={force(e.thrustVacuum)} /> : null}
-            {e.ispSeaLevel ? <SpecRow label="海平面比冲" value={`${e.ispSeaLevel} s`} /> : null}
-            {e.ispVacuum ? <SpecRow label="真空比冲" value={`${e.ispVacuum} s`} /> : null}
+            {e.thrustVacuum ? (
+              <SpecRow label={t.spec.thrustVac} value={force(e.thrustVacuum)} />
+            ) : null}
+            {e.ispSeaLevel ? (
+              <SpecRow label={t.spec.ispSL} value={`${e.ispSeaLevel} s`} />
+            ) : null}
+            {e.ispVacuum ? <SpecRow label={t.spec.ispVac} value={`${e.ispVacuum} s`} /> : null}
             {d?.chamberPressure ? (
               <SpecRow
-                label="燃烧室压力"
+                label={t.spec.chamberPressure}
                 value={`${d.chamberPressure} bar`}
-                sub="衡量循环先进程度"
+                sub={t.spec.chamberPressureNote}
               />
             ) : null}
           </dl>
@@ -263,14 +290,14 @@ function EngineCard({ e, stages }: { e: Engine; stages: string[] }) {
           <div className="mt-4 rounded-lg border border-border-base bg-bg-sunken px-3.5 py-3">
             <p className="text-[11px] text-fg-subtle">{e.cycleZh}</p>
             <p className="mt-1 text-[12px] leading-relaxed text-fg-muted">
-              {CYCLE_EXPLAIN[e.cycle]}
+              {CYCLE_EXPLAIN[lang][e.cycle]}
             </p>
           </div>
 
           {pros.length ? (
             <div className="mt-4">
               <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--ok)]">
-                换来了什么
+                {t.detail.pros}
               </p>
               <ul className="mt-2 space-y-1.5">
                 {pros.map((x) => (
@@ -286,7 +313,7 @@ function EngineCard({ e, stages }: { e: Engine; stages: string[] }) {
           {cons.length ? (
             <div className="mt-4">
               <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--warn)]">
-                代价是什么
+                {t.detail.cons}
               </p>
               <ul className="mt-2 space-y-1.5">
                 {cons.map((x) => (
@@ -333,27 +360,27 @@ function MdInline({ text }: { text: string }) {
 
 /* ── 技术规格 ─────────────────────────────────────────── */
 
-export function SpecsTab({ r }: { r: Rocket }) {
+export function SpecsTab({ r, lang, t }: { r: Rocket; lang: Locale; t: Dict }) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle>总体</CardTitle>
+            <CardTitle>{t.detail.overall}</CardTitle>
           </CardHeader>
           <CardBody>
             <dl>
-              <SpecRow label="全长" value={meters(r.height)} />
-              <SpecRow label="芯级直径" value={meters(r.diameter)} />
+              <SpecRow label={t.spec.height} value={meters(r.height)} />
+              <SpecRow label={t.spec.diameter} value={meters(r.diameter)} />
               {r.span && r.span !== r.diameter ? (
-                <SpecRow label="最大横向尺寸" value={meters(r.span)} />
+                <SpecRow label={t.spec.span} value={meters(r.span)} />
               ) : null}
-              <SpecRow label="起飞质量" value={mass(r.mass)} />
-              <SpecRow label="级数" value={`${r.stageCount} 级`} />
+              <SpecRow label={t.spec.mass} value={mass(r.mass)} />
+              <SpecRow label={t.spec.stageCount} value={`${r.stageCount}`} />
               <SpecRow
-                label="长细比"
+                label={t.spec.fineness}
                 value={num(r.height / r.diameter, 1)}
-                sub="全长 / 芯级直径"
+                sub={t.spec.finenessNote}
               />
             </dl>
           </CardBody>
@@ -361,18 +388,30 @@ export function SpecsTab({ r }: { r: Rocket }) {
 
         <Card>
           <CardHeader>
-            <CardTitle>运载能力</CardTitle>
+            <CardTitle>{t.detail.capability}</CardTitle>
           </CardHeader>
           <CardBody>
             <dl>
-              <SpecRow label="近地轨道 LEO" value={r.payloadLEO ? mass(r.payloadLEO) : "—"} />
-              <SpecRow label="同步转移 GTO" value={r.payloadGTO ? mass(r.payloadGTO) : "—"} />
-              <SpecRow label="太阳同步 SSO" value={r.payloadSSO ? mass(r.payloadSSO) : "—"} />
-              <SpecRow label="地月转移 TLI" value={r.payloadTLI ? mass(r.payloadTLI) : "—"} />
               <SpecRow
-                label="载荷比"
-                value={r.payloadLEO ? `${num((r.payloadLEO / r.mass) * 100, 2)}%` : "—"}
-                sub="LEO 载荷 / 起飞质量"
+                label={t.spec.payloadLEO}
+                value={r.payloadLEO ? mass(r.payloadLEO) : t.common.na}
+              />
+              <SpecRow
+                label={t.spec.payloadGTO}
+                value={r.payloadGTO ? mass(r.payloadGTO) : t.common.na}
+              />
+              <SpecRow
+                label={t.spec.payloadSSO}
+                value={r.payloadSSO ? mass(r.payloadSSO) : t.common.na}
+              />
+              <SpecRow
+                label={t.spec.payloadTLI}
+                value={r.payloadTLI ? mass(r.payloadTLI) : t.common.na}
+              />
+              <SpecRow
+                label={t.spec.payloadRatio}
+                value={r.payloadLEO ? `${num((r.payloadLEO / r.mass) * 100, 2)}%` : t.common.na}
+                sub={t.spec.payloadRatioNote}
               />
             </dl>
           </CardBody>
@@ -380,15 +419,21 @@ export function SpecsTab({ r }: { r: Rocket }) {
 
         <Card>
           <CardHeader>
-            <CardTitle>运行</CardTitle>
+            <CardTitle>{t.detail.operations}</CardTitle>
           </CardHeader>
           <CardBody>
             <dl>
-              <SpecRow label="首飞" value={dateZh(r.firstFlight)} />
-              <SpecRow label="末次飞行" value={r.lastFlight ? dateZh(r.lastFlight) : "仍在服役"} />
-              <SpecRow label="研制 / 运营" value={r.agency.join("、")} />
-              <SpecRow label="可回收" value={r.reusable ? "是" : "否"} />
-              <SpecRow label="载人认证" value={r.humanRated ? "是" : "否"} />
+              <SpecRow label={t.spec.firstFlight} value={dateZh(r.firstFlight, lang)} />
+              <SpecRow
+                label={t.spec.lastFlight}
+                value={r.lastFlight ? dateZh(r.lastFlight, lang) : t.spec.inService}
+              />
+              <SpecRow label={t.spec.operator} value={r.agency.join(" / ")} />
+              <SpecRow label={t.spec.reusable} value={r.reusable ? t.spec.yes : t.spec.no} />
+              <SpecRow
+                label={t.spec.humanRated}
+                value={r.humanRated ? t.spec.yes : t.spec.no}
+              />
             </dl>
             {r.reuseNote ? (
               <p className="mt-3 text-[12px] leading-relaxed text-fg-subtle">{r.reuseNote}</p>
@@ -399,15 +444,15 @@ export function SpecsTab({ r }: { r: Rocket }) {
 
       <div className="space-y-4">
         {r.stages.map((s) => (
-          <StageCard key={s.name} s={s} />
+          <StageCard key={s.name} s={s} lang={lang} t={t} />
         ))}
       </div>
     </div>
   );
 }
 
-function StageCard({ s }: { s: Stage }) {
-  const meta = PROPELLANT_META[s.propellant];
+function StageCard({ s, lang, t }: { s: Stage; lang: Locale; t: Dict }) {
+  const meta = PROPELLANT_LABEL[lang][s.propellant];
   return (
     <Card>
       <CardHeader className="flex flex-wrap items-center justify-between gap-3">
@@ -430,24 +475,30 @@ function StageCard({ s }: { s: Stage }) {
       </CardHeader>
       <CardBody className="grid gap-6 md:grid-cols-2">
         <dl>
-          <SpecRow label="海平面推力" value={force(s.thrustSeaLevel)} />
-          <SpecRow label="真空推力" value={force(s.thrustVacuum)} />
-          <SpecRow label="工作时间" value={s.burnTime ? `${num(s.burnTime)} s` : "—"} />
-          <SpecRow label="干质量" value={mass(s.dryMass)} />
-          <SpecRow label="推进剂质量" value={mass(s.propellantMass)} />
+          <SpecRow label={t.spec.thrustSL} value={force(s.thrustSeaLevel)} />
+          <SpecRow label={t.spec.thrustVac} value={force(s.thrustVacuum)} />
+          <SpecRow
+            label={t.spec.burnTime}
+            value={s.burnTime ? `${num(s.burnTime)} s` : t.common.na}
+          />
+          <SpecRow label={t.spec.dryMass} value={mass(s.dryMass)} />
+          <SpecRow label={t.spec.propellantMass} value={mass(s.propellantMass)} />
           {s.dryMass && s.propellantMass ? (
             <SpecRow
-              label="结构系数 ε"
+              label={t.spec.structuralCoefficient}
               value={num(s.dryMass / (s.dryMass + s.propellantMass), 3)}
-              sub="干质量 / 总质量"
+              sub={t.spec.structuralCoefficientNote}
             />
           ) : null}
-          <SpecRow label="直径 × 长度" value={`${meters(s.diameter)} × ${meters(s.height)}`} />
+          <SpecRow
+            label={t.spec.diameterLength}
+            value={`${meters(s.diameter)} × ${meters(s.height)}`}
+          />
         </dl>
 
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-            发动机
+            {t.spec.engines}
           </p>
           <div className="mt-3 space-y-3">
             {s.engines.map((e) => (
@@ -486,12 +537,12 @@ function StageCard({ s }: { s: Stage }) {
 
 /* ── 发射历史 ─────────────────────────────────────────── */
 
-export function LaunchesTab({ r }: { r: Rocket }) {
+export function LaunchesTab({ r, lang, t }: { r: Rocket; lang: Locale; t: Dict }) {
   const l = r.launches;
   if (!l) {
     return (
       <p className="text-[14px] text-fg-muted">
-        本型号尚无系统整理的发射统计。可参考「数据来源」中的公开记录。
+        {t.detail.noLaunchData}
       </p>
     );
   }
@@ -501,12 +552,12 @@ export function LaunchesTab({ r }: { r: Rocket }) {
     <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
       <Card className="h-fit">
         <CardHeader>
-          <CardTitle>发射统计</CardTitle>
+          <CardTitle>{t.detail.launchStats}</CardTitle>
         </CardHeader>
         <CardBody>
           <div className="flex items-baseline gap-2">
             <span className="text-4xl font-semibold text-fg tabular">{num(rate, 1)}%</span>
-            <span className="text-[12px] text-fg-subtle">成功率</span>
+            <span className="text-[12px] text-fg-subtle">{t.spec.successRate}</span>
           </div>
           <div className="mt-4 flex h-2 overflow-hidden rounded-full bg-bg-sunken">
             <span
@@ -523,28 +574,28 @@ export function LaunchesTab({ r }: { r: Rocket }) {
             />
           </div>
           <dl className="mt-4">
-            <SpecRow label="总发射次数" value={num(l.total)} />
-            <SpecRow label="成功" value={num(l.success)} />
-            {l.partial ? <SpecRow label="部分成功" value={num(l.partial)} /> : null}
-            <SpecRow label="失败" value={num(l.failure)} />
-            <SpecRow label="统计截止" value={dateZh(l.asOf)} />
+            <SpecRow label={t.spec.launches} value={num(l.total)} />
+            <SpecRow label={t.spec.success} value={num(l.success)} />
+            {l.partial ? <SpecRow label={t.spec.partial} value={num(l.partial)} /> : null}
+            <SpecRow label={t.spec.failure} value={num(l.failure)} />
+            <SpecRow label={t.spec.asOf} value={dateZh(l.asOf, lang)} />
           </dl>
           <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-relaxed text-fg-subtle">
             <TriangleAlert className="mt-px size-3 shrink-0" />
-            不同来源对「部分失败」的判定口径不一致，统计结果可能有 ±1–2 次差异。
+            {t.detail.statsCaveat}
           </p>
         </CardBody>
       </Card>
 
       <div>
         <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-          重要任务
+          {t.detail.notableMissions}
         </h3>
         <ol className="mt-4 space-y-px overflow-hidden rounded-xl border border-border-base">
           {l.notable.map((n) => (
             <li key={`${n.date}-${n.name}`} className="bg-panel px-4 py-3.5">
               <div className="flex flex-wrap items-baseline gap-x-3">
-                <span className="text-[12px] text-fg-subtle tabular">{dateZh(n.date)}</span>
+                <span className="text-[12px] text-fg-subtle tabular">{dateZh(n.date, lang)}</span>
                 <span className="text-[14px] font-medium text-fg">{n.name}</span>
               </div>
               <p className="mt-1 text-[13px] leading-relaxed text-fg-muted">{n.note}</p>
@@ -561,15 +612,17 @@ export function LaunchesTab({ r }: { r: Rocket }) {
 export function FamilyTab({
   r,
   related,
+  t,
 }: {
   r: Rocket;
   related: { slug: string; nameZh: string; name: string; description: string }[];
+  t: Dict;
 }) {
   return (
     <div className="grid gap-8 lg:grid-cols-2">
       <div>
         <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-          衍生型号与构型
+          {t.detail.variants}
         </h3>
         <ul className="mt-4 space-y-px overflow-hidden rounded-xl border border-border-base">
           {r.variants.map((v) => (
@@ -577,12 +630,12 @@ export function FamilyTab({
               <div className="flex items-center gap-2">
                 <Flame className="size-3.5 shrink-0 text-fg-subtle" />
                 {v.slug ? (
-                  <Link
+                  <L
                     href={`/rocket/${v.slug}`}
                     className="text-[14px] font-medium text-fg hover:text-accent"
                   >
                     {v.name}
-                  </Link>
+                  </L>
                 ) : (
                   <span className="text-[14px] font-medium text-fg">{v.name}</span>
                 )}
@@ -592,21 +645,21 @@ export function FamilyTab({
           ))}
         </ul>
 
-        <Link
+        <L
           href={`/family/${r.family}`}
           className="mt-4 inline-flex items-center gap-1.5 text-[13px] text-accent hover:underline"
         >
-          查看完整家族谱系 →
-        </Link>
+          {t.detail.fullLineage}
+        </L>
       </div>
 
       <div>
         <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-          相关型号
+          {t.detail.relatedRockets}
         </h3>
         <div className="mt-4 space-y-3">
           {related.map((o) => (
-            <Link
+            <L
               key={o.slug}
               href={`/rocket/${o.slug}`}
               className="block rounded-xl border border-border-base bg-panel p-4 transition-colors hover:border-accent"
@@ -618,7 +671,7 @@ export function FamilyTab({
               <p className="mt-1.5 line-clamp-2 text-[12px] leading-relaxed text-fg-muted">
                 {o.description}
               </p>
-            </Link>
+            </L>
           ))}
         </div>
       </div>
@@ -628,27 +681,29 @@ export function FamilyTab({
 
 /* ── 数据来源 ─────────────────────────────────────────── */
 
-const CONFIDENCE_META = {
-  high: { label: "高置信度", tone: "ok" as const, desc: "一手文件或官方发布" },
-  medium: { label: "中置信度", tone: "warn" as const, desc: "汇总性来源，口径可能有差异" },
-  low: { label: "低置信度", tone: "danger" as const, desc: "报道或推算，仅供参考" },
-};
+const CONFIDENCE_TONE = { high: "ok", medium: "warn", low: "danger" } as const;
 
-export function SourcesTab({ sources, modelNote }: { sources: Source[]; modelNote: string }) {
+export function SourcesTab({
+  sources,
+  modelNote,
+  t,
+}: {
+  sources: Source[];
+  modelNote: string;
+  t: Dict;
+}) {
   return (
     <div className="max-w-3xl">
       <div className="flex items-start gap-2.5 rounded-xl border border-border-base bg-bg-sunken p-4">
         <ShieldCheck className="mt-0.5 size-4 shrink-0 text-fg-subtle" />
         <p className="text-[13px] leading-relaxed text-fg-muted">
-          本站所有内容均基于公开来源整理。设计逻辑部分是对公开资料的解读与归纳，
-          标注为「基于公开信息」；不同来源在质量、推力等参数上常有 ±5% 的口径差异，
-          我们优先采用官方用户手册与技术报告。
+          {t.detail.sourcesIntro}
         </p>
       </div>
 
       <ol className="mt-6 space-y-3">
         {sources.map((s, i) => {
-          const c = CONFIDENCE_META[s.confidence];
+          const tone = CONFIDENCE_TONE[s.confidence];
           return (
             <li key={s.url + i} className="rounded-xl border border-border-base bg-panel p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -666,8 +721,8 @@ export function SourcesTab({ sources, modelNote }: { sources: Source[]; modelNot
                     <p className="mt-0.5 text-[12px] text-fg-subtle">{s.publisher}</p>
                   ) : null}
                 </div>
-                <Badge tone={c.tone} className="shrink-0">
-                  {c.label}
+                <Badge tone={tone} className="shrink-0">
+                  {t.detail.confidence[s.confidence]}
                 </Badge>
               </div>
               {s.note ? (
@@ -680,7 +735,7 @@ export function SourcesTab({ sources, modelNote }: { sources: Source[]; modelNot
 
       <section className="mt-8 rounded-xl border border-border-base bg-bg-sunken p-4">
         <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-          3D 模型说明
+          {t.detail.modelNote}
         </p>
         <p className="mt-2 text-[13px] leading-relaxed text-fg-muted">{modelNote}</p>
       </section>

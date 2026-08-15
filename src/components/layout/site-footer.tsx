@@ -1,8 +1,10 @@
-import Link from "next/link";
+import { L } from "@/components/ui/link";
 import { Globe } from "lucide-react";
 import { atlasStats } from "@/data/rockets";
 import { PRINCIPLES } from "@/data/principles";
 import { FAMILIES } from "@/data/families";
+import { getLang, getServerDict } from "@/i18n/server";
+import { localizeFamily, localizePrinciple } from "@/i18n/localize";
 
 const REPO_URL = "https://github.com/tan-zhuo/rocket-atlas";
 
@@ -15,21 +17,24 @@ function GithubMark({ className }: { className?: string }) {
   );
 }
 
-export function SiteFooter() {
+export async function SiteFooter() {
   const stats = atlasStats();
+  const lang = await getLang();
+  const t = await getServerDict();
+  const principles = PRINCIPLES.slice(0, 5).map((p) => localizePrinciple(p, lang));
+  const families = FAMILIES.slice(0, 5).map((f) => localizeFamily(f, lang));
 
   return (
     <footer className="mt-20 border-t border-border-base bg-bg-sunken">
       <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="text-sm font-semibold text-fg">运载火箭图谱</p>
+            <p className="text-sm font-semibold text-fg">{t.brand}</p>
             <p className="mt-3 max-w-xs text-[13px] leading-relaxed text-fg-muted">
-              一个公开知识驱动的运载火箭可视化教育平台。我们不只罗列参数，更试图讲清楚
-              <span className="text-fg">「为什么这样设计」</span>。
+              {t.footer.blurb}
             </p>
             <p className="mt-4 text-[12px] text-fg-subtle tabular">
-              {stats.rockets} 个型号 · {stats.countries} 个国家/地区 · {stats.sources} 条来源引用
+              {t.footer.stats(stats.rockets, stats.countries, stats.sources)}
             </p>
 
             <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -40,7 +45,7 @@ export function SiteFooter() {
                 className="flex items-center gap-1.5 text-[12px] text-fg-muted transition-colors hover:text-accent"
               >
                 <Globe className="size-3.5" />
-                作者 tanzhuo.xyz
+                {t.footer.author}
               </a>
               <a
                 href={REPO_URL}
@@ -49,33 +54,33 @@ export function SiteFooter() {
                 className="flex items-center gap-1.5 text-[12px] text-fg-muted transition-colors hover:text-accent"
               >
                 <GithubMark className="size-3.5" />
-                开源代码
+                {t.footer.openSource}
               </a>
             </div>
           </div>
 
           <FooterCol
-            title="浏览"
+            title={t.footer.browse}
             links={[
-              { href: "/rockets", label: "全部火箭" },
-              { href: "/compare", label: "对比工具" },
-              { href: "/timeline", label: "发展时间线" },
-              { href: "/principles", label: "原理专题" },
-              { href: "/lab", label: "3D 实验室" },
+              { href: "/rockets", label: t.nav.rockets },
+              { href: "/compare", label: t.nav.compare },
+              { href: "/timeline", label: t.nav.timeline },
+              { href: "/principles", label: t.nav.principles },
+              { href: "/lab", label: t.nav.lab },
             ]}
           />
 
           <FooterCol
-            title="原理专题"
-            links={PRINCIPLES.slice(0, 5).map((p) => ({
+            title={t.footer.principles}
+            links={principles.map((p) => ({
               href: `/principles/${p.slug}`,
               label: p.title,
             }))}
           />
 
           <FooterCol
-            title="火箭家族"
-            links={FAMILIES.slice(0, 5).map((f) => ({
+            title={t.footer.families}
+            links={families.map((f) => ({
               href: `/family/${f.slug}`,
               label: f.nameZh,
             }))}
@@ -84,8 +89,7 @@ export function SiteFooter() {
 
         <div className="mt-12 flex flex-col gap-4 border-t border-border-base pt-6 text-[12px] text-fg-subtle sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-2xl leading-relaxed">
-            全部内容基于公开来源整理，关键参数均标注出处与置信度。3D 模型为按公开尺寸复原的
-            <span className="text-fg-muted">示意模型</span>，不代表真实工程图纸。
+            {t.footer.disclaimer}
           </p>
           <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1">
             <a
@@ -96,9 +100,9 @@ export function SiteFooter() {
             >
               github.com/tan-zhuo/rocket-atlas
             </a>
-            <Link href="/about" className="text-fg-muted hover:text-accent">
-              数据来源与方法说明 →
-            </Link>
+            <L href="/about" className="text-fg-muted hover:text-accent">
+              {t.footer.sourcesLink}
+            </L>
           </div>
         </div>
       </div>
@@ -121,9 +125,9 @@ function FooterCol({
       <ul className="mt-3 space-y-2">
         {links.map((l) => (
           <li key={l.href}>
-            <Link href={l.href} className="text-[13px] text-fg-muted hover:text-accent">
+            <L href={l.href} className="text-[13px] text-fg-muted hover:text-accent">
               {l.label}
-            </Link>
+            </L>
           </li>
         ))}
       </ul>

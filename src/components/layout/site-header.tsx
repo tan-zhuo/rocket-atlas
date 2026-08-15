@@ -1,7 +1,7 @@
 "use client";
 
+import { L } from "@/components/ui/link";
 import * as React from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, GitCompare } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -10,15 +10,18 @@ import { SearchDialog } from "./search-dialog";
 import type { SearchDoc } from "@/lib/search-index";
 import { useCompare } from "@/lib/store";
 import { useHydrated } from "@/lib/client-hooks";
+import { useI18n } from "@/i18n/provider";
+import { LanguageToggle } from "./language-toggle";
 
-const NAV = [
-  { href: "/rockets", label: "火箭百科" },
-  { href: "/compare", label: "对比" },
-  { href: "/principles", label: "原理专题" },
-  { href: "/timeline", label: "时间线" },
-  { href: "/lab", label: "3D 实验室" },
-  { href: "/about", label: "关于" },
-];
+const NAV: { href: string; key: "rockets" | "compare" | "principles" | "timeline" | "lab" | "about" }[] =
+  [
+    { href: "/rockets", key: "rockets" },
+    { href: "/compare", key: "compare" },
+    { href: "/principles", key: "principles" },
+    { href: "/timeline", key: "timeline" },
+    { href: "/lab", key: "lab" },
+    { href: "/about", key: "about" },
+  ];
 
 function CompareBadge() {
   const count = useCompare((s) => s.slugs.length);
@@ -33,30 +36,31 @@ function CompareBadge() {
 
 export function SiteHeader({ docs }: { docs: SearchDoc[] }) {
   const pathname = usePathname();
+  const { t } = useI18n();
   // 菜单的展开状态绑定在「哪个页面上展开的」，导航到新页面时自动收起，
   // 不需要一个监听 pathname 的 effect。
   const [openOn, setOpenOn] = React.useState<string | null>(null);
   const menuOpen = openOn === pathname;
 
+  // pathname 带语言前缀（/en/rockets），比较时先剥掉第一段
   function isActive(href: string) {
-    if (href === "/rockets") return pathname.startsWith("/rocket");
-    if (href === "/principles") return pathname.startsWith("/principles");
-    return pathname === href || pathname.startsWith(`${href}/`);
+    const rest = "/" + pathname.split("/").filter(Boolean).slice(1).join("/");
+    if (href === "/rockets") return rest.startsWith("/rocket");
+    if (href === "/principles") return rest.startsWith("/principles");
+    return rest === href || rest.startsWith(`${href}/`);
   }
 
   return (
     <header className="sticky top-0 z-40 border-b border-border-base bg-bg/85 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-3 px-4 sm:px-6">
-        <Link href="/" className="flex shrink-0 items-center gap-2.5">
+        <L href="/" className="flex shrink-0 items-center gap-2.5">
           <LogoMark />
-          <span className="text-[15px] font-semibold tracking-tight text-fg">
-            运载火箭图谱
-          </span>
-        </Link>
+          <span className="text-[15px] font-semibold tracking-tight text-fg">{t.brand}</span>
+        </L>
 
         <nav className="ml-4 hidden items-center gap-0.5 lg:flex">
           {NAV.map((n) => (
-            <Link
+            <L
               key={n.href}
               href={n.href}
               className={cn(
@@ -66,25 +70,26 @@ export function SiteHeader({ docs }: { docs: SearchDoc[] }) {
                   : "text-fg-muted hover:bg-bg-elevated hover:text-fg",
               )}
             >
-              {n.label}
+              {t.nav[n.key]}
               {n.href === "/compare" ? <CompareBadge /> : null}
-            </Link>
+            </L>
           ))}
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
           <SearchDialog docs={docs} />
+          <LanguageToggle />
           <ThemeToggle />
-          <Link
+          <L
             href="/compare"
-            aria-label="对比工具"
+            aria-label={t.nav.compare}
             className="grid size-9 place-items-center rounded-md text-fg-muted transition-colors hover:bg-bg-elevated hover:text-fg lg:hidden"
           >
             <GitCompare className="size-4" />
-          </Link>
+          </L>
           <button
             type="button"
-            aria-label={menuOpen ? "关闭菜单" : "打开菜单"}
+            aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
             aria-expanded={menuOpen}
             onClick={() => setOpenOn(menuOpen ? null : pathname)}
             className="grid size-9 place-items-center rounded-md text-fg-muted transition-colors hover:bg-bg-elevated hover:text-fg lg:hidden"
@@ -97,7 +102,7 @@ export function SiteHeader({ docs }: { docs: SearchDoc[] }) {
       {menuOpen ? (
         <nav className="border-t border-border-base bg-panel px-4 py-2 lg:hidden">
           {NAV.map((n) => (
-            <Link
+            <L
               key={n.href}
               href={n.href}
               className={cn(
@@ -105,9 +110,9 @@ export function SiteHeader({ docs }: { docs: SearchDoc[] }) {
                 isActive(n.href) ? "text-accent" : "text-fg-muted",
               )}
             >
-              {n.label}
+              {t.nav[n.key]}
               {n.href === "/compare" ? <CompareBadge /> : null}
-            </Link>
+            </L>
           ))}
         </nav>
       ) : null}

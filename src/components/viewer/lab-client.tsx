@@ -1,11 +1,12 @@
 "use client";
 
+import { L } from "@/components/ui/link";
 import * as React from "react";
-import Link from "next/link";
 import type { RocketGeometry } from "@/data/types";
 import { ViewerMount } from "./viewer-mount";
 import { Silhouette } from "@/components/rocket/silhouette";
 import { cn, meters } from "@/lib/utils";
+import { useI18n } from "@/i18n/provider";
 
 export interface LabEntry {
   slug: string;
@@ -17,6 +18,7 @@ export interface LabEntry {
 }
 
 export function LabClient({ entries }: { entries: LabEntry[] }) {
+  const { t } = useI18n();
   const [active, setActive] = React.useState(entries[0]?.slug);
   const current = entries.find((e) => e.slug === active) ?? entries[0];
 
@@ -24,7 +26,7 @@ export function LabClient({ entries }: { entries: LabEntry[] }) {
     <div className="grid gap-6 lg:grid-cols-[200px_minmax(0,1fr)]">
       <aside className="lg:sticky lg:top-20 lg:h-fit">
         <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
-          选择模型
+          {t.lab.pick}
         </p>
         <div className="hide-scrollbar mt-3 flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0">
           {entries.map((e) => (
@@ -78,12 +80,12 @@ export function LabClient({ entries }: { entries: LabEntry[] }) {
             <h2 className="text-[18px] font-semibold text-fg">{current.nameZh}</h2>
             <p className="text-[12px] text-fg-subtle">{current.name}</p>
           </div>
-          <Link
+          <L
             href={`/rocket/${current.slug}`}
             className="text-[13px] text-accent hover:underline"
           >
-            查看完整型号页 →
-          </Link>
+            {t.lab.fullPage}
+          </L>
         </div>
         <p className="mt-3 max-w-3xl text-[12px] leading-relaxed text-fg-subtle">
           {current.geometry.modelNote}

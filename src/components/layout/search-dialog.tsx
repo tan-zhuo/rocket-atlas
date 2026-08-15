@@ -1,17 +1,12 @@
 "use client";
 
+import NextLink from "next/link";
 import * as React from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, CornerDownLeft, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { searchDocs, type SearchDoc } from "@/lib/search-index";
-
-const KIND_LABEL: Record<SearchDoc["kind"], string> = {
-  rocket: "火箭",
-  family: "家族",
-  principle: "专题",
-};
+import { useI18n } from "@/i18n/provider";
 
 export function SearchDialog({ docs }: { docs: SearchDoc[] }) {
   // 查询词与光标位置放在同一份状态里：改查询词时光标自然回到 0，
@@ -23,6 +18,7 @@ export function SearchDialog({ docs }: { docs: SearchDoc[] }) {
   });
   const router = useRouter();
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const { t } = useI18n();
 
   const results = React.useMemo(() => searchDocs(docs, q), [docs, q]);
 
@@ -78,7 +74,7 @@ export function SearchDialog({ docs }: { docs: SearchDoc[] }) {
       >
         <span className="flex items-center gap-2">
           <Search className="size-3.5" />
-          <span className="hidden sm:inline">搜索火箭、发动机…</span>
+          <span className="hidden sm:inline">{t.nav.searchPlaceholder}</span>
         </span>
         <kbd className="hidden rounded border border-border-base bg-bg px-1.5 py-0.5 font-mono text-[10px] sm:inline">
           ⌘K
@@ -94,7 +90,7 @@ export function SearchDialog({ docs }: { docs: SearchDoc[] }) {
           <div
             role="dialog"
             aria-modal="true"
-            aria-label="全站搜索"
+            aria-label={t.nav.search}
             className="w-full max-w-lg overflow-hidden rounded-xl border border-border-strong bg-panel shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
@@ -105,13 +101,13 @@ export function SearchDialog({ docs }: { docs: SearchDoc[] }) {
                 value={q}
                 onChange={(e) => setState((s) => ({ ...s, q: e.target.value, cursor: 0 }))}
                 onKeyDown={onInputKey}
-                placeholder="火箭名、发动机、国家、家族…"
+                placeholder={t.search.placeholder}
                 className="h-12 w-full bg-transparent text-sm text-fg outline-none placeholder:text-fg-subtle"
               />
               <button
                 type="button"
                 onClick={closeDialog}
-                aria-label="关闭搜索"
+                aria-label={t.common.close}
                 className="shrink-0 text-fg-subtle hover:text-fg"
               >
                 <X className="size-4" />
@@ -120,7 +116,7 @@ export function SearchDialog({ docs }: { docs: SearchDoc[] }) {
 
             {q && results.length === 0 ? (
               <p className="px-4 py-8 text-center text-[13px] text-fg-subtle">
-                没有匹配「{q}」的结果
+                {t.search.empty(q)}
               </p>
             ) : null}
 
@@ -128,7 +124,7 @@ export function SearchDialog({ docs }: { docs: SearchDoc[] }) {
               <ul className="max-h-80 overflow-y-auto py-1.5">
                 {results.map((d, i) => (
                   <li key={`${d.kind}-${d.slug}`}>
-                    <Link
+                    <NextLink
                       href={d.href}
                       onClick={closeDialog}
                       onMouseEnter={() => setState((s) => ({ ...s, cursor: i }))}
@@ -138,7 +134,7 @@ export function SearchDialog({ docs }: { docs: SearchDoc[] }) {
                       )}
                     >
                       <span className="w-9 shrink-0 rounded border border-border-base px-1 py-0.5 text-center text-[10px] text-fg-subtle">
-                        {KIND_LABEL[d.kind]}
+                        {t.search.kinds[d.kind]}
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-fg">{d.title}</span>
@@ -149,7 +145,7 @@ export function SearchDialog({ docs }: { docs: SearchDoc[] }) {
                       {i === cursor ? (
                         <CornerDownLeft className="size-3.5 shrink-0 text-fg-subtle" />
                       ) : null}
-                    </Link>
+                    </NextLink>
                   </li>
                 ))}
               </ul>
@@ -157,7 +153,7 @@ export function SearchDialog({ docs }: { docs: SearchDoc[] }) {
 
             {!q ? (
               <p className="px-4 py-6 text-center text-[12px] text-fg-subtle">
-                输入关键词开始搜索 · ↑↓ 选择 · Enter 打开
+                {t.search.hint}
               </p>
             ) : null}
           </div>

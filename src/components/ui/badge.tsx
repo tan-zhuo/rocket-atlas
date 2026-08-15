@@ -1,7 +1,10 @@
+"use client";
+
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import type { RocketStatus } from "@/data/types";
+import { useI18n } from "@/i18n/provider";
 
 const badgeVariants = cva(
   "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-wide whitespace-nowrap",
@@ -29,26 +32,24 @@ export function Badge({
   return <span className={cn(badgeVariants({ tone }), className)} {...props} />;
 }
 
-export const STATUS_META: Record<
-  RocketStatus,
-  { label: string; tone: "ok" | "neutral" | "warn" | "danger" }
-> = {
-  active: { label: "现役", tone: "ok" },
-  retired: { label: "退役", tone: "neutral" },
-  development: { label: "研制中", tone: "warn" },
-  cancelled: { label: "已取消", tone: "danger" },
+export const STATUS_TONE: Record<RocketStatus, "ok" | "neutral" | "warn" | "danger"> = {
+  active: "ok",
+  retired: "neutral",
+  development: "warn",
+  cancelled: "danger",
 };
 
 export function StatusBadge({ status, className }: { status: RocketStatus; className?: string }) {
-  const meta = STATUS_META[status];
+  const { t } = useI18n();
+  const tone = STATUS_TONE[status];
   return (
-    <Badge tone={meta.tone} className={className}>
+    <Badge tone={tone} className={className}>
       <span
         aria-hidden
         className="size-1.5 rounded-full bg-current"
         style={{ boxShadow: "0 0 0 3px color-mix(in srgb, currentColor 20%, transparent)" }}
       />
-      {meta.label}
+      {t.status[status]}
     </Badge>
   );
 }
