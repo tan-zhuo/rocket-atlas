@@ -155,7 +155,8 @@ function ThrustChamber({
 
       {/* 喉部加强环 */}
       <Part id="throat" selected={selected} onSelect={onSelect} onHover={onHover}>
-        <mesh position={[0, 0, 0]}>
+        {/* torus 默认躺在 XY 平面上，绕 X 转 90° 才是箍在轴上的环 */}
+        <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[s.throatRadius * 1.08, s.throatRadius * 0.12, 10, 32]} />
           <Mat tone="hot" dimmed={dim("throat")} selected={selected === "throat"} clip={clip} />
         </mesh>
@@ -174,13 +175,13 @@ function ThrustChamber({
           />
         </mesh>
         {/* 出口加强环 */}
-        <mesh position={[0, -s.nozzleLength, 0]}>
+        <mesh position={[0, -s.nozzleLength, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[s.exitRadius, s.exitRadius * 0.02, 8, 48]} />
           <Mat tone="steel" dimmed={dim("nozzle")} selected={selected === "nozzle"} clip={clip} />
         </mesh>
         {/* 可展开 / 辐射冷却延伸段：用一圈颜色不同的环带标出 */}
         {extLen > 0 ? (
-          <mesh position={[0, -(s.nozzleLength - extLen), 0]}>
+          <mesh position={[0, -(s.nozzleLength - extLen), 0]} rotation={[Math.PI / 2, 0, 0]}>
             <torusGeometry args={[s.exitRadius * 0.62, s.exitRadius * 0.015, 8, 48]} />
             <Mat tone="dark" dimmed={dim("nozzle")} selected={selected === "nozzle"} clip={clip} />
           </mesh>
@@ -446,7 +447,7 @@ export function EngineModel({
       {/* ── 膨胀循环回流总管 ─────────────────── */}
       {s.hasExpanderManifold ? (
         <Part id="cooling" selected={selected} onSelect={onSelect} onHover={onHover}>
-          <mesh position={[0, topY * 0.05, 0]}>
+          <mesh position={[0, topY * 0.05, 0]} rotation={[Math.PI / 2, 0, 0]}>
             <torusGeometry args={[s.chamberRadius * 1.25, s.chamberRadius * 0.11, 10, 32]} />
             <Mat tone="steel" dimmed={dim("cooling")} selected={selected === "cooling"} clip={clip} />
           </mesh>
@@ -469,7 +470,7 @@ export function EngineModel({
       {s.hasGimbal ? (
         <>
           <Part id="gimbal" selected={selected} onSelect={onSelect} onHover={onHover}>
-            <mesh position={[0, topY + R * 2.45, 0]}>
+            <mesh position={[0, topY + R * 2.45, 0]} rotation={[Math.PI / 2, 0, 0]}>
               <torusGeometry args={[R * 0.55, R * 0.13, 10, 28]} />
               <Mat tone="dark" dimmed={dim("gimbal")} selected={selected === "gimbal"} clip={clip} />
             </mesh>
