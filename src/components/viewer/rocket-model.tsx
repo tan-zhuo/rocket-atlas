@@ -29,7 +29,13 @@ function ogivePoints(radius: number, height: number, n = 14) {
   return pts;
 }
 
-/** 尾翼/襟翼的后掠三角剖面 */
+/**
+ * 尾翼 / 襟翼的后掠三角剖面。
+ *
+ * 剖面画在 XY 平面上：**x 为展向（沿半径向外）、y 为沿箭体轴向上**，
+ * 挤出方向 Z 即翼面厚度。因此这个 shape 不需要再旋转——
+ * 之前多加了一个绕 X 轴 90° 的旋转，正好把翼面放倒成了水平。
+ */
 function finShape(len: number, height: number, sweep = 0.55) {
   const s = new THREE.Shape();
   s.moveTo(0, 0);
@@ -208,25 +214,28 @@ function PartMesh({
       );
     }
 
-    case "fins":
+    case "fins": {
+      // 挤出是单向的（0 → depth），把它平移半个厚度让翼面对称落在安装面上
+      const thickness = Math.max(r * 0.1, 0.08);
       return (
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <extrudeGeometry
-            args={[finShape(r, h), { depth: Math.max(r * 0.1, 0.08), bevelEnabled: false }]}
-          />
+        <mesh position={[0, 0, -thickness / 2]}>
+          <extrudeGeometry args={[finShape(r, h), { depth: thickness, bevelEnabled: false }]} />
           {mat}
         </mesh>
       );
+    }
 
-    case "flap":
+    case "flap": {
+      const thickness = Math.max(r * 0.08, 0.1);
       return (
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <mesh position={[0, 0, -thickness / 2]}>
           <extrudeGeometry
-            args={[finShape(r, h, 0.9), { depth: Math.max(r * 0.08, 0.1), bevelEnabled: false }]}
+            args={[finShape(r, h, 0.9), { depth: thickness, bevelEnabled: false }]}
           />
           {mat}
         </mesh>
       );
+    }
 
     case "gridfins":
       return (
