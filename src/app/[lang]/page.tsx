@@ -91,10 +91,10 @@ export default async function Home() {
             </div>
 
             <dl className="mt-12 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-4">
-              <HeroStat label={t.common.models} value={num(stats.rockets)} />
-              <HeroStat label={t.spec.country} value={num(stats.countries)} />
-              <HeroStat label={t.common.yearRange} value={`${stats.span.from}–${stats.span.to}`} />
-              <HeroStat label={t.common.citations} value={num(stats.sources)} />
+              <HeroStat label={t.home.statModels} value={num(stats.rockets)} />
+              <HeroStat label={t.home.statCountries} value={num(stats.countries)} />
+              <HeroStat label={t.home.statYears} value={`${stats.span.from}–${stats.span.to}`} />
+              <HeroStat label={t.home.statSources} value={num(stats.sources)} />
             </dl>
             </div>
 

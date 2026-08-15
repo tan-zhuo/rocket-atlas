@@ -108,6 +108,10 @@ export interface Dict {
     ctaCompare: string;
     ctaPrinciples: string;
     dragToRotate: string;
+    statModels: string;
+    statCountries: string;
+    statYears: string;
+    statSources: string;
     scaleEyebrow: string;
     scaleTitle: string;
     scaleDesc: string;
@@ -429,6 +433,10 @@ const zh: Dict = {
     ctaCompare: "并排对比",
     ctaPrinciples: "从火箭方程读起",
     dragToRotate: "拖动可旋转",
+    statModels: "收录型号",
+    statCountries: "国家 / 地区",
+    statYears: "覆盖年代",
+    statSources: "来源引用",
     scaleEyebrow: "同一刻度",
     scaleTitle: "它们真实的大小差距",
     scaleDesc: "所有剪影使用同一份参数化几何、同一个 y 轴刻度绘制——与 3D 查看器完全一致的数据源。",
@@ -778,6 +786,10 @@ const en: Dict = {
     ctaCompare: "Compare side by side",
     ctaPrinciples: "Start with the rocket equation",
     dragToRotate: "Drag to rotate",
+    statModels: "Vehicles",
+    statCountries: "Countries / regions",
+    statYears: "Years covered",
+    statSources: "Cited sources",
     scaleEyebrow: "Same scale",
     scaleTitle: "How big the difference really is",
     scaleDesc:
