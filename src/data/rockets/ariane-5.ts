@@ -1,5 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -7,10 +7,10 @@ const g = rocketGeometry()
     name: "EAP 固体助推器喷管（2 台）",
     group: "booster",
     shape: "engines",
+    finish: "engine-metal",
     height: 3.0,
     radius: 1.525,
     cluster: { count: 2, offset: 4.25, phase: 90 },
-    color: METAL_DARK,
     nozzles: { count: 1, bellRadius: 1.2, bellHeight: 2.8 },
     description:
       "每台 EAP 只有一个大喷管，由液压作动器摆动做推力矢量控制。固体助推器的喷管必须承受 130 s 的连续烧蚀，采用碳酚醛烧蚀材料——它在工作中被有控制地消耗掉，这与液体发动机的再生冷却是完全不同的热防护哲学。",
@@ -21,10 +21,10 @@ const g = rocketGeometry()
     nameEn: "Étage d'Accélération à Poudre",
     group: "booster",
     shape: "cylinder",
+    finish: "solid-booster",
     height: 28,
     radius: 1.525,
     cluster: { count: 2, offset: 4.25, phase: 90 },
-    color: GROUP_COLOR.booster,
     description:
       "每枚装 240 t 的 HTPB 复合固体推进剂，海平面推力 7,080 kN——两枚合计提供起飞推力的 90% 以上。药柱分三段浇筑后在发射场对接，星形通道截面使推力在前 30 s 保持高位、随后自然下降，从而把最大动压时的过载压下来。**固体推进剂的推力曲线是浇筑时用几何形状「写死」的，飞行中无法更改。**",
   })
@@ -33,10 +33,10 @@ const g = rocketGeometry()
     name: "EAP 头锥",
     group: "booster",
     shape: "cone",
+    finish: "painted-white",
     height: 3.6,
     radius: 1.525,
     cluster: { count: 2, offset: 4.25, phase: 90 },
-    color: "#6c7688",
     description: "助推器头锥，内含分离火箭。EAP 在 T+130 s 分离后落入大西洋，早期曾试验过海上回收但未投入常态化使用。",
   })
   .at(0, {
@@ -44,9 +44,9 @@ const g = rocketGeometry()
     name: "Vulcain 2 发动机",
     group: "core",
     shape: "engines",
+    finish: "engine-metal",
     height: 3.4,
     radius: 2.7,
-    color: METAL_DARK,
     nozzles: { count: 1, bellRadius: 1.15, bellHeight: 3.0 },
     description:
       "单台氢氧发动机，真空推力 1,390 kN、真空比冲 431 s，从地面点火一直工作到 T+540 s。它在起飞时只贡献约 8% 的推力——Ariane 5 的芯级本质上是一个「从地面开始工作的二级」。喷管下部采用燃气发生器排气膜冷却，是 Vulcain 2 相对 Vulcain 1 的主要改进。",
@@ -57,9 +57,9 @@ const g = rocketGeometry()
     nameEn: "Étage Principal Cryotechnique",
     group: "core",
     shape: "cylinder",
+    finish: "insulation-foam",
     height: 27.1,
     radius: 2.7,
-    color: GROUP_COLOR["stage-1"],
     description:
       "5.4 m 直径的液氢/液氧芯级，装 175 t 推进剂。液氧箱在上、液氢箱在下，中间用一个共底隔开——液氢箱体积是液氧箱的三倍多，这就是氢的密度代价在结构上的直观体现。箭体外的橙色是喷涂的聚氨酯泡沫绝热层，不涂漆是为了省下几百公斤。",
   })
@@ -69,9 +69,9 @@ const g = rocketGeometry()
     nameEn: "Étage Supérieur Cryotechnique",
     group: "stage-2",
     shape: "cylinder",
+    finish: "painted-white",
     height: 5.5,
     radius: 2.7,
-    color: GROUP_COLOR["stage-2"],
     description:
       "装一台 HM7B 氢氧发动机（推力 67 kN、真空比冲 446 s），源自 Ariane 4 的成熟上面级。它**不可重启**——只能一次点火直接送入 GTO，这限制了 Ariane 5 执行需要多次点火的任务（如直接 GEO 注入或复杂星座部署）。上方的设备舱（VEB）内是制导计算机与双星发射所需的 SYLDA 结构支撑。",
   })
@@ -80,9 +80,9 @@ const g = rocketGeometry()
     name: "整流罩（含 SYLDA 双星结构）",
     group: "payload",
     shape: "ogive",
+    finish: "painted-white",
     height: 17,
     radius: 2.7,
-    color: "#eef1f6",
     description:
       "5.4 m 直径、最长 17 m 的整流罩，内部可装一个 SYLDA 承力筒：下层放一颗卫星、上层放另一颗，**一次发射同时送两颗商业通信卫星入 GTO**。这个「双星发射」能力是 Ariane 5 商业模式的核心——它把一枚大火箭的成本摊给两个客户，从而在单星运力过剩的情况下仍具价格竞争力。",
   });

@@ -1,7 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
-
-const STEEL = "#b9c2cf";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -10,9 +8,9 @@ const g = rocketGeometry()
     nameEn: "Super Heavy engine section",
     group: "stage-1",
     shape: "engines",
+    finish: "engine-metal",
     height: 3.6,
     radius: 4.5,
-    color: METAL_DARK,
     nozzles: { count: 33, bellRadius: 0.65, bellHeight: 1.9, ringRadius: 3.4 },
     description:
       "内圈 3 台 + 中圈 10 台 + 外圈 20 台。只有内圈 13 台可摆动做推力矢量控制，外圈 20 台固定安装——固定发动机省掉了液压/电动作动器和柔性管路，是把发动机数量堆到 33 台后必须做的减法。着陆时只点内圈 3 台。",
@@ -23,9 +21,9 @@ const g = rocketGeometry()
     nameEn: "Super Heavy booster",
     group: "stage-1",
     shape: "cylinder",
+    finish: "stainless",
     height: 64.4,
     radius: 4.5,
-    color: STEEL,
     description:
       "9 m 直径的 304L / 30X 不锈钢贮箱，由 4 mm 厚钢卷焊接成环再堆叠。选不锈钢而非铝锂或碳纤维，是本世纪运载火箭最反直觉的材料决策之一（见下方设计逻辑）。液氧箱在下、甲烷箱在上，共用一个共底。",
   })
@@ -34,10 +32,10 @@ const g = rocketGeometry()
     name: "栅格舵（4 片）",
     group: "stage-1",
     shape: "gridfins",
+    finish: "bare-metal",
     height: 4.5,
     radius: 2.2,
     cluster: { count: 4, offset: 4.5 },
-    color: "#6d7688",
     description:
       "不可收拢的固定式钛栅格舵，只能绕自身轴转动。Falcon 9 的栅格舵会在上升段收拢贴紧箭体以减阻，Super Heavy 直接省掉了收放机构——因为它的回收弹道更短、气动损失可以接受，而少一套机构就少一个失效模式。",
   })
@@ -47,9 +45,9 @@ const g = rocketGeometry()
     nameEn: "Hot-stage ring",
     group: "stage-1",
     shape: "cylinder",
+    finish: "engine-metal",
     height: 2.3,
     radius: 4.5,
-    color: "#5d6474",
     description:
       "带排气孔的开放式钢环。飞船的 3 台海平面 Raptor **在两级尚未分离时就点火**，燃气从环上的开孔排出。热分离避免了大直径箭体在分离间隙里失去推力控制的风险，代价是多出约 9 t 的结构质量——第 5 次飞行后改为在分离后抛弃这个环以回收部分性能。",
   })
@@ -58,9 +56,9 @@ const g = rocketGeometry()
     name: "飞船发动机（3+3）",
     group: "stage-2",
     shape: "engines",
+    finish: "engine-metal",
     height: 3.6,
     radius: 4.5,
-    color: METAL_DARK,
     nozzles: { count: 6, bellRadius: 1.1, bellHeight: 2.4, ringRadius: 2.2 },
     description:
       "3 台海平面 Raptor（负责着陆与大气内机动）+ 3 台大扩张比真空版 RVac（真空比冲约 380 s，只在轨道段工作）。同一台发动机的两种喷管版本共用涡轮泵与预燃室，是「一种发动机打天下」策略的延伸。",
@@ -71,9 +69,10 @@ const g = rocketGeometry()
     nameEn: "Starship upper stage",
     group: "stage-2",
     shape: "cylinder",
+    finish: "stainless",
+    livery: { kind: "tiles", color: "#23262d" },
     height: 36.7,
     radius: 4.5,
-    color: GROUP_COLOR["stage-2"],
     description:
       "既是上面级、也是飞船、还是着陆器。迎风面贴有约 18,000 块六边形陶瓷隔热瓦，机械固定在钢壳的销钉上。不锈钢在 800 °C 仍保有约一半室温强度，这让隔热系统可以做得比铝结构薄——这是选钢的直接回报之一。",
   })
@@ -82,10 +81,10 @@ const g = rocketGeometry()
     name: "后襟翼（2 片）",
     group: "stage-2",
     shape: "flap",
+    finish: "stainless",
     height: 9,
     radius: 4.2,
     cluster: { count: 2, offset: 4.5, phase: 90 },
-    color: "#98a1b1",
     description:
       "飞船以「腹部朝下」的水平姿态再入，靠 4 片襟翼像跳伞者一样调整姿态与升阻比，落到约 100 m 高度再做「翻身（flip）」竖直点火着陆。后襟翼在 V2 版本中被移到更靠背风的位置，因为原位置的铰链缝隙在再入时被等离子体烧穿过。",
   })
@@ -94,10 +93,10 @@ const g = rocketGeometry()
     name: "前襟翼（2 片）",
     group: "stage-2",
     shape: "flap",
+    finish: "stainless",
     height: 6.5,
     radius: 3.2,
     cluster: { count: 2, offset: 4.3, phase: 90 },
-    color: "#98a1b1",
     description: "位于头锥根部的一对前襟翼，与后襟翼配合控制再入姿态的俯仰与滚转。",
   })
   .at(107, {
@@ -105,9 +104,10 @@ const g = rocketGeometry()
     name: "头锥 / 载荷舱",
     group: "payload",
     shape: "ogive",
+    finish: "stainless",
+    livery: { kind: "tiles", color: "#23262d" },
     height: 14,
     radius: 4.5,
-    color: "#dfe5ee",
     description:
       "载荷从侧面的「投币口（PEZ dispenser）」舱门释放，而不是抛整流罩——因为整流罩要跟着飞船回来。这个选择限制了单个载荷的尺寸包络，但省掉了每次发射抛弃一套整流罩的成本。",
   });

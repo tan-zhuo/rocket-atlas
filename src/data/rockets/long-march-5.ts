@@ -1,5 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -8,10 +8,10 @@ const g = rocketGeometry()
     nameEn: "K3 boosters",
     group: "booster",
     shape: "cylinder",
+    finish: "painted-white",
     height: 23.4,
     radius: 1.675,
     cluster: { count: 4, offset: 4.2, phase: 45 },
-    color: GROUP_COLOR.booster,
     description:
       "四枚 3.35 m 直径的煤油/液氧助推器，每枚装 2 台 YF-100。整枚火箭 1,060 t 起飞推力里有 960 t 来自助推器——芯级的两台氢氧机在海平面只贡献约 10%。这是「氢氧芯级 + 煤油助推」构型的典型特征：起飞推力靠助推器解决，芯级负责高比冲的持续加速。",
   })
@@ -20,10 +20,10 @@ const g = rocketGeometry()
     name: "YF-100 发动机（8 台）",
     group: "booster",
     shape: "engines",
+    finish: "engine-metal",
     height: 3.2,
     radius: 1.675,
     cluster: { count: 4, offset: 4.2, phase: 45 },
-    color: METAL_DARK,
     nozzles: { count: 2, bellRadius: 0.75, bellHeight: 2.2, ringRadius: 0.8 },
     description:
       "YF-100 是中国第一款富氧分级燃烧循环发动机，单台海平面推力 1,200 kN，室压 18 MPa。它的技术源头是引进消化的 RD-120 燃气发生器技术路线，2012 年定型后成为长征五号、六号、七号、八号乃至商业火箭的共用主力机型——一款发动机撑起了整个新一代长征系列。",
@@ -33,10 +33,10 @@ const g = rocketGeometry()
     name: "助推器头锥",
     group: "booster",
     shape: "cone",
+    finish: "painted-white",
     height: 4.2,
     radius: 1.675,
     cluster: { count: 4, offset: 4.2, phase: 45 },
-    color: "#6c7688",
     description:
       "斜切头锥。助推器与芯级采用「捆绑传力」结构：主传力点在助推器头部（前捆绑点），推力通过头锥根部的球窝接头传给芯级——这样芯级的推力结构只需在一个环面上加强。",
   })
@@ -45,9 +45,9 @@ const g = rocketGeometry()
     name: "YF-77 发动机（2 台）",
     group: "core",
     shape: "engines",
+    finish: "engine-metal",
     height: 3.5,
     radius: 2.5,
-    color: METAL_DARK,
     nozzles: { count: 2, bellRadius: 1.05, bellHeight: 2.6, ringRadius: 1.2 },
     description:
       "中国唯一的大推力氢氧发动机，燃气发生器循环，单台真空推力 700 kN、真空比冲 430 s。它同时也是长征五号研制中最难的一环：2017 年第二次飞行失败的直接原因就是 YF-77 涡轮泵的局部结构在高温高转速下失效，此后停飞近 908 天做设计更改。",
@@ -58,9 +58,10 @@ const g = rocketGeometry()
     nameEn: "Core stage",
     group: "core",
     shape: "cylinder",
+    finish: "painted-white",
+    livery: { kind: "text", text: "CZ-5", color: "#b4231d" },
     height: 31.2,
     radius: 2.5,
-    color: GROUP_COLOR["stage-1"],
     description:
       "5 m 直径的液氢/液氧芯级。5 m 是个关键数字——它超出了中国既有铁路隧道的运输极限，直接导致长征五号必须在天津新建总装厂、经海运送往文昌，也正是文昌发射场选址的原因之一。运输约束改变了发射场地理，这在世界航天史上并不多见。",
   })
@@ -70,9 +71,9 @@ const g = rocketGeometry()
     nameEn: "Second stage",
     group: "stage-2",
     shape: "cylinder",
+    finish: "painted-white",
     height: 10,
     radius: 2.5,
-    color: GROUP_COLOR["stage-2"],
     description:
       "装 2 台可摆动的 YF-75D 膨胀循环氢氧发动机，真空比冲 442 s，可两次启动。膨胀循环没有燃气发生器，靠液氢在推力室夹套中受热汽化驱动涡轮——结构最简单、可靠性最高，但推力受换热面积限制，只适合上面级。",
   })
@@ -81,9 +82,9 @@ const g = rocketGeometry()
     name: "有效载荷整流罩",
     group: "payload",
     shape: "ogive",
+    finish: "painted-white",
     height: 12.27,
     radius: 2.6,
-    color: "#eef1f6",
     description:
       "5.2 m 直径、12.267 m 长的冯·卡门曲线整流罩。CZ-5B 构型使用 20.5 m 的加长整流罩以容纳天宫空间站的舱段——这是全球现役最大的整流罩之一。",
   });

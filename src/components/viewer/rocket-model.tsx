@@ -4,7 +4,8 @@ import * as React from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import type { RocketGeometry, RocketPart } from "@/data/types";
-import { GROUP_COLOR, explodeOffset } from "@/data/geometry";
+import { explodeOffset, partFinish } from "@/data/geometry";
+import { surfaceTexture } from "./materials";
 
 /**
  * 参数化几何 → three.js 网格。
@@ -39,41 +40,52 @@ function finShape(len: number, height: number, sweep = 0.55) {
   return s;
 }
 
-/** 部件材质：颜色/高亮/淡出全部由 props 派生，交给 R3F 自己 diff。 */
+/**
+ * 部件材质。
+ *
+ * 基色与 PBR 参数来自 finish 表（白漆 / 裸铝 / 不锈钢 / 泡沫绝热层 / 隔热瓦 …），
+ * 表面细节与涂装标识来自程序化贴图。高亮与淡出由 props 派生，交给 R3F 自己 diff。
+ */
 function Mat({
-  color,
+  part,
   selected,
   dimmed,
 }: {
-  color: string;
+  part: RocketPart;
   selected: boolean;
   dimmed: boolean;
 }) {
+  const spec = partFinish(part);
+  const map = React.useMemo(() => surfaceTexture(part), [part]);
+
   return (
-    <meshStandardMaterial
-      color={color}
-      metalness={0.55}
-      roughness={0.42}
-      emissive={color}
-      emissiveIntensity={selected ? 0.34 : 0.1}
+    <meshPhysicalMaterial
+      map={map ?? undefined}
+      color={map ? "#ffffff" : spec.color}
+      metalness={spec.metalness}
+      roughness={spec.roughness}
+      clearcoat={spec.clearcoat ?? 0}
+      clearcoatRoughness={0.28}
+      envMapIntensity={1.15}
+      emissive="#ff7a2f"
+      emissiveIntensity={selected ? 0.22 : 0}
       transparent={dimmed}
-      opacity={dimmed ? 0.26 : 1}
+      opacity={dimmed ? 0.22 : 1}
+      depthWrite={!dimmed}
     />
   );
 }
 
 function PartMesh({
   part,
-  color,
   selected,
   dimmed,
 }: {
   part: RocketPart;
-  color: string;
   selected: boolean;
   dimmed: boolean;
 }) {
-  const mat = <Mat color={color} selected={selected} dimmed={dimmed} />;
+  const mat = <Mat part={part} selected={selected} dimmed={dimmed} />;
 
   const h = part.height;
   const r = part.radius;
@@ -124,8 +136,13 @@ function PartMesh({
       const n = part.nozzles;
       const count = n?.count ?? 1;
       const bell = n?.bellRadius ?? r * 0.35;
-      const bh = Math.min(n?.bellHeight ?? h, h);
       const ring = n?.ringRadius ?? 0;
+
+      // 部件高度分成两段：上面是推力结构/发动机裙，下面挂喷管。
+      // 数据里的 bellHeight 是喷管本身的长度，裙段至少占 25% 以保证「立得住」。
+      const skirtH = Math.max(h * 0.25, h - (n?.bellHeight ?? h));
+      const bh = Math.max(h - skirtH, h * 0.35);
+
       const positions: [number, number][] = [];
       if (count === 1 || ring === 0) {
         positions.push([0, 0]);
@@ -155,18 +172,37 @@ function PartMesh({
           }
         }
       }
+
+      // 喷管内壁要可见，所以单独用双面材质
+      const nozzleMat = React.cloneElement(mat, { side: THREE.DoubleSide });
+
       return (
         <group>
-          {/* 发动机安装底盘 */}
-          <mesh position={[0, h - bh / 2, 0]}>
-            <cylinderGeometry args={[r * 0.96, r * 0.9, Math.max(h - bh, 0.05), SEG, 1]} />
+          {/* 推力结构 / 发动机裙：撑在箭体与喷管之间 */}
+          <mesh position={[0, h - skirtH / 2, 0]}>
+            <cylinderGeometry args={[r, r * 0.93, skirtH, SEG, 1]} />
+            {mat}
+          </mesh>
+          {/* 底部承力环 */}
+          <mesh position={[0, h - skirtH + 0.02, 0]}>
+            <cylinderGeometry args={[r * 0.95, r * 0.95, Math.max(h * 0.04, 0.06), SEG, 1]} />
             {mat}
           </mesh>
           {positions.map(([px, pz], i) => (
-            <mesh key={i} position={[px, bh / 2, pz]}>
-              <cylinderGeometry args={[bell, bell * 0.34, bh, 20, 1, true]} />
-              {mat}
-            </mesh>
+            <group key={i} position={[px, 0, pz]}>
+              {/* 喷管：喉部在上、扩张段朝下（这一头才是喷口） */}
+              <mesh position={[0, bh / 2, 0]}>
+                <cylinderGeometry args={[bell * 0.3, bell, bh, 24, 1, true]} />
+                {nozzleMat}
+              </mesh>
+              {/* 涡轮泵与阀门集合体的示意块，塞在裙内 */}
+              <mesh position={[0, bh + Math.min(skirtH * 0.35, bell * 1.2) / 2, 0]}>
+                <cylinderGeometry
+                  args={[bell * 0.34, bell * 0.42, Math.min(skirtH * 0.7, bell * 1.6), 12, 1]}
+                />
+                {mat}
+              </mesh>
+            </group>
           ))}
         </group>
       );
@@ -257,7 +293,6 @@ function Part({
 
   const selected = selectedId === part.id;
   const dimmed = Boolean(selectedId) && !selected;
-  const color = part.color ?? GROUP_COLOR[part.group];
 
   useFrame((_, dt) => {
     const g = ref.current;
@@ -299,7 +334,7 @@ function Part({
             totalHeight={totalHeight}
             explode={explode}
           >
-            <PartMesh part={part} color={color} selected={selected} dimmed={dimmed} />
+            <PartMesh part={part} selected={selected} dimmed={dimmed} />
           </ClusterInstance>
         );
       })}

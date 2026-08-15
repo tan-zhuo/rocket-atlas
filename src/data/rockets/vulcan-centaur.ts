@@ -1,5 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -7,9 +7,9 @@ const g = rocketGeometry()
     name: "BE-4 发动机（2 台）",
     group: "stage-1",
     shape: "engines",
+    finish: "engine-metal",
     height: 4,
     radius: 2.7,
-    color: METAL_DARK,
     nozzles: { count: 2, bellRadius: 1.05, bellHeight: 3.1, ringRadius: 1.35 },
     description:
       "两台蓝色起源的 BE-4 甲烷发动机，海平面推力各 2,400 kN。ULA 选择向竞争对手采购发动机，是因为 2014 年后美国法律禁止军用发射使用俄制 RD-180，而当时国内可选的大推力发动机方案只有 BE-4 与 Aerojet 的 AR1——**一个纯粹由地缘政治催生的供应链决策。**",
@@ -19,10 +19,10 @@ const g = rocketGeometry()
     name: "GEM 63XL 固体助推器（最多 6 枚）",
     group: "booster",
     shape: "cylinder",
+    finish: "solid-booster",
     height: 20,
     radius: 0.8,
     cluster: { count: 6, offset: 3.5 },
-    color: GROUP_COLOR.booster,
     description:
       "碳纤维缠绕壳体的固体助推器，单枚推力 2,027 kN。**数量可按任务从 0 到 6 任意配置**——这是火神最核心的设计思想：不为每个运力档研制不同的火箭，而是用同一个芯级配不同数量的固体助推器，覆盖 LEO 10.8 t 到 27.2 t 的全谱系。固体助推器在这里扮演的是「可调节的推力模块」。",
   })
@@ -31,10 +31,10 @@ const g = rocketGeometry()
     name: "助推器头锥",
     group: "booster",
     shape: "cone",
+    finish: "painted-white",
     height: 2,
     radius: 0.8,
     cluster: { count: 6, offset: 3.5 },
-    color: "#6c7688",
     description: "固体助推器头锥。GEM 63XL 采用固定喷管（不摆动），姿态控制完全由芯级的两台 BE-4 承担。",
   })
   .at(4, {
@@ -42,9 +42,10 @@ const g = rocketGeometry()
     name: "芯一级",
     group: "stage-1",
     shape: "cylinder",
+    finish: "painted-white",
+    livery: { kind: "bands", bands: [{ from: 0.02, to: 0.07, color: "#b4231d" }] },
     height: 33.6,
     radius: 2.7,
-    color: GROUP_COLOR["stage-1"],
     description:
       "5.4 m 直径的甲烷/液氧芯级，采用摩擦搅拌焊接的铝合金正交网格壁板。ULA 曾规划过 **SMART 复用**方案：只把最贵的发动机舱段（约占一级成本的 65%）在再入时分离、用充气减速器与降落伞回收、直升机空中抓取——不回收整个箭体。该方案至今未实施。",
   })
@@ -54,9 +55,9 @@ const g = rocketGeometry()
     nameEn: "Centaur V",
     group: "stage-2",
     shape: "cylinder",
+    finish: "stainless",
     height: 11.5,
     radius: 2.7,
-    color: GROUP_COLOR["stage-2"],
     description:
       "两台 RL10C-1-1 氢氧发动机，真空比冲 453.8 s。Centaur 的血统可追溯到 1962 年——它是**人类第一款氢氧上面级**，六十多年间不断演进至今。Centaur V 采用不锈钢承压式贮箱：箱壁只有 0.5 mm 厚，靠内压维持形状，不加压时会自行坍塌，因此干质比极高。它可在轨工作数小时并多次重启，未来的 ACES 方案还计划实现数周级的在轨滞留。",
   })
@@ -65,9 +66,9 @@ const g = rocketGeometry()
     name: "整流罩",
     group: "payload",
     shape: "ogive",
+    finish: "painted-white",
     height: 12.5,
     radius: 2.7,
-    color: "#eef1f6",
     description: "5.4 m 直径整流罩，有 15.5 m 与 21.3 m 两种长度可选（本模型为短罩构型）。",
   });
 

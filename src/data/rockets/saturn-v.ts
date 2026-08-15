@@ -1,5 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -8,9 +8,9 @@ const g = rocketGeometry()
     nameEn: "F-1 engine cluster",
     group: "stage-1",
     shape: "engines",
+    finish: "engine-metal",
     height: 3.7,
     radius: 1.86,
-    color: METAL_DARK,
     nozzles: { count: 5, bellRadius: 1.86, bellHeight: 3.7, ringRadius: 3.6 },
     description:
       "五台 F-1 呈四角+中心布局，单台海平面推力 6,770 kN，至今仍是飞行过的最大推力单室液体发动机。四台外侧机可摆动做推力矢量控制，中心机固定并在 T+135 s 提前关机以把过载压在 4 g 以内。",
@@ -21,9 +21,10 @@ const g = rocketGeometry()
     nameEn: "S-IC first stage",
     group: "stage-1",
     shape: "cylinder",
+    finish: "painted-white",
+    livery: { kind: "roll-pattern", color: "#15171c" },
     height: 38.4,
     radius: 5.05,
-    color: GROUP_COLOR["stage-1"],
     description:
       "直径 10.1 m 的煤油/液氧一级，装 2,077 t 推进剂，工作 168 s 把飞行器送到 68 km、2.76 km/s。RP-1 贮箱在下、液氧箱在上，两箱之间用桁架式级间段隔开，液氧通过 5 根穿越煤油箱的输送管下行。",
   })
@@ -32,10 +33,10 @@ const g = rocketGeometry()
     name: "S-IC 尾翼",
     group: "stage-1",
     shape: "fins",
+    finish: "painted-black",
     height: 6.5,
     radius: 3.2,
     cluster: { count: 4, offset: 5.05 },
-    color: "#3f4654",
     description:
       "四片固定尾翼提供气动稳定裕度，使控制系统在跨声速段不必全靠摆动发动机维持姿态。翼面同时兼作发射台支撑与外侧发动机的气动整流。",
   })
@@ -46,9 +47,10 @@ const g = rocketGeometry()
     nameEn: "S-II second stage",
     group: "stage-2",
     shape: "cylinder",
+    finish: "painted-white",
+    livery: { kind: "roll-pattern", color: "#15171c" },
     height: 24.9,
     radius: 5.05,
-    color: GROUP_COLOR["stage-2"],
     description:
       "5 台 J-2 的液氢/液氧二级，是当年最难的一级：为了减重采用共底贮箱（液氢与液氧仅隔一层蜂窝夹层），干质比达到惊人的 1:20 以上。工作约 360 s，把速度推到 6.8 km/s。",
   })
@@ -57,10 +59,10 @@ const g = rocketGeometry()
     name: "S-II/S-IVB 级间段",
     group: "stage-2",
     shape: "frustum",
+    finish: "painted-white",
     height: 3.5,
     radius: 5.05,
     radiusTop: 3.3,
-    color: "#8a94a8",
     description:
       "从 10.1 m 收缩到 6.6 m 的锥形级间段。S-II 与 S-IVB 之间采用「热分离」：上面级发动机先点火，再由爆炸索切断连接，避免推进剂在失重下沉底不良。",
   })
@@ -70,9 +72,10 @@ const g = rocketGeometry()
     nameEn: "S-IVB third stage",
     group: "stage-3",
     shape: "cylinder",
+    finish: "painted-white",
+    livery: { kind: "bands", bands: [{ from: 0.0, to: 0.12, color: "#15171c" }, { from: 0.52, to: 0.6, color: "#15171c" }] },
     height: 17.8,
     radius: 3.3,
-    color: GROUP_COLOR["stage-3"],
     description:
       "单台 J-2 的氢氧三级，也是唯一需要在轨二次启动的一级：第一次点火完成入轨，滑行 2–3 圈后再次点火执行地月转移（TLI）。箭体外侧可见的辅助推进系统（APS）负责滑行段沉底与姿态控制。",
   })
@@ -82,9 +85,9 @@ const g = rocketGeometry()
     nameEn: "Instrument Unit",
     group: "stage-3",
     shape: "cylinder",
+    finish: "painted-black",
     height: 0.91,
     radius: 3.3,
-    color: "#5e6774",
     description:
       "整枚火箭的「大脑」：IBM 研制的环形舱段，内含 ST-124 惯性平台与 LVDC 数字计算机，独立于飞船完成从起飞到 TLI 的全程制导。把制导系统集中在一个可更换的环上，是 Saturn 系列可维护性设计的关键。",
   })
@@ -93,10 +96,10 @@ const g = rocketGeometry()
     name: "登月舱适配器 SLA",
     group: "payload",
     shape: "frustum",
+    finish: "painted-white",
     height: 7.0,
     radius: 3.3,
     radiusTop: 1.96,
-    color: "#d7dbe3",
     description:
       "锥形适配段内部装载登月舱（LM）。TLI 后四块面板向外抛开，指令/服务舱掉头与登月舱对接并将其抽出——这一「转位对接」动作正是月球轨道交会方案的直接产物。",
   })
@@ -105,9 +108,9 @@ const g = rocketGeometry()
     name: "服务舱 SM",
     group: "payload",
     shape: "cylinder",
+    finish: "bare-metal",
     height: 5.8,
     radius: 1.96,
-    color: "#c2c8d4",
     description:
       "装有 SPS 主发动机（推力 91 kN，自燃推进剂）、燃料电池与消耗品，负责月球轨道进入与返回点火。返回大气层前抛弃。",
   })
@@ -116,9 +119,9 @@ const g = rocketGeometry()
     name: "指令舱 CM",
     group: "payload",
     shape: "capsule",
+    finish: "bare-metal",
     height: 3.5,
     radius: 1.96,
-    color: "#eef1f6",
     description: "三名航天员的加压舱与再入舱，是全箭 3,000 t 中唯一返回地球的 5.5 t。",
   })
   .add({
@@ -126,9 +129,9 @@ const g = rocketGeometry()
     name: "逃逸塔 LES",
     group: "payload",
     shape: "tower",
+    finish: "painted-accent",
     height: 5.1,
     radius: 0.45,
-    color: "#b6483a",
     description:
       "固体逃逸发动机推力 667 kN，可在发射台或上升段把指令舱拽离故障火箭。正常飞行时于 S-II 点火后约 30 s 抛弃——此时逃逸已可由服务舱完成。",
   });

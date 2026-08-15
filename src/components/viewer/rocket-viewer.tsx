@@ -3,7 +3,13 @@
 import * as React from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, PerspectiveCamera, ContactShadows, Html } from "@react-three/drei";
+import {
+  OrbitControls,
+  PerspectiveCamera,
+  ContactShadows,
+  Environment,
+  Html,
+} from "@react-three/drei";
 import {
   Maximize2,
   Minimize2,
@@ -17,6 +23,7 @@ import {
 import type { RocketGeometry, RocketPart } from "@/data/types";
 import { GROUP_COLOR } from "@/data/geometry";
 import { RocketModel } from "./rocket-model";
+import { StudioEnvironment } from "./environment";
 import { Silhouette } from "@/components/rocket/silhouette";
 import { cn, meters } from "@/lib/utils";
 import { useHydrated, useMediaQuery } from "@/lib/client-hooks";
@@ -241,15 +248,17 @@ export function RocketViewer({
               radius={geo.maxRadius}
               explode={explode}
             />
-            <ambientLight intensity={0.55} />
-            <hemisphereLight args={["#cfe0ff", "#20242c", 0.7]} />
+            <Environment resolution={128} frames={1}>
+              <StudioEnvironment />
+            </Environment>
+            <ambientLight intensity={0.22} />
             <directionalLight
               position={[geo.totalHeight, geo.totalHeight * 1.4, geo.totalHeight * 0.8]}
-              intensity={2.1}
+              intensity={1.7}
             />
             <directionalLight
               position={[-geo.totalHeight, geo.totalHeight * 0.3, -geo.totalHeight * 0.6]}
-              intensity={0.7}
+              intensity={0.55}
               color="#8fb6ff"
             />
 

@@ -1,5 +1,5 @@
 import type { RocketGeometry, RocketPart } from "@/data/types";
-import { GROUP_COLOR } from "@/data/geometry";
+import { partFinish } from "@/data/geometry";
 import { cn } from "@/lib/utils";
 
 /**
@@ -13,8 +13,9 @@ import { cn } from "@/lib/utils";
 type Mode = "solid" | "outline";
 
 function partColor(p: RocketPart, mode: Mode) {
+  // 与 3D 查看器共用同一张表面处理表，两种呈现的配色因此始终一致
   if (mode === "outline") return "currentColor";
-  return p.color ?? GROUP_COLOR[p.group];
+  return partFinish(p).color;
 }
 
 /** 单个部件在侧视图中的路径元素（本地坐标：x 为半径方向，y 向上为正） */

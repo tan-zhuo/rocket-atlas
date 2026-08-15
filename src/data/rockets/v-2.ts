@@ -1,5 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, METAL_DARK } from "../geometry";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -8,9 +8,9 @@ const g = rocketGeometry()
     nameEn: "Thrust chamber",
     group: "stage-1",
     shape: "engines",
+    finish: "engine-metal",
     height: 1.7,
     radius: 0.6,
-    color: METAL_DARK,
     nozzles: { count: 1, bellRadius: 0.44, bellHeight: 1.5 },
     description:
       "245 kN 推力的单室发动机，用 18 个杯状喷注头把乙醇和液氧分区喷入——这是为了避开当时无法解决的燃烧不稳定问题：把一个大燃烧室拆成 18 个小的燃烧区，各自稳定后再汇合。喷管内壁用乙醇再生冷却，外加薄膜冷却。",
@@ -20,10 +20,10 @@ const g = rocketGeometry()
     name: "尾段",
     group: "stage-1",
     shape: "frustum",
+    finish: "painted-black",
     height: 2.4,
     radius: 0.95,
     radiusTop: 0.825,
-    color: "#7f8a9e",
     description:
       "尾段内装涡轮泵（由过氧化氢分解产生的蒸汽驱动）、过氧化氢罐与高锰酸钠催化剂罐。涡轮泵的功率来自一套独立的化学系统，而不是主推进剂——这是最早期的「单独气源」思路，比后来的燃气发生器循环更笨重但更容易分别调试。",
   })
@@ -32,10 +32,10 @@ const g = rocketGeometry()
     name: "尾翼与燃气舵（4 片）",
     group: "stage-1",
     shape: "fins",
+    finish: "painted-black",
     height: 3.6,
     radius: 1.05,
     cluster: { count: 4, offset: 0.7 },
-    color: "#4d5462",
     description:
       "四片大尾翼提供气动稳定，翼根处装有**石墨燃气舵**——直接伸进发动机尾焰中偏转燃气，从而在低速、稀薄大气中也能控制姿态。这是人类第一次实用化的推力矢量控制，代价是石墨舵在飞行中被高温燃气不断烧蚀，损失约 17% 的推力。",
   })
@@ -44,9 +44,9 @@ const g = rocketGeometry()
     name: "推进剂贮箱段",
     group: "stage-1",
     shape: "cylinder",
+    finish: "painted-white",
     height: 6.6,
     radius: 0.825,
-    color: "#a4aebf",
     description:
       "上方是乙醇箱、下方是液氧箱，两个铝制贮箱**悬挂在箭体蒙皮内部**而不是自身承力。这种「贮箱内挂」结构比后来的承力贮箱重得多，但制造与检修简单——V-2 是在战时用非熟练劳动力大批量生产的，可制造性优先于结构效率。",
   })
@@ -55,9 +55,9 @@ const g = rocketGeometry()
     name: "仪器舱",
     group: "stage-1",
     shape: "cylinder",
+    finish: "painted-white",
     height: 1.2,
     radius: 0.825,
-    color: "#5e6774",
     description:
       "内装两个陀螺仪（一个测俯仰/偏航，一个测滚转）与积分加速度计。制导逻辑极其朴素：保持姿态、按预定程序转弯、当累计速度达到设定值时切断发动机——没有位置反馈、没有闭环导航。命中精度因此只有约 17 km（CEP），作为武器几乎没有军事价值。",
   })
@@ -66,9 +66,10 @@ const g = rocketGeometry()
     name: "战斗部 / 头锥",
     group: "payload",
     shape: "ogive",
+    finish: "painted-white",
+    livery: { kind: "checker", color: "#15171c" },
     height: 3.8,
     radius: 0.825,
-    color: "#d8dde6",
     description:
       "1,000 kg 阿马图炸药战斗部。头部不可分离，整枚火箭以超过 5 马赫的速度撞击目标——这也意味着 V-2 没有再入热防护的概念，箭体只需要在撞击前撑住几十秒。",
   });

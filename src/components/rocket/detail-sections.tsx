@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { ExternalLink, Flame, ShieldCheck, TriangleAlert } from "lucide-react";
-import type { Rocket, Source, Stage } from "@/data/types";
+import { Check, ExternalLink, Flame, Minus, ShieldCheck, TriangleAlert } from "lucide-react";
+import type { Engine, Rocket, Source, Stage } from "@/data/types";
 import { Card, CardBody, CardHeader, CardTitle, SpecRow } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Markdown } from "@/components/md/markdown";
 import { PROPELLANT_META } from "@/lib/filters";
+import { CYCLE_EXPLAIN, PROPELLANT_TRADEOFF, getEngineDetail } from "@/data/engines";
 import { dateZh, force, mass, meters, num } from "@/lib/utils";
 
 /* ── 概览 ─────────────────────────────────────────────── */
@@ -119,6 +120,216 @@ const PRINCIPLE_TITLES: Record<string, string> = {
   "structures-and-materials": "结构与材料",
   "guidance-and-control": "制导、导航与控制概览",
 };
+
+/* ── 动力系统 ─────────────────────────────────────────── */
+
+/**
+ * 发动机是整枚火箭里信息密度最高的部件：烧什么、怎么把推进剂送进燃烧室、
+ * 涡轮的废气去了哪里——这三个问题基本决定了一枚火箭能做什么、不能做什么。
+ * 所以这里不只列参数，而是逐台讲清楚「换来了什么 / 代价是什么」。
+ */
+export function PropulsionTab({ r }: { r: Rocket }) {
+  // 同名发动机（如一级与助推器共用）只讲一次，但记下它出现在哪些级上
+  const seen = new Map<string, { engine: Engine; stages: string[] }>();
+  for (const st of r.stages) {
+    for (const e of st.engines) {
+      const cur = seen.get(e.name);
+      if (cur) cur.stages.push(st.nameZh);
+      else seen.set(e.name, { engine: e, stages: [st.nameZh] });
+    }
+  }
+  const entries = [...seen.values()];
+  const propellants = Array.from(new Set(r.stages.map((s) => s.propellant)));
+
+  return (
+    <div className="space-y-8">
+      {/* 推进剂总览 */}
+      <section>
+        <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
+          这枚火箭烧什么
+        </h3>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {propellants.map((p) => {
+            const meta = PROPELLANT_META[p];
+            const stages = r.stages.filter((s) => s.propellant === p);
+            return (
+              <div key={p} className="rounded-xl border border-border-base bg-panel p-4">
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className="size-3 rounded-full"
+                    style={{ background: meta.color }}
+                    aria-hidden
+                  />
+                  <p className="text-[14px] font-semibold text-fg">{meta.label}</p>
+                </div>
+                <p className="mt-1 text-[11px] text-fg-subtle">
+                  用于：{stages.map((s) => s.nameZh).join("、")}
+                </p>
+                <p className="mt-2.5 text-[13px] leading-relaxed text-fg-muted">
+                  {PROPELLANT_TRADEOFF[p]}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 逐台发动机 */}
+      <section>
+        <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
+          发动机 · {entries.length} 型
+        </h3>
+        <div className="mt-4 space-y-4">
+          {entries.map(({ engine, stages }) => (
+            <EngineCard key={engine.name} e={engine} stages={stages} />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function EngineCard({ e, stages }: { e: Engine; stages: string[] }) {
+  const d = getEngineDetail(e.name);
+  const pros = e.pros ?? d?.pros ?? [];
+  const cons = e.cons ?? d?.cons ?? [];
+  const meta = PROPELLANT_META[e.propellant];
+
+  return (
+    <article className="overflow-hidden rounded-xl border border-border-base bg-panel">
+      <header className="flex flex-wrap items-start justify-between gap-3 border-b border-border-base px-5 py-4">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h4 className="text-[16px] font-semibold text-fg">{e.name}</h4>
+            <Badge tone="neutral">×{e.count}</Badge>
+            {d?.since ? <Badge tone="neutral">{d.since} 年首飞</Badge> : null}
+          </div>
+          <p className="mt-1 text-[12px] text-fg-subtle">
+            {stages.join(" / ")}
+            {d?.maker ? ` · ${d.maker}` : ""}
+          </p>
+        </div>
+        <span
+          className="flex items-center gap-1.5 rounded-md border border-border-base px-2 py-1 text-[11px] text-fg-muted"
+          title={CYCLE_EXPLAIN[e.cycle]}
+        >
+          <span
+            className="size-1.5 rounded-full"
+            style={{ background: meta.color }}
+            aria-hidden
+          />
+          {e.cycleZh}
+        </span>
+      </header>
+
+      <div className="grid gap-6 px-5 py-4 md:grid-cols-[minmax(0,260px)_minmax(0,1fr)]">
+        {/* 燃料与参数 */}
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
+            推进剂
+          </p>
+          <div className="mt-2.5 space-y-2">
+            <FuelRow label="燃料" value={d?.fuel ?? e.propellantZh ?? meta.label} />
+            <FuelRow label="氧化剂" value={d?.oxidizer ?? "—"} />
+            {d?.mixtureRatio ? <FuelRow label="混合比" value={d.mixtureRatio} /> : null}
+          </div>
+
+          <dl className="mt-4 border-t border-border-base pt-1">
+            <SpecRow label="单台推力" value={force(e.thrust)} />
+            {e.thrustSeaLevel ? (
+              <SpecRow label="海平面推力" value={force(e.thrustSeaLevel)} />
+            ) : null}
+            {e.thrustVacuum ? <SpecRow label="真空推力" value={force(e.thrustVacuum)} /> : null}
+            {e.ispSeaLevel ? <SpecRow label="海平面比冲" value={`${e.ispSeaLevel} s`} /> : null}
+            {e.ispVacuum ? <SpecRow label="真空比冲" value={`${e.ispVacuum} s`} /> : null}
+            {d?.chamberPressure ? (
+              <SpecRow
+                label="燃烧室压力"
+                value={`${d.chamberPressure} bar`}
+                sub="衡量循环先进程度"
+              />
+            ) : null}
+          </dl>
+        </div>
+
+        {/* 优缺点 */}
+        <div className="min-w-0">
+          {d?.summary ? (
+            <p className="text-[13px] leading-relaxed text-fg">{d.summary}</p>
+          ) : e.note ? (
+            <p className="text-[13px] leading-relaxed text-fg">{e.note}</p>
+          ) : null}
+
+          <div className="mt-4 rounded-lg border border-border-base bg-bg-sunken px-3.5 py-3">
+            <p className="text-[11px] text-fg-subtle">{e.cycleZh}</p>
+            <p className="mt-1 text-[12px] leading-relaxed text-fg-muted">
+              {CYCLE_EXPLAIN[e.cycle]}
+            </p>
+          </div>
+
+          {pros.length ? (
+            <div className="mt-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--ok)]">
+                换来了什么
+              </p>
+              <ul className="mt-2 space-y-1.5">
+                {pros.map((x) => (
+                  <li key={x} className="flex gap-2 text-[13px] leading-relaxed text-fg-muted">
+                    <Check className="mt-1 size-3 shrink-0 text-[var(--ok)]" />
+                    <MdInline text={x} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {cons.length ? (
+            <div className="mt-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--warn)]">
+                代价是什么
+              </p>
+              <ul className="mt-2 space-y-1.5">
+                {cons.map((x) => (
+                  <li key={x} className="flex gap-2 text-[13px] leading-relaxed text-fg-muted">
+                    <Minus className="mt-1 size-3 shrink-0 text-[var(--warn)]" />
+                    <MdInline text={x} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function FuelRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline gap-3">
+      <span className="w-12 shrink-0 text-[11px] text-fg-subtle">{label}</span>
+      <span className="text-[13px] text-fg">{value}</span>
+    </div>
+  );
+}
+
+/** 只处理 **加粗**，避免为几个词引入完整的 Markdown 渲染 */
+function MdInline({ text }: { text: string }) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return (
+    <span>
+      {parts.map((p, i) =>
+        p.startsWith("**") && p.endsWith("**") ? (
+          <strong key={i} className="font-semibold text-fg">
+            {p.slice(2, -2)}
+          </strong>
+        ) : (
+          <span key={i}>{p}</span>
+        ),
+      )}
+    </span>
+  );
+}
 
 /* ── 技术规格 ─────────────────────────────────────────── */
 

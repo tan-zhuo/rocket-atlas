@@ -1,5 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -8,11 +8,11 @@ const g = rocketGeometry()
     nameEn: "Strap-on boosters",
     group: "booster",
     shape: "frustum",
+    finish: "bare-metal",
     height: 19,
     radius: 1.53,
     radiusTop: 0.55,
     cluster: { count: 4, offset: 3.0, phase: 45 },
-    color: GROUP_COLOR.booster,
     description:
       "四枚锥形助推器，上粗下细的外形来自「包」式（пакет）构型的传力需求：助推器在**头部**与芯级相连并把推力顶上去，因此上端要粗壮、下端可以收细。锥形同时改善了整体气动外形。四枚助推器与芯级在地面同时点火。",
   })
@@ -21,10 +21,10 @@ const g = rocketGeometry()
     name: "RD-107 发动机（4 台 × 4 室）",
     group: "booster",
     shape: "engines",
+    finish: "engine-metal",
     height: 2.6,
     radius: 1.53,
     cluster: { count: 4, offset: 3.0, phase: 45 },
-    color: METAL_DARK,
     nozzles: { count: 4, bellRadius: 0.45, bellHeight: 1.5, ringRadius: 0.72 },
     description:
       "每枚助推器一台 RD-107，但一台 RD-107 有**四个燃烧室共用一套涡轮泵**，外加两个游动小喷管做姿态控制。这是格鲁什科对「大推力单室会燃烧不稳定」这个难题的解法：不做大燃烧室，做四个成熟的小燃烧室并联。整枚火箭因此有 20 个主燃烧室和 12 个游机喷管同时工作。",
@@ -34,9 +34,9 @@ const g = rocketGeometry()
     name: "RD-108 发动机（芯级）",
     group: "core",
     shape: "engines",
+    finish: "engine-metal",
     height: 2.9,
     radius: 1.475,
-    color: METAL_DARK,
     nozzles: { count: 4, bellRadius: 0.46, bellHeight: 1.6, ringRadius: 0.72 },
     description:
       "芯级发动机，与 RD-107 同源但配四个游机（助推器只有两个），因为助推器分离后芯级要独自承担三轴姿态控制。芯级从地面一直工作到约 300 s，是典型的「一级半」工作方式。",
@@ -47,9 +47,9 @@ const g = rocketGeometry()
     nameEn: "Core stage (Block A)",
     group: "core",
     shape: "cylinder",
+    finish: "bare-metal",
     height: 23.1,
     radius: 1.475,
-    color: GROUP_COLOR["stage-1"],
     description:
       "2.95 m 直径的煤油/液氧芯级。R-7 的贮箱采用承压式设计：箱体本身就是结构，靠内压维持刚度，这让干质量压得很低，但空箱在无内压时不能承受轴向载荷——地面操作必须始终保压。",
   })
@@ -58,9 +58,9 @@ const g = rocketGeometry()
     name: "头锥 / 卫星舱",
     group: "payload",
     shape: "cone",
+    finish: "painted-white",
     height: 3.167,
     radius: 1.475,
-    color: "#e2e6ee",
     description:
       "8K71PS 构型的锥形头部内装 83.6 kg 的「人造地球卫星一号」。为了赶在美国之前发射，原定的重型科学卫星（「物体 D」，1.3 t）被临时换成了这个只有两台无线电发射机和电池的简化球体——**世界航天史的开端是一次进度让位于目标的妥协。**",
   });

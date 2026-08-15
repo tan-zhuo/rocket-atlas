@@ -1,5 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -7,9 +7,9 @@ const g = rocketGeometry()
     name: "BE-4 发动机（7 台）",
     group: "stage-1",
     shape: "engines",
+    finish: "engine-metal",
     height: 5,
     radius: 3.5,
-    color: METAL_DARK,
     nozzles: { count: 7, bellRadius: 0.95, bellHeight: 2.9, ringRadius: 2.2 },
     description:
       "7 台富氧分级燃烧的甲烷发动机，单台海平面推力 2,400 kN。BE-4 同时也是 ULA 火神火箭的一级发动机——**一家公司的发动机同时供给自己和最大的竞争对手，这在运载火箭史上很少见**，原因是美国在 2014 年后急需一款不依赖俄制 RD-180 的大推力发动机，而符合条件的选项只有两个。",
@@ -19,10 +19,10 @@ const g = rocketGeometry()
     name: "着陆腿（6 条）",
     group: "stage-1",
     shape: "fins",
+    finish: "carbon",
     height: 6,
     radius: 1.6,
     cluster: { count: 6, offset: 3.5 },
-    color: "#2c313d",
     description:
       "六条着陆腿，比 Falcon 9 多两条。New Glenn 的一级着陆在**移动的海上平台**（而非固定的驳船锚位），设计上要容忍更大的甲板运动与倾斜，因此需要更宽的支撑基面和更强的缓冲行程。",
   })
@@ -31,9 +31,10 @@ const g = rocketGeometry()
     name: "一级箭体",
     group: "stage-1",
     shape: "cylinder",
+    finish: "painted-white",
+    livery: { kind: "text", text: "NEW GLENN", color: "#2b2f38" },
     height: 52.5,
     radius: 3.5,
-    color: GROUP_COLOR["stage-1"],
     description:
       "7 m 直径的铝合金贮箱——这个直径的选择摆脱了公路运输限制（工厂就建在卡纳维拉尔角旁边，箭体直接陆运几公里到发射台）。7 m 也是整流罩直径，全箭上下等径，避免了收缩段带来的结构与气动复杂度。设计目标是**同一枚一级复用 25 次**。",
   })
@@ -43,10 +44,10 @@ const g = rocketGeometry()
     name: "气动稳定翼（4 片）",
     group: "stage-1",
     shape: "fins",
+    finish: "painted-white",
     height: 6,
     radius: 2.0,
     cluster: { count: 4, offset: 3.5 },
-    color: "#4a4f5c",
     description:
       "一级上部的四片固定气动翼。它不是栅格舵——New Glenn 的再入控制主要靠这些固定翼提供的气动稳定性配合发动机摆动，而不是可动舵面。少一套作动机构，就少一处需要在再入热环境中工作的活动部件。",
   })
@@ -55,9 +56,9 @@ const g = rocketGeometry()
     name: "级间段",
     group: "stage-1",
     shape: "cylinder",
+    finish: "carbon",
     height: 2,
     radius: 3.5,
-    color: "#20242e",
     description: "级间段，分离后留在一级上一同返回。",
   })
   .at(59.5, {
@@ -65,9 +66,9 @@ const g = rocketGeometry()
     name: "二级",
     group: "stage-2",
     shape: "cylinder",
+    finish: "painted-white",
     height: 16.5,
     radius: 3.5,
-    color: GROUP_COLOR["stage-2"],
     description:
       "2 台 BE-3U 氢氧发动机，真空比冲 445 s，可多次重启。一二级用**不同的推进剂组合**（一级甲烷、二级氢氧）：一级要的是推力密度与复用友好性，二级要的是极致比冲。这是把「推进剂分层选择」原则用到极致的现役案例。",
   })
@@ -76,9 +77,9 @@ const g = rocketGeometry()
     name: "整流罩",
     group: "payload",
     shape: "ogive",
+    finish: "painted-white",
     height: 22,
     radius: 3.5,
-    color: "#eef1f6",
     description:
       "7 m 直径、22 m 长的整流罩，内部容积约为 Falcon 9 整流罩的 2.4 倍。**在现役火箭中体积最大**——这是 New Glenn 最明确的差异化卖点：有些载荷受限的不是质量而是尺寸（大口径望远镜、大型天线、空间站舱段）。",
   });

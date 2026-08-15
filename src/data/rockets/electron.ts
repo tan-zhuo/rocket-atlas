@@ -1,7 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
-
-const CARBON = "#23262e";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -9,9 +7,9 @@ const g = rocketGeometry()
     name: "Rutherford 发动机（9 台）",
     group: "stage-1",
     shape: "engines",
+    finish: "engine-metal",
     height: 1.6,
     radius: 0.6,
-    color: METAL_DARK,
     nozzles: { count: 9, bellRadius: 0.14, bellHeight: 0.75, ringRadius: 0.4 },
     description:
       "全球第一款投入轨道飞行的**电泵循环**发动机：推进剂不是靠涡轮驱动的泵输送，而是由两台无刷直流电机带动，电机由锂聚合物电池供电。单台海平面推力仅 24 kN。发动机的主要承力件——推力室、喷注器、泵壳、涡轮——全部用电子束熔融（EBM）3D 打印，一台的打印周期约 24 小时。",
@@ -21,9 +19,9 @@ const g = rocketGeometry()
     name: "一级箭体",
     group: "stage-1",
     shape: "cylinder",
+    finish: "carbon",
     height: 10.5,
     radius: 0.6,
-    color: CARBON,
     description:
       "碳纤维复合材料贮箱，直接承力（不是内挂式）。碳纤维贮低温推进剂的难点在于树脂微裂纹导致的渗漏，Rocket Lab 用自研的内衬工艺解决。整枚一级干质量约 950 kg——比同直径的铝合金方案轻约 40%，这对小火箭是决定性的：**小火箭的载荷占比本来就极低，每省 1 kg 结构几乎就是多 1 kg 载荷。**",
   })
@@ -32,9 +30,9 @@ const g = rocketGeometry()
     name: "级间段",
     group: "stage-1",
     shape: "cylinder",
+    finish: "carbon",
     height: 1.5,
     radius: 0.6,
-    color: "#3a3f4a",
     description:
       "回收构型下，一级在这里之上分离后靠再入减速、降落伞下降，由船只在海上打捞（早期曾用直升机空中抓取降落伞）。一级不做动力回收——Electron 太小，携带返场推进剂的代价会吃光全部载荷。",
   })
@@ -43,9 +41,9 @@ const g = rocketGeometry()
     name: "二级",
     group: "stage-2",
     shape: "cylinder",
+    finish: "carbon",
     height: 2,
     radius: 0.6,
-    color: GROUP_COLOR["stage-2"],
     description:
       "单台真空版 Rutherford（扩张比更大，真空比冲 343 s）。二级的电池组会在工作过程中**分批抛掉已耗尽的电池**——这是电泵循环独有的减重手段：涡轮泵火箭无法抛弃已经烧过的涡轮，但电池可以。",
   })
@@ -54,9 +52,9 @@ const g = rocketGeometry()
     name: "Curie 上面级（Kick Stage）",
     group: "stage-3",
     shape: "cylinder",
+    finish: "bare-metal",
     height: 0.6,
     radius: 0.55,
-    color: GROUP_COLOR["stage-3"],
     description:
       "一个可多次点火的小型上面级，装 120 N 的 Curie 单组元/双组元发动机。它把每颗小卫星分别送到各自的精确轨道，而不是像传统「拼车发射」那样把所有载荷丢在同一点——**这正是小火箭相对搭载发射的核心卖点：你买的不只是运力，而是轨道的自主权。**",
   })
@@ -65,9 +63,9 @@ const g = rocketGeometry()
     name: "整流罩",
     group: "payload",
     shape: "ogive",
+    finish: "carbon",
     height: 1.8,
     radius: 0.6,
-    color: "#dfe3ea",
     description: "1.2 m 直径整流罩，载荷包络 ⌀1.07 × 1.4 m。对 300 kg 级的小卫星来说，限制往往不是质量而是这个体积。",
   });
 

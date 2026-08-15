@@ -1,5 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -8,11 +8,11 @@ const g = rocketGeometry()
     nameEn: "Strap-on boosters",
     group: "booster",
     shape: "frustum",
+    finish: "painted-white",
     height: 19.6,
     radius: 1.34,
     radiusTop: 0.5,
     cluster: { count: 4, offset: 3.0, phase: 45 },
-    color: GROUP_COLOR.booster,
     description:
       "与 1957 年 R-7 完全同构的锥形助推器，装 RD-107A。分离时上端解锁、下端由贮箱剩余增压气体推开，四枚助推器沿抛物线向外张开——这就是「科罗廖夫十字」，七十年来每一次联盟号发射都会重演一次。",
   })
@@ -21,10 +21,10 @@ const g = rocketGeometry()
     name: "RD-107A 发动机（4 台）",
     group: "booster",
     shape: "engines",
+    finish: "engine-metal",
     height: 2.6,
     radius: 1.34,
     cluster: { count: 4, offset: 3.0, phase: 45 },
-    color: METAL_DARK,
     nozzles: { count: 4, bellRadius: 0.4, bellHeight: 1.4, ringRadius: 0.64 },
     description:
       "四燃烧室 + 2 个游机，海平面推力 838 kN。相比 1957 年的 RD-107 提升了约 3%，主要来自新喷注头与更高的室压——七十年里这台发动机的推力总共只涨了不到 5%，因为整个系统的其余部分都是围绕原始推力设计的。",
@@ -34,9 +34,9 @@ const g = rocketGeometry()
     name: "RD-108A 发动机（芯级）",
     group: "core",
     shape: "engines",
+    finish: "engine-metal",
     height: 2.9,
     radius: 1.475,
-    color: METAL_DARK,
     nozzles: { count: 4, bellRadius: 0.42, bellHeight: 1.55, ringRadius: 0.68 },
     description: "四燃烧室 + 4 个游机，海平面推力 792 kN，从地面工作到 T+286 s。",
   })
@@ -45,9 +45,9 @@ const g = rocketGeometry()
     name: "芯级（Блок А）",
     group: "core",
     shape: "cylinder",
+    finish: "painted-white",
     height: 24.2,
     radius: 1.475,
-    color: GROUP_COLOR["stage-1"],
     description:
       "2.95 m 直径煤油/液氧芯级。直径来自 1950 年代的铁路运输限界，而这个限界至今没变——联盟号能从萨马拉的工厂用铁路直接运到拜科努尔、普列谢茨克乃至库鲁，是它保持低成本的关键之一。",
   })
@@ -56,10 +56,10 @@ const g = rocketGeometry()
     name: "级间桁架",
     group: "stage-2",
     shape: "frustum",
+    finish: "engine-metal",
     height: 1.2,
     radius: 1.475,
     radiusTop: 1.35,
-    color: "#5f6878",
     description:
       "开放式桁架级间段。三级采用**热分离**：Blok-I 的 RD-0124 在芯级尚未脱离时就点火，燃气从桁架的缝隙排出。开放桁架的存在本身就是热分离的证据。",
   })
@@ -69,9 +69,9 @@ const g = rocketGeometry()
     nameEn: "Blok-I third stage",
     group: "stage-3",
     shape: "cylinder",
+    finish: "painted-white",
     height: 6.6,
     radius: 1.35,
-    color: GROUP_COLOR["stage-3"],
     description:
       "Soyuz-2.1b 的三级装 RD-0124——一台**四燃烧室的富氧分级燃烧**发动机，真空比冲 359 s，是煤油机中比冲最高的量产型号之一。它相比 2.1a 上的老式 RD-0110（比冲 326 s）提升了约 950 kg 的 LEO 运力，代价是研制周期长了十几年。",
   })
@@ -80,9 +80,9 @@ const g = rocketGeometry()
     name: "有效载荷整流罩",
     group: "payload",
     shape: "ogive",
+    finish: "painted-white",
     height: 11.4,
     radius: 2.055,
-    color: "#eef1f6",
     description:
       "4.11 m 直径整流罩（也有 3.7 m 与 4.11 m 加长型多种）。载人任务则换成联盟飞船 + 逃逸塔构型，总高与外形完全不同——同一枚火箭的上半截是可替换的模块。",
   });

@@ -1,5 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -7,10 +7,10 @@ const g = rocketGeometry()
     name: "助推器（4 枚）",
     group: "booster",
     shape: "cylinder",
+    finish: "painted-white",
     height: 13,
     radius: 1.125,
     cluster: { count: 4, offset: 2.8, phase: 45 },
-    color: GROUP_COLOR.booster,
     description:
       "四枚 2.25 m 直径的液体助推器，每枚一台 YF-20B。使用与芯级相同的四氧化二氮/偏二甲肼——全箭只有一种推进剂组合，地面加注、贮存与应急处置流程因此高度统一。这在载人任务里是有价值的：**流程越单一，人为差错的机会越少。**",
   })
@@ -19,10 +19,10 @@ const g = rocketGeometry()
     name: "助推器发动机（4 台 YF-20B）",
     group: "booster",
     shape: "engines",
+    finish: "engine-metal",
     height: 2.6,
     radius: 1.125,
     cluster: { count: 4, offset: 2.8, phase: 45 },
-    color: METAL_DARK,
     nozzles: { count: 1, bellRadius: 0.72, bellHeight: 2.2 },
     description: "单台海平面推力 740.4 kN，固定安装，不参与姿态控制。",
   })
@@ -31,10 +31,10 @@ const g = rocketGeometry()
     name: "助推器头锥",
     group: "booster",
     shape: "cone",
+    finish: "painted-white",
     height: 2.3,
     radius: 1.125,
     cluster: { count: 4, offset: 2.8, phase: 45 },
-    color: "#6c7688",
     description: "助推器在 T+128 s 分离，落区位于内蒙古与陕西境内——这是内陆发射场无法回避的代价，每次发射前都要疏散落区居民。",
   })
   .at(0, {
@@ -42,9 +42,9 @@ const g = rocketGeometry()
     name: "YF-21C 发动机组（4 台 YF-20B）",
     group: "stage-1",
     shape: "engines",
+    finish: "engine-metal",
     height: 3,
     radius: 1.675,
-    color: METAL_DARK,
     nozzles: { count: 4, bellRadius: 0.62, bellHeight: 2.3, ringRadius: 0.85 },
     description:
       "芯一级的四台 YF-20B 并联成 YF-21C 机组，海平面总推力 2,961.6 kN。四台发动机可**双向摆动**做推力矢量控制——这是长征二号系列从东风五号洲际导弹继承下来的成熟设计，飞行验证时间以数十年计。",
@@ -54,9 +54,10 @@ const g = rocketGeometry()
     name: "芯一级",
     group: "stage-1",
     shape: "cylinder",
+    finish: "painted-white",
+    livery: { kind: "text", text: "CZ-2F", color: "#b4231d" },
     height: 21.5,
     radius: 1.675,
-    color: GROUP_COLOR["stage-1"],
     description:
       "3.35 m 直径箭体——这个尺寸由中国铁路隧道的运输限界决定，从 1970 年代的长征二号沿用至今。载人型在此基础上做的最大改动不是结构，而是**增加了 300 多个测量参数的遥测系统与故障检测处理系统（FDS）**：它实时监视十几项关键参数，一旦判定危及乘员，就在毫秒级触发逃逸。",
   })
@@ -65,9 +66,9 @@ const g = rocketGeometry()
     name: "芯二级",
     group: "stage-2",
     shape: "cylinder",
+    finish: "painted-white",
     height: 14.5,
     radius: 1.675,
-    color: GROUP_COLOR["stage-2"],
     description:
       "一台 YF-22B 主机（真空推力 738 kN，固定）+ 四台 YF-23B 游动发动机（各 47.1 kN，可摆动）。主机不摆、靠小游机控姿的方案结构简单可靠，代价是游机的推进剂消耗与额外的管路复杂度。",
   })
@@ -76,10 +77,10 @@ const g = rocketGeometry()
     name: "整流罩过渡段",
     group: "payload",
     shape: "frustum",
+    finish: "painted-white",
     height: 2,
     radius: 1.675,
     radiusTop: 1.9,
-    color: "#dfe3ea",
     description: "从 3.35 m 箭体扩张到 3.8 m 整流罩。",
   })
   .at(41, {
@@ -87,9 +88,9 @@ const g = rocketGeometry()
     name: "整流罩 / 神舟飞船",
     group: "payload",
     shape: "cylinder",
+    finish: "painted-white",
     height: 9,
     radius: 1.9,
-    color: "#eef1f6",
     description:
       "3.8 m 直径整流罩，内装神舟飞船的轨道舱、返回舱与推进舱（推进舱在整流罩外）。整流罩上部与逃逸飞行器一起构成逃逸组合体：一旦触发逃逸，**整流罩上段会带着轨道舱和返回舱整体被拽走**，而不是只拉走返回舱。",
   })
@@ -98,9 +99,9 @@ const g = rocketGeometry()
     name: "整流罩锥段",
     group: "payload",
     shape: "cone",
+    finish: "painted-white",
     height: 3,
     radius: 1.9,
-    color: "#eef1f6",
     description: "整流罩顶部锥段，与逃逸塔连接。",
   })
   .at(53, {
@@ -109,9 +110,9 @@ const g = rocketGeometry()
     nameEn: "Launch Escape System",
     group: "payload",
     shape: "tower",
+    finish: "painted-accent",
     height: 5.34,
     radius: 0.55,
-    color: "#b6483a",
     description:
       "顶部的固体逃逸塔覆盖发射台至约 39 km 高度的逃逸需求，最大过载约 10 g。塔上有四组不同方向的固体发动机：主逃逸发动机负责拉离，分离发动机负责把逃逸飞行器与整流罩分开，还有专门的姿控发动机保证逃逸过程中的姿态。**它在正常飞行中于 T+120 s 抛弃——此后的逃逸由飞船自身的推进舱完成。**",
   });

@@ -4,6 +4,7 @@ import type { RocketSummary } from "@/lib/summary";
 import { StatusBadge } from "@/components/ui/badge";
 import { Silhouette } from "./silhouette";
 import { CompareToggle } from "./compare-toggle";
+import { Flag } from "@/components/ui/flag";
 import { PROPELLANT_META } from "@/lib/filters";
 import { cn, mass as fmtMass, meters, year } from "@/lib/utils";
 
@@ -59,7 +60,8 @@ export function RocketCard({ r, className }: { r: RocketSummary; className?: str
           </dl>
 
           <div className="mt-3 flex flex-wrap items-center gap-1.5">
-            <span className="rounded border border-border-base px-1.5 py-0.5 text-[10px] text-fg-muted">
+            <span className="flex items-center gap-1.5 rounded border border-border-base px-1.5 py-0.5 text-[10px] text-fg-muted">
+              <Flag country={r.countryZh} flagClassName="h-2.5 w-[15px]" />
               {r.countryZh}
             </span>
             {r.propellants.slice(0, 3).map((p) => (

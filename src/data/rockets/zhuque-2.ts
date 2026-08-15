@@ -1,5 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -7,9 +7,9 @@ const g = rocketGeometry()
     name: "天鹊 TQ-12 发动机（4 台）",
     group: "stage-1",
     shape: "engines",
+    finish: "engine-metal",
     height: 3.5,
     radius: 1.675,
-    color: METAL_DARK,
     nozzles: { count: 4, bellRadius: 0.62, bellHeight: 2.3, ringRadius: 0.85 },
     description:
       "四台液氧甲烷发动机，单台海平面推力 657 kN。天鹊系列是中国第一款投入飞行的大推力甲烷机，采用燃气发生器循环——没有走分级燃烧的技术路线，是商业公司在研制周期与技术风险之间的典型取舍：**先做出能飞的，再做更好的。**",
@@ -19,9 +19,9 @@ const g = rocketGeometry()
     name: "一级箭体",
     group: "stage-1",
     shape: "cylinder",
+    finish: "painted-white",
     height: 24,
     radius: 1.675,
-    color: GROUP_COLOR["stage-1"],
     description:
       "3.35 m 直径——与长征二号/三号/四号系列相同。这个尺寸在中国有完整的工装、模具、运输与发射设施配套，商业公司沿用它可以大幅降低基础设施成本。**创新集中在推进剂与发动机上，箭体尺寸则跟随既有工业体系，这是中国商业火箭的普遍策略。**",
   })
@@ -30,9 +30,9 @@ const g = rocketGeometry()
     name: "级间段",
     group: "stage-1",
     shape: "cylinder",
+    finish: "painted-black",
     height: 2,
     radius: 1.675,
-    color: "#3a3f4a",
     description: "级间段。朱雀二号改进型（2E/3）规划了一级垂直回收能力，级间段将改为带栅格舵的可回收构型。",
   })
   .at(29.5, {
@@ -40,9 +40,9 @@ const g = rocketGeometry()
     name: "二级",
     group: "stage-2",
     shape: "cylinder",
+    finish: "painted-white",
     height: 9,
     radius: 1.675,
-    color: GROUP_COLOR["stage-2"],
     description:
       "一台真空版 TQ-12（推力 785 kN）+ 四台 TQ-11 游动发动机（各 98 kN）。首飞失败的原因正出在这里：**游动发动机的推进剂供应管路失效**，导致二级在主机关机后无法完成末速修正，载荷未能入轨。第二发针对性改进后即成功。",
   })
@@ -51,9 +51,9 @@ const g = rocketGeometry()
     name: "整流罩",
     group: "payload",
     shape: "ogive",
+    finish: "painted-white",
     height: 11,
     radius: 1.675,
-    color: "#eef1f6",
     description: "3.35 m 直径整流罩。改进型 2E 换用 4.2 m 大整流罩以适应星座卫星的批量部署。",
   });
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Boxes, Layers, Sparkles, Telescope } from "lucide-react";
+import { ArrowRight, Boxes, Layers, Telescope } from "lucide-react";
 import { ROCKETS, FEATURED_SLUGS, getRockets, atlasStats } from "@/data/rockets";
 import { PRINCIPLES } from "@/data/principles";
 import { TIMELINE_SORTED, TIMELINE_KIND_META } from "@/data/timeline";
@@ -7,9 +7,12 @@ import { toSummary } from "@/lib/summary";
 import { RocketCard } from "@/components/rocket/rocket-card";
 import { Silhouette } from "@/components/rocket/silhouette";
 import { Badge } from "@/components/ui/badge";
+import { Flag } from "@/components/ui/flag";
+import { HeroMount } from "@/components/viewer/hero-mount";
 import { dateZh, mass, meters, num } from "@/lib/utils";
 
 const SCALE_ROW = ["v-2", "electron", "falcon-9", "long-march-5", "saturn-v", "starship"];
+const HERO_ROW = ["saturn-v", "starship", "falcon-9", "long-march-5", "ariane-5"];
 
 export default function Home() {
   const stats = atlasStats();
@@ -18,6 +21,14 @@ export default function Home() {
   const tallest = Math.max(...scaleRockets.map((r) => r.height));
   const pxPerMeter = 250 / tallest;
   const recent = [...TIMELINE_SORTED].reverse().slice(0, 6);
+  const heroItems = getRockets(HERO_ROW).map((r) => ({
+    slug: r.slug,
+    nameZh: r.nameZh,
+    name: r.name,
+    height: r.height,
+    mass: r.mass,
+    geometry: r.geometry,
+  }));
 
   return (
     <>
@@ -32,12 +43,9 @@ export default function Home() {
               "radial-gradient(70% 55% at 50% -10%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%)",
           }}
         />
-        <div className="relative mx-auto max-w-[1400px] px-4 py-20 sm:px-6 lg:py-28">
-          <div className="max-w-3xl">
-            <Badge tone="accent" className="mb-5">
-              <Sparkles className="size-3" />
-              公开知识 · 结构可视化 · 设计逻辑
-            </Badge>
+        <div className="relative mx-auto max-w-[1400px] px-4 py-16 sm:px-6 lg:py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
+            <div className="max-w-3xl">
             <h1 className="text-[34px] font-semibold leading-[1.15] tracking-tight text-fg sm:text-5xl">
               看得见结构，
               <br className="hidden sm:block" />
@@ -80,6 +88,10 @@ export default function Home() {
               <HeroStat label="覆盖年代" value={`${stats.span.from}–${stats.span.to}`} />
               <HeroStat label="来源引用" value={num(stats.sources)} />
             </dl>
+            </div>
+
+            {/* 3D 展示位：与详情页查看器共用几何、材质与环境光照 */}
+            <HeroMount items={heroItems} />
           </div>
         </div>
       </section>
@@ -252,6 +264,7 @@ export default function Home() {
             ...new Set(ROCKETS.map((r) => r.countryZh)),
           ].map((c) => (
             <QuickLink key={c} href="/rockets">
+              <Flag country={c} flagClassName="h-2.5 w-[15px]" className="mr-1.5 align-middle" />
               {c}
             </QuickLink>
           ))}

@@ -1,7 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
-
-const SCORCHED = "#8a6a4e";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -9,9 +7,9 @@ const g = rocketGeometry()
     name: "RS-68A 发动机（芯级）",
     group: "core",
     shape: "engines",
+    finish: "engine-metal",
     height: 4,
     radius: 2.55,
-    color: METAL_DARK,
     nozzles: { count: 1, bellRadius: 1.3, bellHeight: 3.4 },
     description:
       "推力最大的氢氧发动机：海平面 3,137 kN。为了降低成本，它刻意放弃了 SSME 那种极致设计——喷管是**烧蚀冷却**而非再生冷却，零件数只有 SSME 的 1/5，室压也低得多（97 bar vs 207 bar）。代价是真空比冲只有 412 s，比 SSME 的 452 s 低了 40 s。**这是一次明确的「用性能换成本」的交换。**",
@@ -22,9 +20,9 @@ const g = rocketGeometry()
     nameEn: "Common Booster Core",
     group: "core",
     shape: "cylinder",
+    finish: "insulation-foam",
     height: 36.8,
     radius: 2.55,
-    color: GROUP_COLOR["stage-1"],
     description:
       "5.1 m 直径的液氢/液氧「通用助推芯级」。Delta IV 全系列（Medium、Medium+、Heavy）都用同一款 CBC，区别只是捆绑几个、加不加固体助推器——这是 1990 年代 EELV 计划「模块化降成本」思路的产物。芯级在两侧助推器工作期间**节流到 57%**，以保存推进剂供后段独自使用。",
   })
@@ -33,10 +31,10 @@ const g = rocketGeometry()
     name: "RS-68A 发动机（助推 CBC，2 台）",
     group: "booster",
     shape: "engines",
+    finish: "engine-metal",
     height: 4,
     radius: 2.55,
     cluster: { count: 2, offset: 5.1, phase: 90 },
-    color: METAL_DARK,
     nozzles: { count: 1, bellRadius: 1.3, bellHeight: 3.4 },
     description: "两侧助推 CBC 各一台 RS-68A，全推力工作至 T+242 s 后分离。",
   })
@@ -45,10 +43,10 @@ const g = rocketGeometry()
     name: "助推 CBC（2 枚）",
     group: "booster",
     shape: "cylinder",
+    finish: "scorched",
     height: 36.8,
     radius: 2.55,
     cluster: { count: 2, offset: 5.1, phase: 90 },
-    color: SCORCHED,
     description:
       "与芯级完全相同的箭体，只是顶部换成锥形头锥。Delta IV Heavy 起飞时那团著名的橙色火球，来自点火前排放的氢气被点燃——氢气比空气轻，会沿箭体外壁向上窜，把喷涂在贮箱外的橙色泡沫绝热层烧焦。**这是设计上接受的现象，不是故障。**",
   })
@@ -57,10 +55,10 @@ const g = rocketGeometry()
     name: "助推 CBC 头锥",
     group: "booster",
     shape: "cone",
+    finish: "painted-white",
     height: 4.2,
     radius: 2.55,
     cluster: { count: 2, offset: 5.1, phase: 90 },
-    color: "#6c7688",
     description: "助推芯级顶部的锥形整流头，改善并联构型的气动特性。",
   })
   .at(40.8, {
@@ -68,9 +66,9 @@ const g = rocketGeometry()
     name: "级间段",
     group: "stage-2",
     shape: "cylinder",
+    finish: "insulation-foam",
     height: 5,
     radius: 2.55,
-    color: "#5f6878",
     description: "芯级与上面级之间的级间段，内含 DCSS 的发动机与推进剂沉底系统。",
   })
   .at(45.8, {
@@ -79,9 +77,9 @@ const g = rocketGeometry()
     nameEn: "Delta Cryogenic Second Stage",
     group: "stage-3",
     shape: "cylinder",
+    finish: "painted-white",
     height: 6.4,
     radius: 2.55,
-    color: GROUP_COLOR["stage-3"],
     description:
       "装一台 RL10B-2——真空比冲 462 s，是**史上比冲最高的量产化学火箭发动机**之一。它采用膨胀循环，并带一个可在真空中展开的碳复合喷管延伸段（发射时收起以缩短级长，点火前展开以获得 285 的扩张比）。DCSS 可多次重启，最长在轨工作时间以小时计，因此能执行直接 GEO 注入与深空转移。",
   })
@@ -90,9 +88,9 @@ const g = rocketGeometry()
     name: "整流罩",
     group: "payload",
     shape: "ogive",
+    finish: "painted-white",
     height: 19.8,
     radius: 2.55,
-    color: "#eef1f6",
     description:
       "5 m 直径、最长 19.8 m 的复合材料整流罩——Delta IV Heavy 的载荷包络长度在退役时仍是美国最大的之一，这也是它长期垄断大型侦察卫星发射的原因：某些光学侦察卫星的镜筒长度只有它装得下。",
   });

@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { TimelineEvent } from "@/data/types";
 import { TIMELINE_KIND_META } from "@/data/timeline";
 import { Badge } from "@/components/ui/badge";
+import { Flag } from "@/components/ui/flag";
 import { cn, dateZh } from "@/lib/utils";
 
 type Kind = TimelineEvent["kind"];
@@ -59,6 +60,7 @@ export function TimelineView({ events }: { events: TimelineEvent[] }) {
           <div className="mt-2 flex flex-wrap gap-1.5">
             {allCountries.map((c) => (
               <Chip key={c} on={countries.includes(c)} onClick={() => toggleCountry(c)}>
+                <Flag country={c} flagClassName="h-2.5 w-[15px]" className="mr-1.5 align-middle" />
                 {c}
               </Chip>
             ))}
@@ -88,7 +90,8 @@ export function TimelineView({ events }: { events: TimelineEvent[] }) {
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                       <span className="text-[12px] text-fg-subtle tabular">{dateZh(e.date)}</span>
                       <Badge tone={meta.tone}>{meta.label}</Badge>
-                      <span className="rounded border border-border-base px-1.5 py-0.5 text-[10px] text-fg-muted">
+                      <span className="flex items-center gap-1.5 rounded border border-border-base px-1.5 py-0.5 text-[10px] text-fg-muted">
+                        <Flag country={e.countryZh} flagClassName="h-2.5 w-[15px]" />
                         {e.countryZh}
                       </span>
                     </div>

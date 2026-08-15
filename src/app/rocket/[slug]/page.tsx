@@ -5,6 +5,7 @@ import { ChevronRight } from "lucide-react";
 import { ROCKETS, getRocket, getRockets } from "@/data/rockets";
 import { getFamily } from "@/data/families";
 import { StatusBadge } from "@/components/ui/badge";
+import { Flag } from "@/components/ui/flag";
 import { Tabs } from "@/components/ui/tabs";
 import { ViewerMount } from "@/components/viewer/viewer-mount";
 import { CompareToggle } from "@/components/rocket/compare-toggle";
@@ -13,6 +14,7 @@ import {
   FamilyTab,
   LaunchesTab,
   OverviewTab,
+  PropulsionTab,
   SourcesTab,
   SpecsTab,
 } from "@/components/rocket/detail-sections";
@@ -72,6 +74,7 @@ export default async function RocketPage(props: PageProps<"/rocket/[slug]">) {
   const tabs = [
     { id: "overview", label: "概览" },
     { id: "design", label: "设计逻辑", hint: `${r.tradeoffs.length}` },
+    { id: "propulsion", label: "动力系统" },
     { id: "specs", label: "技术规格" },
     { id: "launches", label: "发射历史" },
     { id: "family", label: "演进与家族" },
@@ -81,6 +84,7 @@ export default async function RocketPage(props: PageProps<"/rocket/[slug]">) {
   const panels = [
     <OverviewTab key="o" r={r} />,
     <DesignTab key="d" r={r} />,
+    <PropulsionTab key="p" r={r} />,
     <SpecsTab key="s" r={r} />,
     <LaunchesTab key="l" r={r} />,
     <FamilyTab key="f" r={r} related={related} />,
@@ -118,8 +122,12 @@ export default async function RocketPage(props: PageProps<"/rocket/[slug]">) {
               <h1 className="text-[30px] font-semibold tracking-tight text-fg">{r.nameZh}</h1>
               <StatusBadge status={r.status} />
             </div>
-            <p className="mt-1 text-[14px] text-fg-muted">
-              {r.name} · {r.countryZh} · {r.agency.join(" / ")}
+            <p className="mt-1 flex flex-wrap items-center gap-x-1.5 text-[14px] text-fg-muted">
+              <span>{r.name}</span>
+              <span aria-hidden>·</span>
+              <Flag country={r.countryZh} withName />
+              <span aria-hidden>·</span>
+              <span>{r.agency.join(" / ")}</span>
             </p>
           </div>
           <CompareToggle slug={r.slug} variant="button" />

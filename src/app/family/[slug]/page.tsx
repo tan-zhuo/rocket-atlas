@@ -7,6 +7,7 @@ import { getRockets } from "@/data/rockets";
 import { toSummary } from "@/lib/summary";
 import { RocketCard } from "@/components/rocket/rocket-card";
 import { Markdown } from "@/components/md/markdown";
+import { Flag } from "@/components/ui/flag";
 
 export function generateStaticParams() {
   return FAMILIES.map((f) => ({ slug: f.slug }));
@@ -42,8 +43,10 @@ export default async function FamilyPage(props: PageProps<"/family/[slug]">) {
 
       <header className="mt-4 max-w-3xl">
         <h1 className="text-[30px] font-semibold tracking-tight text-fg">{f.nameZh}</h1>
-        <p className="mt-1 text-[14px] text-fg-muted">
-          {f.name} · {f.countryZh}
+        <p className="mt-1 flex flex-wrap items-center gap-x-1.5 text-[14px] text-fg-muted">
+          <span>{f.name}</span>
+          <span aria-hidden>·</span>
+          <Flag country={f.countryZh} withName />
         </p>
       </header>
 
@@ -113,7 +116,11 @@ export default async function FamilyPage(props: PageProps<"/family/[slug]">) {
                       >
                         <Dot className="size-4 shrink-0" />
                         {o!.nameZh}
-                        <span className="ml-1.5 text-[11px] text-fg-subtle">{o!.countryZh}</span>
+                        <Flag
+                          country={o!.countryZh}
+                          flagClassName="h-2.5 w-[15px]"
+                          className="ml-1.5"
+                        />
                       </Link>
                     </li>
                   ))}

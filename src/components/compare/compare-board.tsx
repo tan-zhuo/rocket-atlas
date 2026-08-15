@@ -8,6 +8,8 @@ import { MAX_COMPARE, useCompare } from "@/lib/store";
 import { useHydrated } from "@/lib/client-hooks";
 import { Silhouette } from "@/components/rocket/silhouette";
 import { StatusBadge } from "@/components/ui/badge";
+import { Flag } from "@/components/ui/flag";
+import { Check } from "lucide-react";
 import { PROPELLANT_META } from "@/lib/filters";
 import { cn, force, mass, meters, num, year } from "@/lib/utils";
 
@@ -273,7 +275,12 @@ export function CompareBoard({ rockets }: { rockets: RocketSummary[] }) {
               </tr>
             </thead>
             <tbody>
-              <Row label="国家 / 地区" cells={selected.map((r) => r.countryZh)} />
+              <Row
+                label="国家 / 地区"
+                cells={selected.map((r) => (
+                  <Flag key={r.slug} country={r.countryZh} withName />
+                ))}
+              />
               <Row
                 label="状态"
                 cells={selected.map((r) => <StatusBadge key={r.slug} status={r.status} />)}
@@ -449,7 +456,7 @@ function Picker({
                       on ? "border-accent bg-accent text-accent-fg" : "border-border-strong",
                     )}
                   >
-                    {on ? "✓" : ""}
+                    {on ? <Check className="size-3" /> : null}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-fg">{r.nameZh}</span>

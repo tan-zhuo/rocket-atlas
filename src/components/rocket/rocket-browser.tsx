@@ -19,6 +19,7 @@ import {
 import { STATUS_META, StatusBadge } from "@/components/ui/badge";
 import { RocketCard } from "./rocket-card";
 import { CompareToggle } from "./compare-toggle";
+import { Flag } from "@/components/ui/flag";
 import { cn, mass as fmtMass, meters, year } from "@/lib/utils";
 
 const STATUS_ORDER: RocketStatus[] = ["active", "development", "retired", "cancelled"];
@@ -75,6 +76,7 @@ export function RocketBrowser({
                 on={filters.countries.includes(c)}
                 onClick={() => patch({ countries: toggle(filters.countries, c) })}
               >
+                <Flag country={c} flagClassName="h-2.5 w-[15px]" className="mr-1.5 align-middle" />
                 {c}
               </Chip>
             ))}
@@ -266,7 +268,9 @@ function ResultTable({ rows }: { rows: RocketSummary[] }) {
                 </Link>
                 <span className="ml-2 text-[11px] text-fg-subtle">{r.name}</span>
               </td>
-              <td className="px-3 py-2.5 text-fg-muted">{r.countryZh}</td>
+              <td className="px-3 py-2.5 text-fg-muted">
+                <Flag country={r.countryZh} withName />
+              </td>
               <td className="px-3 py-2.5">
                 <StatusBadge status={r.status} />
               </td>

@@ -1,5 +1,5 @@
 import type { Rocket } from "../types";
-import { rocketGeometry, GROUP_COLOR, METAL_DARK } from "../geometry";
+import { rocketGeometry } from "../geometry";
 
 const g = rocketGeometry()
   .at(0, {
@@ -8,9 +8,9 @@ const g = rocketGeometry()
     nameEn: "Octaweb engine section",
     group: "stage-1",
     shape: "engines",
+    finish: "engine-metal",
     height: 3.1,
     radius: 1.85,
-    color: METAL_DARK,
     nozzles: { count: 9, bellRadius: 0.42, bellHeight: 1.55, ringRadius: 1.28 },
     description:
       "八台环绕、一台居中的「Octaweb」结构。这个布局不是为了美观：中心机在回收着陆时单独工作（推力可深度节流到约 40%），而八台外围机用简单的钢梁隔舱互相隔离，任何一台发生非包容性故障都不会连累邻机——发动机数量多带来的可靠性风险，是用结构隔离和飞行中关机能力换回来的。",
@@ -20,10 +20,10 @@ const g = rocketGeometry()
     name: "着陆腿（4 条）",
     group: "stage-1",
     shape: "fins",
+    finish: "carbon",
     height: 4.6,
     radius: 1.1,
     cluster: { count: 4, offset: 1.85, phase: 45 },
-    color: "#2c313d",
     description:
       "碳纤维/铝蜂窝着陆腿，收拢时贴在箭体外侧，着陆前约 10 s 由高压氦气展开，跨距 18 m。为了减重它们不可主动收回——早期回收后需要人工拆卸，Block 5 改为可折叠以缩短复用周转时间。",
   })
@@ -33,9 +33,10 @@ const g = rocketGeometry()
     nameEn: "First stage",
     group: "stage-1",
     shape: "cylinder",
+    finish: "painted-white",
+    livery: { kind: "text", text: "SPACEX", color: "#2b2f38" },
     height: 38.1,
     radius: 1.85,
-    color: GROUP_COLOR["stage-1"],
     description:
       "3.7 m 直径的 2195 铝锂合金贮箱，摩擦搅拌焊接。直径不是气动最优解，而是**公路运输的上限**——箭体要能装上拖车穿越美国州际公路的桥涵，这个约束直接决定了 Falcon 9 只能靠拉长（v1.0 的 47 m → Block 5 的 70 m）而不能靠加粗来提升运力。",
   })
@@ -44,10 +45,10 @@ const g = rocketGeometry()
     name: "栅格舵（4 片）",
     group: "stage-1",
     shape: "gridfins",
+    finish: "bare-metal",
     height: 1.6,
     radius: 0.85,
     cluster: { count: 4, offset: 1.85 },
-    color: "#4a4f5c",
     description:
       "钛合金整体铸造的栅格舵，在再入段提供气动控制力矩。早期铝制版本带隔热涂层，会在再入加热中烧蚀、每次都要更换；换成钛后可以裸奔并且无限次复用——这是 Block 5「不检修连飞十次」目标下的典型改动。",
   })
@@ -56,9 +57,9 @@ const g = rocketGeometry()
     name: "级间段",
     group: "stage-1",
     shape: "cylinder",
+    finish: "carbon",
     height: 6.7,
     radius: 1.85,
-    color: "#20242e",
     description:
       "碳纤维复合材料级间段，内部是气动压紧释放机构（pneumatic pusher）。相比爆炸螺栓，气动分离可以在地面反复测试与复位，且不产生碎片——同样是为复用而做的选择。",
   })
@@ -68,9 +69,9 @@ const g = rocketGeometry()
     nameEn: "Second stage",
     group: "stage-2",
     shape: "cylinder",
+    finish: "painted-white",
     height: 9.0,
     radius: 1.85,
-    color: GROUP_COLOR["stage-2"],
     description:
       "单台真空版 Merlin（MVac）的二级，喷管扩张比 165，铌合金辐射冷却喷管延伸段。二级是一次性的：SpaceX 曾公开研究过二级回收，最终判断为了回收所需的隔热与结构代价会吃掉大部分运力，在 Falcon 架构上不划算——这个结论直接推动了 Starship 的全新设计。",
   })
@@ -79,10 +80,10 @@ const g = rocketGeometry()
     name: "整流罩过渡段",
     group: "payload",
     shape: "frustum",
+    finish: "painted-white",
     height: 2.4,
     radius: 1.85,
     radiusTop: 2.6,
-    color: "#dfe3ea",
     description: "从 3.7 m 箭体扩张到 5.2 m 整流罩的过渡段。",
   })
   .at(59.3, {
@@ -90,9 +91,9 @@ const g = rocketGeometry()
     name: "有效载荷整流罩",
     group: "payload",
     shape: "ogive",
+    finish: "painted-white",
     height: 10.7,
     radius: 2.6,
-    color: "#eef1f6",
     description:
       "5.2 × 13.1 m 铝蜂窝夹层复合整流罩，两瓣式。分离后由冷气推力器调姿、翼伞减速，海上回收后翻新复用——单套整流罩成本约 600 万美元，占单次发射成本的相当比例，值得为它专门养一支回收船队。",
   });

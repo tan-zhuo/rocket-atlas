@@ -55,8 +55,14 @@ export interface Engine {
   thrustVacuum?: number;
   ispSeaLevel?: number;
   ispVacuum?: number;
+  /** 推进剂的中文描述，如「RP-1 煤油 / 液氧（过冷）」 */
+  propellantZh?: string;
   /** 一句话点出这台发动机的技术地位 */
   note?: string;
+  /** 这台发动机（及其循环/推进剂选择）换来了什么 */
+  pros?: string[];
+  /** 代价是什么 —— 与 pros 成对出现，避免只讲优点 */
+  cons?: string[];
 }
 
 export interface Stage {
@@ -95,6 +101,45 @@ export type PartShape =
   | "tower" // 逃逸塔桁架
   | "flap"; // 气动襟翼（星舰）
 
+/**
+ * 表面处理 —— 决定 PBR 材质参数与涂装质感。
+ * 运载火箭的外观几乎全部由「这一段是漆的、裸的、包绝热层的还是贴瓦的」决定，
+ * 所以这是比单纯给个颜色更有信息量的建模维度。
+ */
+export type PartFinish =
+  | "painted-white" // 白漆蒙皮（最常见）
+  | "painted-black" // 黑漆滚动标识 / 涂黑段
+  | "painted-accent" // 醒目色（逃逸塔红等）
+  | "bare-metal" // 裸铝 / 抛光金属
+  | "stainless" // 不锈钢（星舰）
+  | "insulation-foam" // 喷涂式泡沫绝热层（橙色低温贮箱）
+  | "carbon" // 碳纤维复合材料
+  | "solid-booster" // 固体助推器壳体
+  | "engine-metal" // 发动机舱与喷管
+  | "copper-nozzle" // 再生冷却铜合金喷管
+  | "heatshield" // 隔热瓦 / 烧蚀层
+  | "scorched"; // 被氢焰燎黑的泡沫（Delta IV Heavy）
+
+/**
+ * 涂装图案 —— 在部件表面用程序化贴图叠加的标识。
+ * 这些图案不是装饰：滚动标识用于地面光学跟踪判读姿态，
+ * 隔热瓦的分布直接说明了再入时哪一面朝下。
+ */
+export interface PartLivery {
+  kind:
+    | "roll-pattern" // 象限式黑白滚动标识（土星五号、V-2）
+    | "checker" // 黑白格（V-2 的试验涂装）
+    | "bands" // 横向色带
+    | "tiles" // 隔热瓦阵列（只覆盖迎风面）
+    | "text"; // 侧面字样（USA、CZ-5 等）
+  /** bands: 每条带的位置（0=底 1=顶）与颜色 */
+  bands?: { from: number; to: number; color: string }[];
+  /** text: 竖排/横排字样 */
+  text?: string;
+  /** 图案主色（默认取自 finish） */
+  color?: string;
+}
+
 /** 部件在爆炸视图中的归组；也用于「按级高亮」。 */
 export type PartGroup =
   | "payload"
@@ -118,6 +163,10 @@ export interface RocketPart {
   radiusTop?: number;
   /** 覆盖分组默认配色 */
   color?: string;
+  /** 表面处理，决定材质质感；缺省时按分组与形状推断 */
+  finish?: PartFinish;
+  /** 程序化涂装图案 */
+  livery?: PartLivery;
   /** 绕轴周向阵列：助推器、尾翼、栅格舵 */
   cluster?: { count: number; offset: number; phase?: number };
   /** shape==='engines' 时的喷管布局 */

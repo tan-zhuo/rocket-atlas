@@ -1,4 +1,4 @@
-import type { RocketGeometry, RocketPart, PartGroup } from "./types";
+import type { RocketGeometry, RocketPart, PartGroup, PartFinish } from "./types";
 
 /**
  * 参数化几何构建器。
@@ -24,6 +24,124 @@ export const GROUP_COLOR: Record<PartGroup, string> = {
 
 export const METAL_DARK = "#4c5464";
 export const HEATSHIELD = "#2b2f38";
+
+/**
+ * 表面处理 → 基色 + PBR 参数。
+ *
+ * 这张表是模型「有质感」的来源：白漆蒙皮、裸铝、不锈钢、橙色泡沫绝热层、
+ * 碳纤维、隔热瓦在真实火箭上是完全不同的表面，金属度与粗糙度差了一个数量级。
+ * 同一张表也被 2D 剪影复用，保证两种呈现的配色一致。
+ */
+export interface FinishSpec {
+  color: string;
+  metalness: number;
+  roughness: number;
+  /** 清漆感（漆面/抛光金属有，泡沫与隔热瓦没有） */
+  clearcoat?: number;
+  labelZh: string;
+}
+
+export const FINISH: Record<PartFinish, FinishSpec> = {
+  "painted-white": {
+    color: "#e9edf4",
+    metalness: 0.06,
+    roughness: 0.44,
+    clearcoat: 0.35,
+    labelZh: "白漆蒙皮",
+  },
+  "painted-black": {
+    color: "#1a1d24",
+    metalness: 0.12,
+    roughness: 0.46,
+    clearcoat: 0.3,
+    labelZh: "黑漆段",
+  },
+  "painted-accent": {
+    color: "#bb4335",
+    metalness: 0.14,
+    roughness: 0.48,
+    clearcoat: 0.3,
+    labelZh: "醒目涂装",
+  },
+  "bare-metal": {
+    color: "#aeb6c3",
+    metalness: 0.88,
+    roughness: 0.3,
+    labelZh: "裸铝蒙皮",
+  },
+  stainless: {
+    color: "#c6cdd8",
+    metalness: 0.96,
+    roughness: 0.17,
+    labelZh: "不锈钢",
+  },
+  "insulation-foam": {
+    color: "#c9702f",
+    metalness: 0.02,
+    roughness: 0.94,
+    labelZh: "泡沫绝热层",
+  },
+  scorched: {
+    color: "#8a6242",
+    metalness: 0.05,
+    roughness: 0.88,
+    labelZh: "燎黑绝热层",
+  },
+  carbon: {
+    color: "#20232b",
+    metalness: 0.38,
+    roughness: 0.34,
+    clearcoat: 0.5,
+    labelZh: "碳纤维",
+  },
+  "solid-booster": {
+    color: "#d6dae2",
+    metalness: 0.08,
+    roughness: 0.62,
+    labelZh: "固体助推器壳体",
+  },
+  "engine-metal": {
+    color: "#474d59",
+    metalness: 0.92,
+    roughness: 0.36,
+    labelZh: "发动机金属",
+  },
+  "copper-nozzle": {
+    color: "#a86a45",
+    metalness: 0.95,
+    roughness: 0.31,
+    labelZh: "铜合金喷管",
+  },
+  heatshield: {
+    color: "#2a2d34",
+    metalness: 0.03,
+    roughness: 0.9,
+    labelZh: "隔热瓦",
+  },
+};
+
+/** 数据里没写 finish 时的推断规则 */
+export function defaultFinish(part: RocketPart): PartFinish {
+  switch (part.shape) {
+    case "engines":
+      return "engine-metal";
+    case "gridfins":
+      return "bare-metal";
+    case "tower":
+      return "painted-accent";
+    case "flap":
+    case "fins":
+      return "painted-white";
+    default:
+      return part.group === "payload" ? "painted-white" : "bare-metal";
+  }
+}
+
+export function partFinish(part: RocketPart): FinishSpec {
+  const spec = FINISH[part.finish ?? defaultFinish(part)];
+  // 数据里显式给了 color 时以 color 为准（保留既有配色的表达力）
+  return part.color ? { ...spec, color: part.color } : spec;
+}
 
 export class RocketBuilder {
   y = 0;

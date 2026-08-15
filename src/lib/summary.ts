@@ -70,6 +70,7 @@ function liteGeometry(g: RocketGeometry): RocketGeometry {
       radius: p.radius,
       radiusTop: p.radiusTop,
       color: p.color,
+      finish: p.finish,
       cluster: p.cluster,
       nozzles: p.nozzles,
       description: "",
