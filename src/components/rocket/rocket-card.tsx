@@ -1,0 +1,104 @@
+import Link from "next/link";
+import { Users, Recycle } from "lucide-react";
+import type { RocketSummary } from "@/lib/summary";
+import { StatusBadge } from "@/components/ui/badge";
+import { Silhouette } from "./silhouette";
+import { CompareToggle } from "./compare-toggle";
+import { PROPELLANT_META } from "@/lib/filters";
+import { cn, mass as fmtMass, meters, year } from "@/lib/utils";
+
+export function RocketCard({ r, className }: { r: RocketSummary; className?: string }) {
+  return (
+    <div
+      className={cn(
+        "group relative flex flex-col overflow-hidden rounded-xl border border-border-base bg-panel transition-colors hover:border-border-strong",
+        className,
+      )}
+    >
+      <div className="absolute right-2.5 top-2.5 z-10">
+        <CompareToggle slug={r.slug} />
+      </div>
+
+      <Link href={`/rocket/${r.slug}`} className="flex flex-1 flex-col">
+        <div
+          className="relative flex h-44 items-end justify-center overflow-hidden px-6 pb-3 pt-6"
+          style={{
+            background:
+              "linear-gradient(180deg, color-mix(in srgb, var(--viewer-bg-a) 82%, transparent), var(--panel))",
+          }}
+        >
+          <Silhouette
+            geometry={r.geometry}
+            className="h-full w-auto max-w-[80%] opacity-90 transition-transform duration-500 group-hover:scale-[1.04]"
+            title={`${r.nameZh} 等比剪影`}
+          />
+          <span className="absolute bottom-2 right-3 text-[10px] text-fg-subtle tabular">
+            {meters(r.height)}
+          </span>
+        </div>
+
+        <div className="flex flex-1 flex-col border-t border-border-base p-4">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <h3 className="truncate text-[15px] font-semibold text-fg group-hover:text-accent">
+                {r.nameZh}
+              </h3>
+              <p className="truncate text-[11px] text-fg-subtle">{r.name}</p>
+            </div>
+            <StatusBadge status={r.status} className="shrink-0" />
+          </div>
+
+          <p className="mt-2.5 line-clamp-2 text-[12px] leading-relaxed text-fg-muted">
+            {r.description}
+          </p>
+
+          <dl className="mt-3.5 grid grid-cols-3 gap-2 border-t border-border-base pt-3 text-center">
+            <Stat label="首飞" value={year(r.firstFlight)} />
+            <Stat label="LEO 载荷" value={r.payloadLEO ? fmtMass(r.payloadLEO) : "—"} />
+            <Stat label="起飞质量" value={fmtMass(r.mass)} />
+          </dl>
+
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            <span className="rounded border border-border-base px-1.5 py-0.5 text-[10px] text-fg-muted">
+              {r.countryZh}
+            </span>
+            {r.propellants.slice(0, 3).map((p) => (
+              <span
+                key={p}
+                className="flex items-center gap-1 rounded border border-border-base px-1.5 py-0.5 text-[10px] text-fg-muted"
+              >
+                <span
+                  className="size-1.5 rounded-full"
+                  style={{ background: PROPELLANT_META[p].color }}
+                  aria-hidden
+                />
+                {PROPELLANT_META[p].short}
+              </span>
+            ))}
+            {r.reusable ? (
+              <span className="flex items-center gap-1 rounded border border-accent/30 bg-accent-soft px-1.5 py-0.5 text-[10px] text-accent">
+                <Recycle className="size-2.5" />
+                可回收
+              </span>
+            ) : null}
+            {r.humanRated ? (
+              <span className="flex items-center gap-1 rounded border border-border-base px-1.5 py-0.5 text-[10px] text-fg-muted">
+                <Users className="size-2.5" />
+                载人
+              </span>
+            ) : null}
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-[10px] text-fg-subtle">{label}</dt>
+      <dd className="mt-0.5 text-[13px] text-fg tabular">{value}</dd>
+    </div>
+  );
+}
