@@ -12,7 +12,7 @@ import { dateZh, force, mass, meters, num } from "@/lib/utils";
 
 /* ── 概览 ─────────────────────────────────────────────── */
 
-export function OverviewTab({ r, t }: { r: Rocket; t: Dict }) {
+export function OverviewTab({ r, lang, t }: { r: Rocket; lang: Locale; t: Dict }) {
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
       <div className="min-w-0">
@@ -31,7 +31,7 @@ export function OverviewTab({ r, t }: { r: Rocket; t: Dict }) {
           <CardBody className="space-y-3.5">
             {r.milestones.map((m) => (
               <div key={`${m.date}-${m.title}`} className="border-l border-border-strong pl-3">
-                <p className="text-[11px] text-fg-subtle tabular">{dateZh(m.date)}</p>
+                <p className="text-[11px] text-fg-subtle tabular">{dateZh(m.date, lang)}</p>
                 <p className="mt-0.5 text-[13px] font-medium text-fg">{m.title}</p>
                 {m.note ? (
                   <p className="mt-1 text-[12px] leading-relaxed text-fg-muted">{m.note}</p>

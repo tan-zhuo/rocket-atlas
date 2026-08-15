@@ -14,7 +14,7 @@ type Kind = TimelineEvent["kind"];
 export function TimelineView({ events }: { events: TimelineEvent[] }) {
   const [kinds, setKinds] = React.useState<Kind[]>([]);
   const [countries, setCountries] = React.useState<string[]>([]);
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   const allCountries = React.useMemo(
     () => Array.from(new Set(events.map((e) => e.countryZh))).sort(),
@@ -92,7 +92,7 @@ export function TimelineView({ events }: { events: TimelineEvent[] }) {
                 const body = (
                   <div className="rounded-xl border border-border-base bg-panel p-4 transition-colors hover:border-accent">
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                      <span className="text-[12px] text-fg-subtle tabular">{dateZh(e.date)}</span>
+                      <span className="text-[12px] text-fg-subtle tabular">{dateZh(e.date, lang)}</span>
                       <Badge tone={meta.tone}>{t.timeline.kinds[e.kind]}</Badge>
                       <span className="flex items-center gap-1.5 rounded border border-border-base px-1.5 py-0.5 text-[10px] text-fg-muted">
                         <Flag country={e.countryZh} flagClassName="h-2.5 w-[15px]" />

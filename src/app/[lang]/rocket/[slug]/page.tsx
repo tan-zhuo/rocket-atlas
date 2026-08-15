@@ -93,7 +93,7 @@ export default async function RocketPage(props: PageProps<"/[lang]/rocket/[slug]
   ];
 
   const panels = [
-    <OverviewTab key="o" r={r} t={t} />,
+    <OverviewTab key="o" r={r} lang={lang} t={t} />,
     <DesignTab key="d" r={r} lang={lang} t={t} />,
     <PropulsionTab key="p" r={r} lang={lang} t={t} />,
     <SpecsTab key="s" r={r} lang={lang} t={t} />,
