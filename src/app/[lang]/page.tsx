@@ -56,10 +56,11 @@ export default async function Home() {
         <div className="relative mx-auto max-w-[1400px] px-4 py-16 sm:px-6 lg:py-24">
           <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
             <div className="max-w-3xl">
-            <h1 className="text-[34px] font-semibold leading-[1.15] tracking-tight text-fg sm:text-5xl">
+            <p className="text-[12px] font-medium uppercase tracking-[0.16em] text-fg-subtle">
+              {t.home.heroKicker}
+            </p>
+            <h1 className="mt-4 text-[38px] font-semibold leading-[1.12] tracking-tight text-fg sm:text-[52px]">
               {t.home.heroTitleA}
-              <br className="hidden sm:block" />
-              {t.home.heroTitleB}
               <span className="text-accent">{t.home.heroAccent}</span>
             </h1>
             <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-fg-muted sm:text-base">

@@ -14,6 +14,8 @@ import { localizeRocket } from "@/i18n/localize";
 import { CYCLE_EXPLAIN, CYCLE_LABEL, PROPELLANT_LABEL, PROPELLANT_TRADEOFF } from "@/i18n/terms";
 import { ANATOMY_COPY, type DiagramCycle } from "@/data/engine-anatomy";
 import { CycleDiagram } from "@/components/engine/cycle-diagram";
+import { engineModelSpec } from "@/data/engine-geometry";
+import { EngineViewerMount } from "@/components/engine/engine-viewer-mount";
 import { force, meters, num, year } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -47,6 +49,7 @@ export default async function EnginePage(props: PageProps<"/[lang]/engine/[slug]
   const country = lang === "en" ? entry.detail.country : entry.detail.countryZh;
   const cycleLabel = CYCLE_LABEL[lang][spec.cycle];
   const anatomy = ANATOMY_COPY[lang];
+  const modelSpec = engineModelSpec(entry);
   // 固体与未公开循环没有泵系统流程图可画
   const diagramCycle: DiagramCycle | null =
     spec.cycle === "solid" || spec.cycle === "hybrid-unknown" ? null : spec.cycle;
@@ -145,7 +148,20 @@ export default async function EnginePage(props: PageProps<"/[lang]/engine/[slug]
           <Quick label={t.engines.vehicleCount} value={String(entry.rockets.length)} />
         </dl>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+        {/* 3D 模型：喷管尺寸由推力/室压/扩张比反算 */}
+        <section className="mt-8">
+          <EngineViewerMount
+            spec={modelSpec}
+            parts={anatomy.parts}
+            name={name}
+            className="h-[460px]"
+          />
+          <p className="mt-2 text-[12px] leading-relaxed text-fg-subtle">
+            {t.engineViewer.howSized}
+          </p>
+        </section>
+
+        <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="min-w-0 space-y-8">
             {/* 换来了什么 / 代价是什么 */}
             {d.pros?.length ? (

@@ -124,15 +124,25 @@ export function SiteHeader({ docs }: { docs: SearchDoc[] }) {
   );
 }
 
+/**
+ * 标志：一个「A」，同时是一副钟形喷管的母线——两条向下张开的曲线加一道横杆。
+ * 这两件事恰好是站名（Atlas）和站的内容（火箭）的交集，
+ * 而且在 16 px 的浏览器标签里依然认得出来。
+ */
 function LogoMark() {
   return (
-    <svg viewBox="0 0 24 24" className="size-6 text-accent" aria-hidden fill="none">
-      <path
-        d="M12 2c2.6 2.7 4 6.2 4 10v4.2l2 2.6V21l-3.2-1.4h-5.6L6 21v-2.2l2-2.6V12c0-3.8 1.4-7.3 4-10Z"
-        fill="currentColor"
-        opacity="0.9"
-      />
-      <circle cx="12" cy="9.4" r="1.6" className="fill-bg" />
+    <svg viewBox="0 0 32 32" className="size-7 shrink-0" aria-hidden fill="none">
+      <rect width="32" height="32" rx="7" className="fill-accent" />
+      <g
+        fill="none"
+        stroke="var(--accent-fg)"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+      >
+        <path d="M16 5.2 C 13.6 12.4 11 19 7.4 26" />
+        <path d="M16 5.2 C 18.4 12.4 21 19 24.6 26" />
+        <path d="M10.6 19.4 H 21.4" />
+      </g>
     </svg>
   );
 }

@@ -33,12 +33,14 @@ export async function generateMetadata(props: LayoutProps<"/[lang]">): Promise<M
   return {
     metadataBase: new URL(SITE_URL),
     title: {
-      default: zh ? "运载火箭图谱 · 全球运载火箭百科" : "Rocket Atlas · A visual encyclopedia of launch vehicles",
-      template: zh ? "%s · 运载火箭图谱" : "%s · Rocket Atlas",
+      default: zh
+        ? "RocketAtlas · 火箭为什么长成这样"
+        : "RocketAtlas · Why rockets look the way they do",
+      template: "%s · RocketAtlas",
     },
     description: zh
-      ? "系统化、可视化、可交互的运载火箭公开知识平台。3D 结构、设计逻辑、横向对比与原理专题——不只讲「是什么」，更讲清楚「为什么这样设计」。"
-      : "A systematic, visual and interactive encyclopedia of launch vehicles built from public sources: 3D structure, design logic, side-by-side comparison and principle deep-dives — not just what a rocket is, but why it was designed that way.",
+      ? "把每一枚运载火箭与它的发动机拆开：可交互 3D 结构、逐级参数、设计权衡问答与原理专题。全部内容基于可查证的公开资料。"
+      : "Every launch vehicle and engine taken apart: interactive 3D structure, stage-by-stage numbers, design trade-off Q&A and principle deep-dives — all built from verifiable public sources.",
     keywords: zh
       ? ["运载火箭", "航天", "3D", "百科", "火箭方程", "可回收火箭", "推进剂"]
       : ["launch vehicle", "rocket", "spaceflight", "3D", "rocket equation", "reusability", "propellant"],
@@ -49,7 +51,7 @@ export async function generateMetadata(props: LayoutProps<"/[lang]">): Promise<M
     openGraph: {
       type: "website",
       locale: LOCALE_META[locale].htmlLang,
-      siteName: zh ? "运载火箭图谱" : "Rocket Atlas",
+      siteName: "RocketAtlas",
     },
     twitter: { card: "summary_large_image" },
     robots: { index: true, follow: true },

@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { L } from "@/components/ui/link";
 import { ChevronRight } from "lucide-react";
 import { ANATOMY_COPY, CYCLE_ORDER } from "@/data/engine-anatomy";
-import { ENGINES } from "@/data/engines-index";
+import { ENGINES, getEngine } from "@/data/engines-index";
+import { engineModelSpec } from "@/data/engine-geometry";
+import { EngineViewerMount } from "@/components/engine/engine-viewer-mount";
 import { AnatomyDiagram, Inline } from "@/components/engine/anatomy-diagram";
 import { CycleDiagram, CycleLegend } from "@/components/engine/cycle-diagram";
 import { getLang, getServerDict } from "@/i18n/server";
@@ -18,6 +20,8 @@ export default async function EngineAnatomyPage() {
   const t = await getServerDict();
   const c = ANATOMY_COPY[lang];
   const cycleLabel = CYCLE_LABEL[lang];
+  // 用 F-1 作教学样本：零件最全，公开尺寸也最容易核对
+  const sample = getEngine("f-1");
 
   // 每种循环列出本站收录的代表型号，把原理和具体发动机接上
   const examples = new Map<string, { slug: string; name: string }[]>();
@@ -52,6 +56,24 @@ export default async function EngineAnatomyPage() {
         <h2 className="text-[22px] font-semibold tracking-tight text-fg">{c.sectionAnatomy}</h2>
         <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-fg-muted">{c.anatomyLead}</p>
         <AnatomyDiagram parts={c.parts} hint={c.hint} className="mt-6" />
+
+        {/* 同一套部件说明，换成可旋转的 3D 实体 */}
+        {sample ? (
+          <div className="mt-8">
+            <h3 className="text-[13px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
+              {t.engineViewer.title}
+            </h3>
+            <EngineViewerMount
+              spec={engineModelSpec(sample)}
+              parts={c.parts}
+              name={lang === "en" ? sample.detail.displayEn : sample.detail.displayZh}
+              className="mt-3 h-[460px]"
+            />
+            <p className="mt-2 text-[12px] leading-relaxed text-fg-subtle">
+              {t.engineViewer.howSized}
+            </p>
+          </div>
+        ) : null}
       </section>
 
       {/* ── 六种循环 ─────────────────────────────── */}

@@ -37,11 +37,30 @@ export interface EngineDetail {
   cons: string[];
   /** 一句话定位 */
   summary?: string;
+
+  /* ── 3D 建模需要的公开几何参数 ───────────────────────────
+   * 喷管尺寸不是捏出来的：喉部面积由「推力 / (推力系数 × 室压)」反算，
+   * 出口半径再按扩张比放大。所以只要这两个数是公开的，模型比例就可信。 */
+  /** 喷管扩张比（出口面积 / 喉部面积）；部分型号为公开估算 */
+  expansionRatio?: number;
+  /** 主燃烧室数量。苏/俄传统的多室发动机在这里 > 1 */
+  chambers?: number;
+  /** 游动喷管数量 */
+  verniers?: number;
+  /** 是否泵压式（挤压式与固体为 false） */
+  pumpDriven?: boolean;
+  /** 是否带可展开 / 辐射冷却喷管延伸段 */
+  nozzleExtension?: boolean;
 }
 
 export const ENGINE_DETAIL: Record<string, EngineDetail> = {
   /* ── 煤油 / 液氧 ─────────────────────────────────────── */
   "F-1": {
+    expansionRatio: 16,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "f-1",
     displayZh: "F-1",
     displayEn: "F-1",
@@ -67,6 +86,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "Merlin 1D": {
+    expansionRatio: 16,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "merlin-1d",
     displayZh: "梅林 1D",
     displayEn: "Merlin 1D",
@@ -93,6 +117,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "Merlin 1D Vacuum": {
+    expansionRatio: 165,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: true,
     slug: "merlin-1d-vacuum",
     displayZh: "梅林 1D 真空版",
     displayEn: "Merlin 1D Vacuum",
@@ -116,6 +145,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   Rutherford: {
+    expansionRatio: 14,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "rutherford",
     displayZh: "卢瑟福",
     displayEn: "Rutherford",
@@ -141,6 +175,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RD-107": {
+    expansionRatio: 18.9,
+    chambers: 4,
+    verniers: 2,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "rd-107",
     displayZh: "RD-107",
     displayEn: "RD-107",
@@ -165,6 +204,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RD-108": {
+    expansionRatio: 18.9,
+    chambers: 4,
+    verniers: 4,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "rd-108",
     displayZh: "RD-108",
     displayEn: "RD-108",
@@ -187,6 +231,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RD-107A": {
+    expansionRatio: 18.9,
+    chambers: 4,
+    verniers: 2,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "rd-107a",
     displayZh: "RD-107A",
     displayEn: "RD-107A",
@@ -209,6 +258,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RD-108A": {
+    expansionRatio: 18.9,
+    chambers: 4,
+    verniers: 4,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "rd-108a",
     displayZh: "RD-108A",
     displayEn: "RD-108A",
@@ -225,6 +279,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     cons: ["同 RD-107A：构型与性能已到天花板", "游机消耗额外推进剂"],
   },
   "RD-0124": {
+    expansionRatio: 100,
+    chambers: 4,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "rd-0124",
     displayZh: "RD-0124",
     displayEn: "RD-0124",
@@ -248,6 +307,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "YF-100": {
+    expansionRatio: 35,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "yf-100",
     displayZh: "YF-100",
     displayEn: "YF-100",
@@ -271,6 +335,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "天鹊 TQ-12": {
+    expansionRatio: 25,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "tq-12",
     displayZh: "天鹊 TQ-12",
     displayEn: "Tianque TQ-12",
@@ -297,6 +366,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
 
   /* ── 液氢 / 液氧 ─────────────────────────────────────── */
   "J-2": {
+    expansionRatio: 27.5,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "j-2",
     displayZh: "J-2",
     displayEn: "J-2",
@@ -322,6 +396,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "YF-77": {
+    expansionRatio: 49,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "yf-77",
     displayZh: "YF-77",
     displayEn: "YF-77",
@@ -346,6 +425,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "YF-75D": {
+    expansionRatio: 80,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "yf-75d",
     displayZh: "YF-75D",
     displayEn: "YF-75D",
@@ -369,6 +453,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "Vulcain 2": {
+    expansionRatio: 58.5,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "vulcain-2",
     displayZh: "火神 2",
     displayEn: "Vulcain 2",
@@ -393,6 +482,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RS-68A": {
+    expansionRatio: 21.5,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "rs-68a",
     displayZh: "RS-68A",
     displayEn: "RS-68A",
@@ -417,6 +511,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "HM7B": {
+    expansionRatio: 83,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "hm7b",
     displayZh: "HM7B",
     displayEn: "HM7B",
@@ -440,6 +539,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RL10B-2": {
+    expansionRatio: 285,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: true,
     slug: "rl10b-2",
     displayZh: "RL10B-2",
     displayEn: "RL10B-2",
@@ -464,6 +568,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RL10C-1-1": {
+    expansionRatio: 130,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "rl10c-1-1",
     displayZh: "RL10C-1-1",
     displayEn: "RL10C-1-1",
@@ -488,6 +597,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "BE-3U": {
+    expansionRatio: 100,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "be-3u",
     displayZh: "BE-3U",
     displayEn: "BE-3U",
@@ -514,6 +628,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
 
   /* ── 甲烷 / 液氧 ─────────────────────────────────────── */
   "Raptor 2": {
+    expansionRatio: 34.3,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "raptor-2",
     displayZh: "猛禽 2",
     displayEn: "Raptor 2",
@@ -541,6 +660,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "Raptor Vacuum (RVac)": {
+    expansionRatio: 80,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: true,
     slug: "raptor-vacuum",
     displayZh: "猛禽真空版 RVac",
     displayEn: "Raptor Vacuum (RVac)",
@@ -564,6 +688,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "BE-4": {
+    expansionRatio: 30,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "be-4",
     displayZh: "BE-4",
     displayEn: "BE-4",
@@ -590,6 +719,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
 
   /* ── 自燃推进剂 ──────────────────────────────────────── */
   "YF-20B": {
+    expansionRatio: 10,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "yf-20b",
     displayZh: "YF-20B",
     displayEn: "YF-20B",
@@ -615,6 +749,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "YF-22B": {
+    expansionRatio: 40,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "yf-22b",
     displayZh: "YF-22B",
     displayEn: "YF-22B",
@@ -634,6 +773,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     cons: ["姿态控制完全依赖 4 台游动发动机，多出一整套推进系统与管路", "比冲受自燃推进剂限制"],
   },
   "YF-23B": {
+    expansionRatio: 40,
+    chambers: 4,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "yf-23b",
     displayZh: "YF-23B",
     displayEn: "YF-23B",
@@ -649,6 +793,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     cons: ["额外消耗推进剂", "四套小推进系统的管路与阀门是可靠性上的薄弱环节"],
   },
   "天鹊 TQ-11": {
+    expansionRatio: 40,
+    chambers: 4,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "tq-11",
     displayZh: "天鹊 TQ-11",
     displayEn: "Tianque TQ-11",
@@ -667,6 +816,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   Curie: {
+    expansionRatio: 60,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: false,
+    nozzleExtension: false,
     slug: "curie",
     displayZh: "居里",
     displayEn: "Curie",
@@ -686,6 +840,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     cons: ["推力仅 120 N，变轨耗时长", "推进剂配方未公开，第三方难以独立评估性能"],
   },
   "A4 发动机": {
+    expansionRatio: 3.6,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: true,
+    nozzleExtension: false,
     slug: "a4-engine",
     displayZh: "A4 发动机",
     displayEn: "A4 engine",
@@ -713,6 +872,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
 
   /* ── 固体 ────────────────────────────────────────────── */
   "P241 固体发动机": {
+    expansionRatio: 11,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: false,
+    nozzleExtension: false,
     slug: "p241",
     displayZh: "P241 固体发动机",
     displayEn: "P241 solid motor",
@@ -738,6 +902,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "GEM 63XL": {
+    expansionRatio: 16,
+    chambers: 1,
+    verniers: 0,
+    pumpDriven: false,
+    nozzleExtension: false,
     slug: "gem-63xl",
     displayZh: "GEM 63XL",
     displayEn: "GEM 63XL",

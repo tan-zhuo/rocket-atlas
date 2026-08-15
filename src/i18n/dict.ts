@@ -102,8 +102,8 @@ export interface Dict {
 
   home: {
     heroTitleA: string;
-    heroTitleB: string;
     heroAccent: string;
+    heroKicker: string;
     heroLead: string;
     ctaExplore: string;
     ctaCompare: string;
@@ -292,6 +292,17 @@ export interface Dict {
     howItWorksCta: string;
   };
 
+  engineViewer: {
+    title: string;
+    cutaway: string;
+    derivedNote: string;
+    throatDia: string;
+    exitDia: string;
+    nozzleLength: string;
+    expansionRatio: string;
+    howSized: string;
+  };
+
   lab: {
     title: string;
     lead: string;
@@ -361,8 +372,8 @@ export interface Dict {
 }
 
 const zh: Dict = {
-  brand: "运载火箭图谱",
-  tagline: "看得见结构，也讲得清为什么这样设计",
+  brand: "RocketAtlas",
+  tagline: "火箭为什么长成这样",
 
   nav: {
     rockets: "火箭百科",
@@ -460,11 +471,11 @@ const zh: Dict = {
   },
 
   home: {
-    heroTitleA: "看得见结构，",
-    heroTitleB: "也讲得清",
-    heroAccent: "为什么这样设计",
+    heroTitleA: "火箭为什么",
+    heroAccent: "长成这样",
+    heroKicker: "运载火箭的结构、参数与设计取舍",
     heroLead:
-      "从 V-2 到星舰，把散落在 NASA 技术报告、用户手册与官方白皮书里的公开信息，整理成可检索、可对比、可交互的知识体系。每一枚火箭都有 3D 结构、分级参数，以及一组「为什么不是别的方案」的设计权衡问答。",
+      "同样是把几十吨货物送进轨道，土星五号选择一次性堆到极致，猎鹰九号选择少带 30% 载荷换回箭体，星舰干脆把整套逻辑推倒重来。这些差别不是偏好，是一连串可以追溯的权衡。这里把每一枚火箭拆开——3D 结构、分级参数，以及一组「为什么不是别的方案」的问答。",
     ctaExplore: "探索全部火箭",
     ctaCompare: "并排对比",
     ctaPrinciples: "从火箭方程读起",
@@ -674,6 +685,18 @@ const zh: Dict = {
     howItWorksCta: "读原理讲解",
   },
 
+  engineViewer: {
+    title: "3D 模型",
+    cutaway: "半剖视图",
+    derivedNote: "喷管尺寸由推力 / 室压反算喉部、再按扩张比放大得到；泵与管路为示意布置",
+    throatDia: "喉部直径",
+    exitDia: "出口直径",
+    nozzleLength: "喷管长度",
+    expansionRatio: "扩张比",
+    howSized:
+      "这台发动机的喷管不是画出来的，是算出来的：由推力与燃烧室压力反算喉部面积，再按扩张比放大到出口。用 F-1 验算，这套算法给出的喉径、出口直径与喷管长度都与公开尺寸吻合。",
+  },
+
   lab: {
     title: "3D 实验室",
     lead: "所有模型在一个页面里自由切换。拖拽旋转、滚轮缩放、拉动滑块展开爆炸视图，点击任意部件读它的设计说明。橙色人形是 1.8 m 比例尺——它比任何数字都更能说明这些东西到底有多大。",
@@ -712,7 +735,7 @@ const zh: Dict = {
 
   footer: {
     blurb:
-      "一个公开知识驱动的运载火箭可视化教育平台。我们不只罗列参数，更试图讲清楚「为什么这样设计」。",
+      "把每一枚运载火箭拆开，讲清楚它为什么是这个样子。全部内容基于可查证的公开资料。",
     browse: "浏览",
     principles: "原理专题",
     families: "火箭家族",
@@ -751,8 +774,8 @@ const zh: Dict = {
 };
 
 const en: Dict = {
-  brand: "Rocket Atlas",
-  tagline: "See the structure — and understand why it was designed that way",
+  brand: "RocketAtlas",
+  tagline: "Why rockets look the way they do",
 
   nav: {
     rockets: "Rockets",
@@ -850,11 +873,11 @@ const en: Dict = {
   },
 
   home: {
-    heroTitleA: "See the structure.",
-    heroTitleB: "Understand ",
-    heroAccent: "why it was designed that way",
+    heroTitleA: "Why rockets look ",
+    heroAccent: "the way they do",
+    heroKicker: "Structure, numbers and design trade-offs of launch vehicles",
     heroLead:
-      "From the V-2 to Starship: public information scattered across NASA technical reports, launch-service user guides and official white papers, reorganised into something searchable, comparable and interactive. Every vehicle gets a 3D structure, stage-by-stage numbers, and a set of “why not the other option” design trade-offs.",
+      "To put tens of tonnes into orbit, Saturn V pushed a single-use vehicle to its limit, Falcon 9 gave up 30% of its payload to get the booster back, and Starship threw the whole architecture out and started again. Those differences are not preferences — they are chains of traceable trade-offs. This is every vehicle taken apart: 3D structure, stage-by-stage numbers, and a set of “why not the other option” questions.",
     ctaExplore: "Explore all rockets",
     ctaCompare: "Compare side by side",
     ctaPrinciples: "Start with the rocket equation",
@@ -1073,6 +1096,19 @@ const en: Dict = {
     howItWorksCta: "Read the explainer",
   },
 
+  engineViewer: {
+    title: "3D model",
+    cutaway: "Half section",
+    derivedNote:
+      "Nozzle size is derived: throat area from thrust and chamber pressure, exit radius from expansion ratio. Pumps and plumbing are schematic.",
+    throatDia: "Throat diameter",
+    exitDia: "Exit diameter",
+    nozzleLength: "Nozzle length",
+    expansionRatio: "Expansion ratio",
+    howSized:
+      "This nozzle is not drawn, it is calculated: throat area comes from thrust divided by chamber pressure, and the exit radius follows from the expansion ratio. Checked against the F-1, the method reproduces the published throat diameter, exit diameter and nozzle length.",
+  },
+
   lab: {
     title: "3D Lab",
     lead: "Every model in one place. Drag to rotate, scroll to zoom, pull the slider for the exploded view, and click any part to read its design note. The orange figure is a 1.8 m scale reference — it tells you more about the size of these machines than any number does.",
@@ -1111,7 +1147,7 @@ const en: Dict = {
 
   footer: {
     blurb:
-      "A public-knowledge-driven visual encyclopedia of launch vehicles. Not just the numbers — the reasoning behind them.",
+      "Every launch vehicle taken apart, and why each one is shaped the way it is. Built entirely from verifiable public sources.",
     browse: "Browse",
     principles: "Principles",
     families: "Families",
