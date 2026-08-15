@@ -138,11 +138,34 @@ body {
   background-size: 48px 48px;
 }
 
-.hide-scrollbar {
+/* 写成 @utility 而不是普通类，这样才能带 lg: 之类的变体
+   （3D 实验室的型号列表在小屏是横向滑动、隐藏滚动条，大屏是纵向滚动、显示滚动条）*/
+@utility hide-scrollbar {
   scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
+
+/* 内部滚动的长列表：滚动条要看得见（否则用户不知道能滚），但不要抢戏 */
+@utility thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+  &::-webkit-scrollbar {
+    display: block;
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--border-strong);
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--fg-subtle);
+  }
 }
 
 /* ── Long-form prose (design-logic essays, principle articles) ───── */

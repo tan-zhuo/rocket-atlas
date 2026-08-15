@@ -25,10 +25,18 @@ export function LabClient({ entries }: { entries: LabEntry[] }) {
   return (
     <div className="grid gap-6 lg:grid-cols-[200px_minmax(0,1fr)]">
       <aside className="lg:sticky lg:top-20 lg:h-fit">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
+        <p className="flex items-baseline justify-between gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-subtle">
           {t.lab.pick}
+          <span className="tabular font-normal tracking-normal">{entries.length}</span>
         </p>
-        <div className="hide-scrollbar mt-3 flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0">
+        {/* 小屏横向滑动、隐藏滚动条；大屏是一列独立滚动的长列表——
+            型号已经三十多个，不能再逼着人滚整页去够底下那几个。 */}
+        <div
+          className={cn(
+            "hide-scrollbar mt-3 flex gap-2 overflow-x-auto pb-2",
+            "lg:thin-scrollbar lg:max-h-[calc(100dvh-9rem)] lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto lg:pb-0 lg:pr-1.5",
+          )}
+        >
           {entries.map((e) => (
             <button
               key={e.slug}
