@@ -53,6 +53,30 @@ export const PROPELLANT_TRADEOFF: Record<Locale, Record<PropellantType, string>>
   },
 };
 
+/** 动力循环的短标签（列表页筛选、卡片徽标用） */
+export const CYCLE_LABEL: Record<Locale, Record<EngineCycle, string>> = {
+  zh: {
+    "gas-generator": "燃气发生器循环",
+    "staged-combustion": "分级燃烧循环",
+    "full-flow-staged-combustion": "全流量分级燃烧",
+    expander: "膨胀循环",
+    "electric-pump": "电泵循环",
+    "pressure-fed": "挤压式",
+    solid: "固体",
+    "hybrid-unknown": "其它 / 未公开",
+  },
+  en: {
+    "gas-generator": "Gas generator",
+    "staged-combustion": "Staged combustion",
+    "full-flow-staged-combustion": "Full-flow staged combustion",
+    expander: "Expander",
+    "electric-pump": "Electric pump",
+    "pressure-fed": "Pressure-fed",
+    solid: "Solid",
+    "hybrid-unknown": "Other / undisclosed",
+  },
+};
+
 export const CYCLE_EXPLAIN: Record<Locale, Record<EngineCycle, string>> = {
   zh: {
     "gas-generator":

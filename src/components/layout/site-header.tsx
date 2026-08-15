@@ -13,15 +13,18 @@ import { useHydrated } from "@/lib/client-hooks";
 import { useI18n } from "@/i18n/provider";
 import { LanguageToggle } from "./language-toggle";
 
-const NAV: { href: string; key: "rockets" | "compare" | "principles" | "timeline" | "lab" | "about" }[] =
-  [
-    { href: "/rockets", key: "rockets" },
-    { href: "/compare", key: "compare" },
-    { href: "/principles", key: "principles" },
-    { href: "/timeline", key: "timeline" },
-    { href: "/lab", key: "lab" },
-    { href: "/about", key: "about" },
-  ];
+const NAV: {
+  href: string;
+  key: "rockets" | "engines" | "compare" | "principles" | "timeline" | "lab" | "about";
+}[] = [
+  { href: "/rockets", key: "rockets" },
+  { href: "/engines", key: "engines" },
+  { href: "/compare", key: "compare" },
+  { href: "/principles", key: "principles" },
+  { href: "/timeline", key: "timeline" },
+  { href: "/lab", key: "lab" },
+  { href: "/about", key: "about" },
+];
 
 function CompareBadge() {
   const count = useCompare((s) => s.slugs.length);
@@ -45,7 +48,8 @@ export function SiteHeader({ docs }: { docs: SearchDoc[] }) {
   // pathname 带语言前缀（/en/rockets），比较时先剥掉第一段
   function isActive(href: string) {
     const rest = "/" + pathname.split("/").filter(Boolean).slice(1).join("/");
-    if (href === "/rockets") return rest.startsWith("/rocket");
+    if (href === "/rockets") return rest === "/rockets" || rest.startsWith("/rocket/");
+    if (href === "/engines") return rest.startsWith("/engine");
     if (href === "/principles") return rest.startsWith("/principles");
     return rest === href || rest.startsWith(`${href}/`);
   }

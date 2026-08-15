@@ -63,6 +63,7 @@ export async function SiteFooter() {
             title={t.footer.browse}
             links={[
               { href: "/rockets", label: t.nav.rockets },
+              { href: "/engines", label: t.nav.engines },
               { href: "/compare", label: t.nav.compare },
               { href: "/timeline", label: t.nav.timeline },
               { href: "/principles", label: t.nav.principles },

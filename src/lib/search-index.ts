@@ -3,9 +3,11 @@ import { FAMILIES } from "@/data/families";
 import { PRINCIPLES } from "@/data/principles";
 import type { Locale } from "@/i18n/config";
 import { localizeFamily, localizePrinciple, localizeRocket } from "@/i18n/localize";
+import { ENGINES } from "@/data/engines-index";
+import { getEngineDetail } from "@/data/engines";
 
 export interface SearchDoc {
-  kind: "rocket" | "family" | "principle";
+  kind: "rocket" | "engine" | "family" | "principle";
   slug: string;
   title: string;
   subtitle: string;
@@ -65,7 +67,25 @@ export function buildSearchIndex(lang: Locale = "zh"): SearchDoc[] {
     href: `/${lang}/principles/${p.slug}`,
   }));
 
-  return [...rockets, ...families, ...principles];
+  const engines: SearchDoc[] = ENGINES.map((e) => {
+    const d = getEngineDetail(e.key, lang) ?? e.detail;
+    const name = lang === "en" ? e.detail.displayEn : e.detail.displayZh;
+    return {
+      kind: "engine" as const,
+      slug: e.slug,
+      title: name,
+      subtitle:
+        lang === "zh"
+          ? `发动机 · ${e.detail.countryZh} · ${d.maker ?? ""}`
+          : `Engine · ${e.detail.country} · ${d.maker ?? ""}`,
+      terms: [e.key, e.detail.displayZh, e.detail.displayEn, e.slug, d.maker ?? "", d.fuel]
+        .join(" ")
+        .toLowerCase(),
+      href: `/${lang}/engine/${e.slug}`,
+    };
+  });
+
+  return [...rockets, ...engines, ...families, ...principles];
 }
 
 export function searchDocs(docs: SearchDoc[], q: string, limit = 8): SearchDoc[] {

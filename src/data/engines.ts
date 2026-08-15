@@ -12,6 +12,14 @@ import { ENGINE_DETAIL_EN } from "./en/engines";
  */
 
 export interface EngineDetail {
+  /** 路由标识 */
+  slug: string;
+  /** 展示名（中文页面用） */
+  displayZh: string;
+  /** 展示名（英文页面用） */
+  displayEn: string;
+  countryZh: string;
+  country: string;
   /** 推进剂的中文全称 */
   propellantZh: string;
   /** 燃料 / 氧化剂拆分，用于卡片上的双行展示 */
@@ -34,6 +42,11 @@ export interface EngineDetail {
 export const ENGINE_DETAIL: Record<string, EngineDetail> = {
   /* ── 煤油 / 液氧 ─────────────────────────────────────── */
   "F-1": {
+    slug: "f-1",
+    displayZh: "F-1",
+    displayEn: "F-1",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "RP-1 煤油 / 液氧",
     fuel: "RP-1 精炼煤油",
     oxidizer: "液氧",
@@ -54,6 +67,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "Merlin 1D": {
+    slug: "merlin-1d",
+    displayZh: "梅林 1D",
+    displayEn: "Merlin 1D",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "RP-1 煤油 / 液氧（均为过冷）",
     fuel: "RP-1 煤油（冷却至 −7 °C）",
     oxidizer: "液氧（过冷至 −207 °C）",
@@ -75,6 +93,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "Merlin 1D Vacuum": {
+    slug: "merlin-1d-vacuum",
+    displayZh: "梅林 1D 真空版",
+    displayEn: "Merlin 1D Vacuum",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "RP-1 煤油 / 液氧",
     fuel: "RP-1 煤油",
     oxidizer: "液氧",
@@ -93,6 +116,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   Rutherford: {
+    slug: "rutherford",
+    displayZh: "卢瑟福",
+    displayEn: "Rutherford",
+    countryZh: "新西兰 / 美国",
+    country: "New Zealand / United States",
     propellantZh: "RP-1 煤油 / 液氧",
     fuel: "RP-1 煤油",
     oxidizer: "液氧",
@@ -113,6 +141,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RD-107": {
+    slug: "rd-107",
+    displayZh: "RD-107",
+    displayEn: "RD-107",
+    countryZh: "苏联",
+    country: "Soviet Union",
     propellantZh: "T-1 煤油 / 液氧",
     fuel: "T-1 煤油",
     oxidizer: "液氧",
@@ -132,6 +165,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RD-108": {
+    slug: "rd-108",
+    displayZh: "RD-108",
+    displayEn: "RD-108",
+    countryZh: "苏联",
+    country: "Soviet Union",
     propellantZh: "T-1 煤油 / 液氧",
     fuel: "T-1 煤油",
     oxidizer: "液氧",
@@ -149,6 +187,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RD-107A": {
+    slug: "rd-107a",
+    displayZh: "RD-107A",
+    displayEn: "RD-107A",
+    countryZh: "俄罗斯",
+    country: "Russia",
     propellantZh: "RG-1 煤油 / 液氧",
     fuel: "RG-1 煤油",
     oxidizer: "液氧",
@@ -166,6 +209,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RD-108A": {
+    slug: "rd-108a",
+    displayZh: "RD-108A",
+    displayEn: "RD-108A",
+    countryZh: "俄罗斯",
+    country: "Russia",
     propellantZh: "RG-1 煤油 / 液氧",
     fuel: "RG-1 煤油",
     oxidizer: "液氧",
@@ -177,6 +225,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     cons: ["同 RD-107A：构型与性能已到天花板", "游机消耗额外推进剂"],
   },
   "RD-0124": {
+    slug: "rd-0124",
+    displayZh: "RD-0124",
+    displayEn: "RD-0124",
+    countryZh: "俄罗斯",
+    country: "Russia",
     propellantZh: "RG-1 煤油 / 液氧",
     fuel: "RG-1 煤油",
     oxidizer: "液氧",
@@ -195,6 +248,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "YF-100": {
+    slug: "yf-100",
+    displayZh: "YF-100",
+    displayEn: "YF-100",
+    countryZh: "中国",
+    country: "China",
     propellantZh: "煤油 / 液氧",
     fuel: "航天煤油",
     oxidizer: "液氧",
@@ -213,6 +271,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "天鹊 TQ-12": {
+    slug: "tq-12",
+    displayZh: "天鹊 TQ-12",
+    displayEn: "Tianque TQ-12",
+    countryZh: "中国",
+    country: "China",
     propellantZh: "液态甲烷 / 液氧",
     fuel: "液态甲烷",
     oxidizer: "液氧",
@@ -234,6 +297,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
 
   /* ── 液氢 / 液氧 ─────────────────────────────────────── */
   "J-2": {
+    slug: "j-2",
+    displayZh: "J-2",
+    displayEn: "J-2",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "液氢 / 液氧",
     fuel: "液氢",
     oxidizer: "液氧",
@@ -254,6 +322,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "YF-77": {
+    slug: "yf-77",
+    displayZh: "YF-77",
+    displayEn: "YF-77",
+    countryZh: "中国",
+    country: "China",
     propellantZh: "液氢 / 液氧",
     fuel: "液氢",
     oxidizer: "液氧",
@@ -273,6 +346,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "YF-75D": {
+    slug: "yf-75d",
+    displayZh: "YF-75D",
+    displayEn: "YF-75D",
+    countryZh: "中国",
+    country: "China",
     propellantZh: "液氢 / 液氧",
     fuel: "液氢",
     oxidizer: "液氧",
@@ -291,6 +369,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "Vulcain 2": {
+    slug: "vulcain-2",
+    displayZh: "火神 2",
+    displayEn: "Vulcain 2",
+    countryZh: "欧洲",
+    country: "Europe",
     propellantZh: "液氢 / 液氧",
     fuel: "液氢",
     oxidizer: "液氧",
@@ -310,6 +393,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RS-68A": {
+    slug: "rs-68a",
+    displayZh: "RS-68A",
+    displayEn: "RS-68A",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "液氢 / 液氧",
     fuel: "液氢",
     oxidizer: "液氧",
@@ -329,6 +417,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "HM7B": {
+    slug: "hm7b",
+    displayZh: "HM7B",
+    displayEn: "HM7B",
+    countryZh: "欧洲",
+    country: "Europe",
     propellantZh: "液氢 / 液氧",
     fuel: "液氢",
     oxidizer: "液氧",
@@ -347,6 +440,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RL10B-2": {
+    slug: "rl10b-2",
+    displayZh: "RL10B-2",
+    displayEn: "RL10B-2",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "液氢 / 液氧",
     fuel: "液氢",
     oxidizer: "液氧",
@@ -366,6 +464,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "RL10C-1-1": {
+    slug: "rl10c-1-1",
+    displayZh: "RL10C-1-1",
+    displayEn: "RL10C-1-1",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "液氢 / 液氧",
     fuel: "液氢",
     oxidizer: "液氧",
@@ -385,6 +488,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "BE-3U": {
+    slug: "be-3u",
+    displayZh: "BE-3U",
+    displayEn: "BE-3U",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "液氢 / 液氧",
     fuel: "液氢",
     oxidizer: "液氧",
@@ -406,6 +514,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
 
   /* ── 甲烷 / 液氧 ─────────────────────────────────────── */
   "Raptor 2": {
+    slug: "raptor-2",
+    displayZh: "猛禽 2",
+    displayEn: "Raptor 2",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "液态甲烷 / 液氧",
     fuel: "液态甲烷",
     oxidizer: "液氧",
@@ -428,6 +541,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "Raptor Vacuum (RVac)": {
+    slug: "raptor-vacuum",
+    displayZh: "猛禽真空版 RVac",
+    displayEn: "Raptor Vacuum (RVac)",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "液态甲烷 / 液氧",
     fuel: "液态甲烷",
     oxidizer: "液氧",
@@ -446,6 +564,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "BE-4": {
+    slug: "be-4",
+    displayZh: "BE-4",
+    displayEn: "BE-4",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "液态甲烷 / 液氧",
     fuel: "液态甲烷",
     oxidizer: "液氧",
@@ -467,6 +590,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
 
   /* ── 自燃推进剂 ──────────────────────────────────────── */
   "YF-20B": {
+    slug: "yf-20b",
+    displayZh: "YF-20B",
+    displayEn: "YF-20B",
+    countryZh: "中国",
+    country: "China",
     propellantZh: "四氧化二氮 / 偏二甲肼",
     fuel: "偏二甲肼（UDMH）",
     oxidizer: "四氧化二氮（N₂O₄）",
@@ -487,6 +615,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "YF-22B": {
+    slug: "yf-22b",
+    displayZh: "YF-22B",
+    displayEn: "YF-22B",
+    countryZh: "中国",
+    country: "China",
     propellantZh: "四氧化二氮 / 偏二甲肼",
     fuel: "偏二甲肼（UDMH）",
     oxidizer: "四氧化二氮（N₂O₄）",
@@ -501,6 +634,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     cons: ["姿态控制完全依赖 4 台游动发动机，多出一整套推进系统与管路", "比冲受自燃推进剂限制"],
   },
   "YF-23B": {
+    slug: "yf-23b",
+    displayZh: "YF-23B",
+    displayEn: "YF-23B",
+    countryZh: "中国",
+    country: "China",
     propellantZh: "四氧化二氮 / 偏二甲肼",
     fuel: "偏二甲肼（UDMH）",
     oxidizer: "四氧化二氮（N₂O₄）",
@@ -511,6 +649,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     cons: ["额外消耗推进剂", "四套小推进系统的管路与阀门是可靠性上的薄弱环节"],
   },
   "天鹊 TQ-11": {
+    slug: "tq-11",
+    displayZh: "天鹊 TQ-11",
+    displayEn: "Tianque TQ-11",
+    countryZh: "中国",
+    country: "China",
     propellantZh: "液态甲烷 / 液氧",
     fuel: "液态甲烷",
     oxidizer: "液氧",
@@ -524,6 +667,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   Curie: {
+    slug: "curie",
+    displayZh: "居里",
+    displayEn: "Curie",
+    countryZh: "新西兰 / 美国",
+    country: "New Zealand / United States",
     propellantZh: "绿色单组元 / 双组元推进剂",
     fuel: "未公开（自研绿色推进剂）",
     oxidizer: "同上",
@@ -538,6 +686,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     cons: ["推力仅 120 N，变轨耗时长", "推进剂配方未公开，第三方难以独立评估性能"],
   },
   "A4 发动机": {
+    slug: "a4-engine",
+    displayZh: "A4 发动机",
+    displayEn: "A4 engine",
+    countryZh: "德国",
+    country: "Germany",
     propellantZh: "75% 乙醇水溶液 / 液氧",
     fuel: "75% 乙醇水溶液",
     oxidizer: "液氧",
@@ -560,6 +713,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
 
   /* ── 固体 ────────────────────────────────────────────── */
   "P241 固体发动机": {
+    slug: "p241",
+    displayZh: "P241 固体发动机",
+    displayEn: "P241 solid motor",
+    countryZh: "欧洲",
+    country: "Europe",
     propellantZh: "HTPB 复合固体推进剂",
     fuel: "HTPB（端羟基聚丁二烯）+ 铝粉",
     oxidizer: "高氯酸铵",
@@ -580,6 +738,11 @@ export const ENGINE_DETAIL: Record<string, EngineDetail> = {
     ],
   },
   "GEM 63XL": {
+    slug: "gem-63xl",
+    displayZh: "GEM 63XL",
+    displayEn: "GEM 63XL",
+    countryZh: "美国",
+    country: "United States",
     propellantZh: "HTPB 复合固体推进剂",
     fuel: "HTPB + 铝粉",
     oxidizer: "高氯酸铵",

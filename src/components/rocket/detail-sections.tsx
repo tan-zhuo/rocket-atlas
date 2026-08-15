@@ -5,6 +5,7 @@ import { Card, CardBody, CardHeader, CardTitle, SpecRow } from "@/components/ui/
 import { Badge } from "@/components/ui/badge";
 import { Markdown } from "@/components/md/markdown";
 import { getEngineDetail } from "@/data/engines";
+import { normalizeEngineName } from "@/data/engines-index";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dict";
 import { CYCLE_EXPLAIN, PROPELLANT_LABEL, PROPELLANT_TRADEOFF } from "@/i18n/terms";
@@ -212,6 +213,7 @@ function EngineCard({
   t: Dict;
 }) {
   const d = getEngineDetail(e.name, lang);
+  const key = normalizeEngineName(e.name);
   const pros = e.pros ?? d?.pros ?? [];
   const cons = e.cons ?? d?.cons ?? [];
   const meta = PROPELLANT_LABEL[lang][e.propellant];
@@ -221,7 +223,16 @@ function EngineCard({
       <header className="flex flex-wrap items-start justify-between gap-3 border-b border-border-base px-5 py-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2.5">
-            <h4 className="text-[16px] font-semibold text-fg">{e.name}</h4>
+            {key && d ? (
+              <L
+                href={`/engine/${d.slug}`}
+                className="text-[16px] font-semibold text-fg hover:text-accent"
+              >
+                {e.name}
+              </L>
+            ) : (
+              <h4 className="text-[16px] font-semibold text-fg">{e.name}</h4>
+            )}
             <Badge tone="neutral">×{e.count}</Badge>
             {d?.since ? <Badge tone="neutral">{d.since}</Badge> : null}
           </div>

@@ -12,6 +12,7 @@ export interface Dict {
 
   nav: {
     rockets: string;
+    engines: string;
     compare: string;
     principles: string;
     timeline: string;
@@ -257,6 +258,37 @@ export interface Dict {
     eventsIn: (n: number) => string;
   };
 
+  engines: {
+    title: string;
+    lead: string;
+    count: (a: number, b: number) => string;
+    filterCycle: string;
+    filterPropellant: string;
+    filterCountry: string;
+    sortThrust: string;
+    sortIsp: string;
+    sortPressure: string;
+    sortName: string;
+    usedBy: string;
+    usedOn: (n: number) => string;
+    vehicleCount: string;
+    chartTitle: string;
+    chartDesc: string;
+    chartX: string;
+    chartY: string;
+    maker: string;
+    since: string;
+    firstFlight: string;
+    cycleSection: string;
+    propellantSection: string;
+    relatedRockets: string;
+    backToList: string;
+    empty: string;
+    noData: string;
+    thrustLabel: string;
+    breadcrumb: string;
+  };
+
   lab: {
     title: string;
     lead: string;
@@ -311,7 +343,7 @@ export interface Dict {
     placeholder: string;
     empty: (q: string) => string;
     hint: string;
-    kinds: Record<"rocket" | "family" | "principle", string>;
+    kinds: Record<"rocket" | "engine" | "family" | "principle", string>;
   };
 
   family: {
@@ -331,6 +363,7 @@ const zh: Dict = {
 
   nav: {
     rockets: "火箭百科",
+    engines: "发动机",
     compare: "对比",
     principles: "原理专题",
     timeline: "时间线",
@@ -602,6 +635,38 @@ const zh: Dict = {
     eventsIn: (n) => `${n} 个事件`,
   },
 
+  engines: {
+    title: "发动机",
+    lead: "发动机是整枚火箭里信息密度最高的部件：烧什么、怎么把推进剂送进燃烧室、涡轮的废气去了哪里——这三个问题基本决定了一枚火箭能做什么、不能做什么。每一型都成对写「换来了什么 / 代价是什么」。",
+    count: (a, b) => `${a} / ${b} 型发动机`,
+    filterCycle: "动力循环",
+    filterPropellant: "推进剂",
+    filterCountry: "国家 / 地区",
+    sortThrust: "推力",
+    sortIsp: "真空比冲",
+    sortPressure: "燃烧室压力",
+    sortName: "名称",
+    usedBy: "用于",
+    usedOn: (n) => `${n} 个型号在用`,
+    vehicleCount: "在用型号",
+    chartTitle: "室压与比冲",
+    chartDesc:
+      "横轴是燃烧室压力（衡量循环的先进程度），纵轴是真空比冲（衡量效率）。同一循环的发动机会聚成一团——这张图基本就是「循环决定性能上限」的可视化。",
+    chartX: "燃烧室压力 (bar)",
+    chartY: "真空比冲 (s)",
+    maker: "研制方",
+    since: "首飞年份",
+    firstFlight: "首飞",
+    cycleSection: "动力循环",
+    propellantSection: "推进剂",
+    relatedRockets: "装在哪些火箭上",
+    backToList: "全部发动机",
+    empty: "没有符合条件的发动机",
+    noData: "该型号暂无公开数据",
+    thrustLabel: "单台推力",
+    breadcrumb: "发动机",
+  },
+
   lab: {
     title: "3D 实验室",
     lead: "所有模型在一个页面里自由切换。拖拽旋转、滚轮缩放、拉动滑块展开爆炸视图，点击任意部件读它的设计说明。橙色人形是 1.8 m 比例尺——它比任何数字都更能说明这些东西到底有多大。",
@@ -665,7 +730,7 @@ const zh: Dict = {
     placeholder: "火箭名、发动机、国家、家族…",
     empty: (q) => `没有匹配「${q}」的结果`,
     hint: "输入关键词开始搜索 · ↑↓ 选择 · Enter 打开",
-    kinds: { rocket: "火箭", family: "家族", principle: "专题" },
+    kinds: { rocket: "火箭", engine: "发动机", family: "家族", principle: "专题" },
   },
 
   family: {
@@ -684,6 +749,7 @@ const en: Dict = {
 
   nav: {
     rockets: "Rockets",
+    engines: "Engines",
     compare: "Compare",
     principles: "Principles",
     timeline: "Timeline",
@@ -964,6 +1030,38 @@ const en: Dict = {
     eventsIn: (n) => `${n} events`,
   },
 
+  engines: {
+    title: "Engines",
+    lead: "The engine is the densest source of information on a launch vehicle: what it burns, how the propellant gets into the chamber, and where the turbine exhaust goes. Those three questions largely determine what a rocket can and cannot do. Every entry states both what the design buys and what it costs.",
+    count: (a, b) => `${a} of ${b} engines`,
+    filterCycle: "Cycle",
+    filterPropellant: "Propellant",
+    filterCountry: "Country / region",
+    sortThrust: "thrust",
+    sortIsp: "vacuum Isp",
+    sortPressure: "chamber pressure",
+    sortName: "name",
+    usedBy: "Used on",
+    usedOn: (n) => `on ${n} vehicles`,
+    vehicleCount: "Vehicles",
+    chartTitle: "Chamber pressure against specific impulse",
+    chartDesc:
+      "Chamber pressure on the x-axis (a proxy for how sophisticated the cycle is), vacuum specific impulse on the y-axis (efficiency). Engines of the same cycle cluster together — this chart is essentially a picture of how the cycle sets the performance ceiling.",
+    chartX: "Chamber pressure (bar)",
+    chartY: "Vacuum Isp (s)",
+    maker: "Builder",
+    since: "First flight",
+    firstFlight: "First flight",
+    cycleSection: "Engine cycle",
+    propellantSection: "Propellant",
+    relatedRockets: "Vehicles that use it",
+    backToList: "All engines",
+    empty: "No engines match these filters",
+    noData: "No public data",
+    thrustLabel: "Thrust per engine",
+    breadcrumb: "Engines",
+  },
+
   lab: {
     title: "3D Lab",
     lead: "Every model in one place. Drag to rotate, scroll to zoom, pull the slider for the exploded view, and click any part to read its design note. The orange figure is a 1.8 m scale reference — it tells you more about the size of these machines than any number does.",
@@ -1027,7 +1125,7 @@ const en: Dict = {
     placeholder: "Rocket, engine, country, family…",
     empty: (q) => `Nothing matches “${q}”`,
     hint: "Type to search · ↑↓ to select · Enter to open",
-    kinds: { rocket: "Rocket", family: "Family", principle: "Principle" },
+    kinds: { rocket: "Rocket", engine: "Engine", family: "Family", principle: "Principle" },
   },
 
   family: {

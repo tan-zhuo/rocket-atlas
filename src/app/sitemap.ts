@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { ROCKETS } from "@/data/rockets";
 import { FAMILIES } from "@/data/families";
 import { PRINCIPLES } from "@/data/principles";
+import { ENGINES } from "@/data/engines-index";
 import { LOCALES } from "@/i18n/config";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://rocket-atlas.example";
@@ -21,11 +22,21 @@ function entry(path: string, changeFrequency: "weekly" | "monthly", priority: nu
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/rockets", "/compare", "/principles", "/timeline", "/lab", "/about"];
+  const staticRoutes = [
+    "",
+    "/rockets",
+    "/engines",
+    "/compare",
+    "/principles",
+    "/timeline",
+    "/lab",
+    "/about",
+  ];
 
   return [
     ...staticRoutes.flatMap((p) => entry(p, "weekly", p === "" ? 1 : 0.8)),
     ...ROCKETS.flatMap((r) => entry(`/rocket/${r.slug}`, "monthly", 0.9)),
+    ...ENGINES.flatMap((e) => entry(`/engine/${e.slug}`, "monthly", 0.7)),
     ...FAMILIES.flatMap((f) => entry(`/family/${f.slug}`, "monthly", 0.6)),
     ...PRINCIPLES.flatMap((p) => entry(`/principles/${p.slug}`, "monthly", 0.7)),
   ];
