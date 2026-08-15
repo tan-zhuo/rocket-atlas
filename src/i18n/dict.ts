@@ -193,6 +193,8 @@ export interface Dict {
     burnsWhat: string;
     usedBy: string;
     engineCount: (n: number) => string;
+    engineEntry: string;
+    viewEngine: string;
     propellantSection: string;
     fuel: string;
     oxidizer: string;
@@ -573,6 +575,8 @@ const zh: Dict = {
     burnsWhat: "这枚火箭烧什么",
     usedBy: "用于",
     engineCount: (n) => `发动机 · ${n} 型`,
+    engineEntry: "本箭发动机",
+    viewEngine: "查看发动机详情",
     propellantSection: "推进剂",
     fuel: "燃料",
     oxidizer: "氧化剂",
@@ -980,6 +984,8 @@ const en: Dict = {
     burnsWhat: "What this rocket burns",
     usedBy: "Used on",
     engineCount: (n) => `Engines · ${n} types`,
+    engineEntry: "Engines on this vehicle",
+    viewEngine: "Engine details",
     propellantSection: "Propellant",
     fuel: "Fuel",
     oxidizer: "Oxidizer",

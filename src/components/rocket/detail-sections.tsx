@@ -1,5 +1,5 @@
 import { L } from "@/components/ui/link";
-import { Check, ExternalLink, Flame, Minus, ShieldCheck, TriangleAlert } from "lucide-react";
+import { ArrowRight, Check, ExternalLink, Flame, Minus, ShieldCheck, TriangleAlert } from "lucide-react";
 import type { Engine, Rocket, Source, Stage } from "@/data/types";
 import { Card, CardBody, CardHeader, CardTitle, SpecRow } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -241,17 +241,28 @@ function EngineCard({
             {d?.maker ? ` · ${d.maker}` : ""}
           </p>
         </div>
-        <span
-          className="flex items-center gap-1.5 rounded-md border border-border-base px-2 py-1 text-[11px] text-fg-muted"
-          title={CYCLE_EXPLAIN[lang][e.cycle]}
-        >
+        <div className="flex flex-wrap items-center gap-2">
           <span
-            className="size-1.5 rounded-full"
-            style={{ background: meta.color }}
-            aria-hidden
-          />
-          {e.cycleZh}
-        </span>
+            className="flex items-center gap-1.5 rounded-md border border-border-base px-2 py-1 text-[11px] text-fg-muted"
+            title={CYCLE_EXPLAIN[lang][e.cycle]}
+          >
+            <span
+              className="size-1.5 rounded-full"
+              style={{ background: meta.color }}
+              aria-hidden
+            />
+            {e.cycleZh}
+          </span>
+          {key && d ? (
+            <L
+              href={`/engine/${d.slug}`}
+              className="group flex items-center gap-1.5 rounded-md border border-accent/35 bg-accent-soft px-2 py-1 text-[11px] font-medium text-accent"
+            >
+              {t.detail.viewEngine}
+              <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+            </L>
+          ) : null}
+        </div>
       </header>
 
       <div className="grid gap-6 px-5 py-4 md:grid-cols-[minmax(0,260px)_minmax(0,1fr)]">

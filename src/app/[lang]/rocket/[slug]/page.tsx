@@ -9,6 +9,8 @@ import { Flag } from "@/components/ui/flag";
 import { Tabs } from "@/components/ui/tabs";
 import { ViewerMount } from "@/components/viewer/viewer-mount";
 import { CompareToggle } from "@/components/rocket/compare-toggle";
+import { EngineLinks } from "@/components/rocket/engine-links";
+import { enginesOfRocket } from "@/data/engines-index";
 import {
   DesignTab,
   FamilyTab,
@@ -52,6 +54,7 @@ export default async function RocketPage(props: PageProps<"/[lang]/rocket/[slug]
   if (!raw) notFound();
 
   const r = localizeRocket(raw, lang);
+  const engines = enginesOfRocket(r.slug);
   const familyRaw = getFamily(r.family);
   const family = familyRaw ? localizeFamily(familyRaw, lang) : undefined;
   const related = getRockets(r.relatedRockets)
@@ -176,6 +179,8 @@ export default async function RocketPage(props: PageProps<"/[lang]/rocket/[slug]
                 ? ` · ${t.spec.payloadRatio} ${num((r.payloadLEO / r.mass) * 100, 2)}%`
                 : ""}
             </p>
+
+            <EngineLinks engines={engines} lang={lang} t={t} className="mt-5" />
 
             <Tabs className="mt-7" tabs={tabs} panels={panels} syncHash />
           </div>
