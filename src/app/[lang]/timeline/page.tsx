@@ -3,10 +3,17 @@ import { TIMELINE_SORTED } from "@/data/timeline";
 import { TimelineView } from "@/components/timeline/timeline-view";
 import { getLang, getServerDict } from "@/i18n/server";
 import { localizeTimeline } from "@/i18n/localize";
+import { pageMeta } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
   const t = await getServerDict();
-  return { title: t.timeline.title, description: t.timeline.lead };
+  return pageMeta({
+    lang,
+    path: "/timeline",
+    title: t.timeline.title,
+    description: t.timeline.lead,
+  });
 }
 
 export default async function TimelinePage() {

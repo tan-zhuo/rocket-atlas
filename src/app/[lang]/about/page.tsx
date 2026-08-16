@@ -7,10 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { unique } from "@/lib/utils";
 import { getLang, getServerDict } from "@/i18n/server";
 import { ABOUT_COPY } from "@/i18n/about-copy";
+import { pageMeta } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const c = ABOUT_COPY[await getLang()];
-  return { title: c.title, description: c.metaDescription };
+  const lang = await getLang();
+  const c = ABOUT_COPY[lang];
+  return pageMeta({ lang, path: "/about", title: c.title, description: c.metaDescription });
 }
 
 export default async function AboutPage() {

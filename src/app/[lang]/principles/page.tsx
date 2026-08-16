@@ -5,10 +5,17 @@ import { PRINCIPLES } from "@/data/principles";
 import { getRocket } from "@/data/rockets";
 import { getLang, getServerDict } from "@/i18n/server";
 import { localizePrinciple, localizeRocket } from "@/i18n/localize";
+import { pageMeta } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
   const t = await getServerDict();
-  return { title: t.principles.title, description: t.principles.lead };
+  return pageMeta({
+    lang,
+    path: "/principles",
+    title: t.principles.title,
+    description: t.principles.lead,
+  });
 }
 
 export default async function PrinciplesPage() {

@@ -9,10 +9,18 @@ import { AnatomyDiagram, Inline } from "@/components/engine/anatomy-diagram";
 import { CycleDiagram, CycleLegend } from "@/components/engine/cycle-diagram";
 import { getLang, getServerDict } from "@/i18n/server";
 import { CYCLE_LABEL } from "@/i18n/terms";
+import { pageMeta } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const c = ANATOMY_COPY[await getLang()];
-  return { title: c.title, description: c.lead };
+  const lang = await getLang();
+  const c = ANATOMY_COPY[lang];
+  return pageMeta({
+    lang,
+    path: "/engines/anatomy",
+    title: c.title,
+    description: c.lead,
+    type: "article",
+  });
 }
 
 export default async function EngineAnatomyPage() {

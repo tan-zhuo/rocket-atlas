@@ -12,9 +12,27 @@ import { HeroMount } from "@/components/viewer/hero-mount";
 import { dateZh, mass, meters, num } from "@/lib/utils";
 import { getLang, getServerDict } from "@/i18n/server";
 import { localizePrinciple, localizeRocket, localizeTimeline } from "@/i18n/localize";
+import type { Metadata } from "next";
+import { JsonLd } from "@/components/seo/json-ld";
+import { itemListJsonLd, pageMeta } from "@/lib/seo";
 
 const SCALE_ROW = ["v-2", "electron", "falcon-9", "long-march-5", "saturn-v", "starship"];
 const HERO_ROW = ["saturn-v", "starship", "falcon-9", "long-march-5", "ariane-5"];
+
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  const zh = lang === "zh";
+  const stats = atlasStats();
+  return pageMeta({
+    lang,
+    path: "",
+    // 首页描述单独写：heroLead 是给人读的长文案，做 meta description 会被截断
+    title: zh ? "火箭为什么长成这样" : "Why rockets look the way they do",
+    description: zh
+      ? `${stats.rockets} 枚运载火箭与 ${stats.countries} 个国家的设计逻辑：可交互 3D 结构、逐级参数、成对的优缺点与「为什么不是别的方案」问答。内容全部基于可查证的公开资料。`
+      : `Design logic for ${stats.rockets} launch vehicles across ${stats.countries} countries: interactive 3D structure, stage-by-stage numbers, paired trade-offs and “why not the alternative” Q&A — all from verifiable public sources.`,
+  });
+}
 
 export default async function Home() {
   const lang = await getLang();
@@ -42,6 +60,16 @@ export default async function Home() {
 
   return (
     <>
+      {/* 首页把精选型号声明成 ItemList，让爬虫知道这是一个集合页而不是散页 */}
+      <JsonLd
+        nodes={[
+          itemListJsonLd(
+            lang,
+            featured.map((r) => ({ name: r.nameZh, path: `/rocket/${r.slug}` })),
+          ),
+        ]}
+      />
+
       {/* ── Hero ───────────────────────────────────────────── */}
       <section className="relative overflow-hidden border-b border-border-base">
         <div className="grid-backdrop absolute inset-0 opacity-70" aria-hidden />

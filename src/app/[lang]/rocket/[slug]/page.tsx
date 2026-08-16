@@ -23,6 +23,15 @@ import {
 import { dateZh, mass, meters, num } from "@/lib/utils";
 import { getLang, getServerDict } from "@/i18n/server";
 import { localizeFamily, localizeRocket } from "@/i18n/localize";
+import { JsonLd } from "@/components/seo/json-ld";
+import {
+  absUrl,
+  breadcrumbJsonLd,
+  faqJsonLd,
+  pageMeta,
+  stripMarkdown,
+  techArticleJsonLd,
+} from "@/lib/seo";
 
 export function generateStaticParams() {
   return ROCKETS.map((r) => ({ slug: r.slug }));
@@ -34,16 +43,17 @@ export async function generateMetadata(
   const { slug, lang } = await props.params;
   const raw = getRocket(slug);
   if (!raw) return { title: "404" };
-  const r = localizeRocket(raw, lang === "en" ? "en" : "zh");
-  return {
-    title: `${r.nameZh} ${r.name}`,
+  const locale = lang === "en" ? "en" : "zh";
+  const r = localizeRocket(raw, locale);
+  const title = locale === "en" ? r.nameZh : `${r.nameZh} ${r.name}`;
+  return pageMeta({
+    lang: locale,
+    path: `/rocket/${r.slug}`,
+    title,
     description: r.description,
-    openGraph: {
-      title: `${r.nameZh}（${r.name}）`,
-      description: r.description,
-      type: "article",
-    },
-  };
+    type: "article",
+    keywords: [r.nameZh, r.name, r.countryZh, ...r.tags],
+  });
 }
 
 export default async function RocketPage(props: PageProps<"/[lang]/rocket/[slug]">) {
@@ -66,24 +76,49 @@ export default async function RocketPage(props: PageProps<"/[lang]/rocket/[slug]
       description: o.description,
     }));
 
-  const jsonLd = {
-    "@context": "https://schema.org",
+  const path = `/rocket/${r.slug}`;
+  const vehicle = {
     "@type": "Product",
-    name: `${r.name} / ${r.nameZh}`,
+    "@id": `${absUrl(lang, path)}#vehicle`,
+    name: `${r.nameZh} / ${r.name}`,
     description: r.description,
-    category: "Launch vehicle",
+    category: lang === "en" ? "Launch vehicle" : "运载火箭",
     brand: { "@type": "Organization", name: r.agency[0] ?? r.countryZh },
     countryOfOrigin: r.countryZh,
     releaseDate: r.firstFlight,
     additionalProperty: [
-      { "@type": "PropertyValue", name: "全长", value: `${r.height} m` },
-      { "@type": "PropertyValue", name: "起飞质量", value: `${r.mass} kg` },
-      { "@type": "PropertyValue", name: "级数", value: r.stageCount },
+      { "@type": "PropertyValue", name: t.spec.height, value: `${r.height} m` },
+      { "@type": "PropertyValue", name: t.spec.mass, value: `${r.mass} kg` },
+      { "@type": "PropertyValue", name: t.spec.stageCount, value: r.stageCount },
       ...(r.payloadLEO
-        ? [{ "@type": "PropertyValue", name: "LEO 载荷", value: `${r.payloadLEO} kg` }]
+        ? [{ "@type": "PropertyValue", name: "LEO", value: `${r.payloadLEO} kg` }]
+        : []),
+      ...(r.payloadGTO
+        ? [{ "@type": "PropertyValue", name: "GTO", value: `${r.payloadGTO} kg` }]
         : []),
     ],
   };
+
+  const crumbs = [
+    { name: t.nav.rockets, path: "/rockets" },
+    ...(family ? [{ name: family.nameZh, path: `/family/${family.slug}` }] : []),
+    { name: r.nameZh },
+  ];
+
+  const nodes = [
+    breadcrumbJsonLd(lang, crumbs),
+    techArticleJsonLd({
+      lang,
+      path,
+      headline: `${r.nameZh}（${r.name}）`,
+      description: stripMarkdown(r.designPhilosophy, 300),
+      image: `${absUrl(lang, path)}/opengraph-image`,
+      about: r.nameZh,
+    }),
+    vehicle,
+    // 「设计逻辑」本来就是问答式的，直接映射成 FAQPage
+    faqJsonLd(r.tradeoffs),
+  ];
 
   const tabs = [
     { id: "overview", label: t.detail.tabs.overview },
@@ -107,10 +142,7 @@ export default async function RocketPage(props: PageProps<"/[lang]/rocket/[slug]
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd nodes={nodes} />
 
       <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
         {/* 面包屑 + 标题 */}

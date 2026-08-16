@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { meters, year } from "@/lib/utils";
 import { getLang, getServerDict } from "@/i18n/server";
 import { localizePrinciple, localizeRocket } from "@/i18n/localize";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, pageMeta, stripMarkdown, techArticleJsonLd } from "@/lib/seo";
 
 export function generateStaticParams() {
   return PRINCIPLES.map((p) => ({ slug: p.slug }));
@@ -21,12 +23,15 @@ export async function generateMetadata(
   const { slug, lang } = await props.params;
   const raw = getPrinciple(slug);
   if (!raw) return { title: "404" };
-  const p = localizePrinciple(raw, lang === "en" ? "en" : "zh");
-  return {
+  const locale = lang === "en" ? "en" : "zh";
+  const p = localizePrinciple(raw, locale);
+  return pageMeta({
+    lang: locale,
+    path: `/principles/${p.slug}`,
     title: p.title,
     description: p.summary,
-    openGraph: { title: p.title, description: p.summary, type: "article" },
-  };
+    type: "article",
+  });
 }
 
 export default async function PrinciplePage(props: PageProps<"/[lang]/principles/[slug]">) {
@@ -48,21 +53,29 @@ export default async function PrinciplePage(props: PageProps<"/[lang]/principles
   const prev = PRINCIPLES[idx - 1] ? localizePrinciple(PRINCIPLES[idx - 1], lang) : undefined;
   const next = PRINCIPLES[idx + 1] ? localizePrinciple(PRINCIPLES[idx + 1], lang) : undefined;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: p.title,
-    description: p.summary,
-    inLanguage: "zh-Hans",
-    articleSection: "运载火箭原理",
-  };
+  const path = `/principles/${p.slug}`;
+  const nodes = [
+    breadcrumbJsonLd(lang, [
+      { name: t.nav.principles, path: "/principles" },
+      { name: p.title },
+    ]),
+    {
+      ...techArticleJsonLd({
+        lang,
+        path,
+        headline: p.title,
+        description: p.summary,
+        about: p.title,
+      }),
+      articleSection: t.nav.principles,
+      wordCount: stripMarkdown(p.body, 1_000_000).length,
+      timeRequired: `PT${p.readingMinutes}M`,
+    },
+  ];
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd nodes={nodes} />
       <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
         <nav
           aria-label={t.common.breadcrumb}

@@ -4,10 +4,12 @@ import { toSummary } from "@/lib/summary";
 import { CompareBoard } from "@/components/compare/compare-board";
 import { getLang, getServerDict } from "@/i18n/server";
 import { localizeRocket } from "@/i18n/localize";
+import { pageMeta } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
   const t = await getServerDict();
-  return { title: t.compare.title, description: t.compare.lead };
+  return pageMeta({ lang, path: "/compare", title: t.compare.title, description: t.compare.lead });
 }
 
 export default async function ComparePage() {

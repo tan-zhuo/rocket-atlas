@@ -10,6 +10,8 @@ import { Markdown } from "@/components/md/markdown";
 import { Flag } from "@/components/ui/flag";
 import { getLang, getServerDict } from "@/i18n/server";
 import { localizeFamily, localizeRocket } from "@/i18n/localize";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, itemListJsonLd, pageMeta, stripMarkdown } from "@/lib/seo";
 
 export function generateStaticParams() {
   return FAMILIES.map((f) => ({ slug: f.slug }));
@@ -21,11 +23,15 @@ export async function generateMetadata(
   const { slug, lang } = await props.params;
   const raw = getFamily(slug);
   if (!raw) return { title: "404" };
-  const f = localizeFamily(raw, lang === "en" ? "en" : "zh");
-  return {
+  const locale = lang === "en" ? "en" : "zh";
+  const f = localizeFamily(raw, locale);
+  return pageMeta({
+    lang: locale,
+    path: `/family/${f.slug}`,
     title: f.nameZh,
-    description: f.summary.split("\n")[0].slice(0, 150),
-  };
+    description: stripMarkdown(f.summary, 160),
+    type: "article",
+  });
 }
 
 export default async function FamilyPage(props: PageProps<"/[lang]/family/[slug]">) {
@@ -42,8 +48,18 @@ export default async function FamilyPage(props: PageProps<"/[lang]/family/[slug]
     .filter(Boolean)
     .map((o) => localizeFamily(o!, lang));
 
+  const nodes = [
+    breadcrumbJsonLd(lang, [{ name: t.nav.rockets, path: "/rockets" }, { name: f.nameZh }]),
+    itemListJsonLd(
+      lang,
+      members.map((m) => ({ name: m.nameZh, path: `/rocket/${m.slug}` })),
+    ),
+  ];
+
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
+    <>
+      <JsonLd nodes={nodes} />
+      <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
       <nav
         aria-label={t.common.breadcrumb}
         className="flex items-center gap-1.5 text-[12px] text-fg-subtle"
@@ -145,5 +161,6 @@ export default async function FamilyPage(props: PageProps<"/[lang]/family/[slug]
         </aside>
       </div>
     </div>
+    </>
   );
 }

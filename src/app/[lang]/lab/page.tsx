@@ -3,10 +3,12 @@ import { ROCKETS } from "@/data/rockets";
 import { LabClient, type LabEntry } from "@/components/viewer/lab-client";
 import { getLang, getServerDict } from "@/i18n/server";
 import { localizeRocket } from "@/i18n/localize";
+import { pageMeta } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
   const t = await getServerDict();
-  return { title: t.lab.title, description: t.lab.lead };
+  return pageMeta({ lang, path: "/lab", title: t.lab.title, description: t.lab.lead });
 }
 
 export default async function LabPage() {

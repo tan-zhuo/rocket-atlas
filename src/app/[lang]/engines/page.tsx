@@ -7,10 +7,13 @@ import { L } from "@/components/ui/link";
 import { ArrowRight, Wrench } from "lucide-react";
 import { getLang, getServerDict } from "@/i18n/server";
 import { localizeRocket } from "@/i18n/localize";
+import { itemListJsonLd, pageMeta } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
   const t = await getServerDict();
-  return { title: t.engines.title, description: t.engines.lead };
+  return pageMeta({ lang, path: "/engines", title: t.engines.title, description: t.engines.lead });
 }
 
 export default async function EnginesPage() {
@@ -23,8 +26,20 @@ export default async function EnginesPage() {
   };
   const engines = ENGINES.map((e) => toEngineSummary(e, lang, rocketName));
 
+  const nodes = [
+    itemListJsonLd(
+      lang,
+      ENGINES.map((e) => ({
+        name: lang === "en" ? e.detail.displayEn : e.detail.displayZh,
+        path: `/engine/${e.slug}`,
+      })),
+    ),
+  ];
+
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6">
+    <>
+      <JsonLd nodes={nodes} />
+      <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6">
       <header className="mb-8 max-w-3xl">
         <h1 className="text-[28px] font-semibold tracking-tight text-fg">{t.engines.title}</h1>
         <p className="mt-2.5 text-[14px] leading-relaxed text-fg-muted">{t.engines.lead}</p>
@@ -52,5 +67,6 @@ export default async function EnginesPage() {
 
       <EngineBrowser engines={engines} />
     </div>
+    </>
   );
 }

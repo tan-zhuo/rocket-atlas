@@ -17,6 +17,8 @@ import { CycleDiagram } from "@/components/engine/cycle-diagram";
 import { engineModelSpec } from "@/data/engine-geometry";
 import { EngineViewerMount } from "@/components/engine/engine-viewer-mount";
 import { force, meters, num, year } from "@/lib/utils";
+import { JsonLd } from "@/components/seo/json-ld";
+import { absUrl, breadcrumbJsonLd, pageMeta, techArticleJsonLd } from "@/lib/seo";
 
 export function generateStaticParams() {
   return ENGINES.map((e) => ({ slug: e.slug }));
@@ -29,11 +31,21 @@ export async function generateMetadata(
   const e = getEngine(slug);
   if (!e) return { title: "404" };
   const en = lang === "en";
-  const d = getEngineDetail(e.key, en ? "en" : "zh") ?? e.detail;
-  return {
-    title: en ? e.detail.displayEn : e.detail.displayZh,
-    description: d.summary,
-  };
+  const locale = en ? "en" : "zh";
+  const d = getEngineDetail(e.key, locale) ?? e.detail;
+  const name = en ? e.detail.displayEn : e.detail.displayZh;
+  return pageMeta({
+    lang: locale,
+    path: `/engine/${e.slug}`,
+    title: name,
+    description:
+      d.summary ??
+      (en
+        ? `${name}: propellant, cycle, chamber pressure, what it buys and what it costs.`
+        : `${name}：推进剂、动力循环、室压，以及它换来了什么、代价是什么。`),
+    type: "article",
+    keywords: [name, d.propellantZh, d.countryZh].filter(Boolean) as string[],
+  });
 }
 
 export default async function EnginePage(props: PageProps<"/[lang]/engine/[slug]">) {
@@ -70,22 +82,44 @@ export default async function EnginePage(props: PageProps<"/[lang]/engine/[slug]
     };
   });
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name,
-    category: "Rocket engine",
-    description: d.summary,
-    brand: { "@type": "Organization", name: d.maker ?? country },
-    countryOfOrigin: country,
-  };
+  const path = `/engine/${entry.slug}`;
+  const nodes = [
+    breadcrumbJsonLd(lang, [{ name: t.engines.breadcrumb, path: "/engines" }, { name }]),
+    techArticleJsonLd({
+      lang,
+      path,
+      headline: name,
+      description: d.summary ?? "",
+      image: `${absUrl(lang, path)}/opengraph-image`,
+      about: name,
+    }),
+    {
+      "@type": "Product",
+      "@id": `${absUrl(lang, path)}#engine`,
+      name,
+      category: lang === "en" ? "Rocket engine" : "火箭发动机",
+      description: d.summary,
+      brand: { "@type": "Organization", name: d.maker ?? country },
+      countryOfOrigin: country,
+      ...(d.since ? { releaseDate: String(d.since) } : {}),
+      additionalProperty: [
+        { "@type": "PropertyValue", name: "Propellant", value: d.propellantZh },
+        ...(d.chamberPressure
+          ? [{ "@type": "PropertyValue", name: "Chamber pressure", value: `${d.chamberPressure} bar` }]
+          : []),
+        ...(entry.spec.thrust
+          ? [{ "@type": "PropertyValue", name: "Thrust", value: `${entry.spec.thrust} kN` }]
+          : []),
+        ...(entry.spec.ispVacuum
+          ? [{ "@type": "PropertyValue", name: "Vacuum Isp", value: `${entry.spec.ispVacuum} s` }]
+          : []),
+      ],
+    },
+  ];
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd nodes={nodes} />
 
       <div className="mx-auto max-w-[1100px] px-4 py-8 sm:px-6">
         <nav

@@ -2,6 +2,10 @@ import { L } from "@/components/ui/link";
 import { ROCKETS } from "@/data/rockets";
 import { getLang, getServerDict } from "@/i18n/server";
 import { localizeRocket } from "@/i18n/localize";
+import type { Metadata } from "next";
+
+/** Next 已经会给 not-found 自动加 noindex，这里只补一个标题 */
+export const metadata: Metadata = { title: "404" };
 
 export default async function NotFound() {
   const lang = await getLang();

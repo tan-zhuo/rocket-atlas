@@ -62,6 +62,30 @@ npm run build   # 生产构建（全站 SSG）
 npm run lint    # ESLint
 ```
 
+### 部署前必须设置的环境变量
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://your-domain.example
+```
+
+canonical、hreflang、sitemap、robots 与 OG 图的绝对地址全部由它生成。
+不设置会退回占位域名 `rocket-atlas.example`，搜索引擎会照着那个域名收录。
+
+## SEO
+
+- **每页自指的 canonical + hreflang**（zh-Hans / en / x-default）。这一条不能靠根 layout
+  声明——Next 的 metadata 逐字段继承，在 layout 上写 `alternates` 会让全站几百个页面
+  都把 canonical 指向首页。统一走 `src/lib/seo.ts` 的 `pageMeta()`。
+- **结构化数据**（`application/ld+json`，全站静态预渲染，爬虫不需要执行 JS）：
+  `Organization` + `WebSite` 在根布局，型号页是 `BreadcrumbList` + `TechArticle` +
+  `Product` + **`FAQPage`**（「设计权衡」本来就是问答式的，直接映射过去），
+  发动机页同理，列表页与家族页是 `ItemList`。
+- **OG 图**由 `next/og` 在构建时生成：型号卡片直接画那枚火箭的等比剪影，
+  发动机卡片画物理反算出来的钟形喷管轮廓——与 3D 模型共用同一份几何。
+  卡片一律用拉丁字符：satori 只内置拉丁字形，中文会渲染成豆腐块。
+- sitemap 覆盖全部 294 个页面并互相声明 alternates；刻意不写 `lastModified`，
+  因为站点没有真实的逐页修改时间，用构建时间戳等于每次部署都宣称全站都改了。
+
 ## 新增一枚火箭
 
 内容与代码完全分离，加一个型号只需要一个数据文件：
