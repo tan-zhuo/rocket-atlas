@@ -10,6 +10,8 @@ import { LOCALES, LOCALE_META, isLocale, type Locale } from "@/i18n/config";
 import { I18nProvider } from "@/i18n/provider";
 import { JsonLd } from "@/components/seo/json-ld";
 import { AUTHOR_NAME, AUTHOR_URL, SITE_NAME, SITE_URL, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -92,6 +94,9 @@ export default async function RootLayout(props: LayoutProps<"/[lang]">) {
           <main className="flex-1">{props.children}</main>
           <SiteFooter />
         </I18nProvider>
+        {/* Vercel 监控：只在 Vercel 上跑起来，本地 dev 不上报 */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
