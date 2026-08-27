@@ -28,6 +28,7 @@ export interface AboutCopy {
     intro: string;
     trusted: string;
     schematic: string;
+    livery: string;
     outro: string;
   };
   scope: { title: string; intro: string; excluded: string[]; outro: string };
@@ -94,7 +95,9 @@ const zh: AboutCopy = {
     intro:
       "本站不使用也不生成任何非公开的工程图纸或高精度 CAD。所有 3D 模型都是参数化示意模型：用一组带真实尺寸的回转体与周向阵列，按公开的总高、直径、分段长度、发动机数量与布局复原外形。",
     trusted: "可信的部分：各级长度与直径的比例、发动机数量与排布、助推器构型、整流罩尺寸。",
-    schematic: "示意的部分：表面细节（管路、蒙皮桁条、涂装标识）、内部结构、局部曲面过渡。",
+    schematic: "示意的部分：表面细节（管路、蒙皮桁条）、内部结构、局部曲面过渡。",
+    livery:
+      "涂装是「特征级还原」：橙色泡沫、灰色底漆、软木层、不锈钢、隔热瓦按材料本色给；国旗、色带与型号字样按公开照片放在正确的位置与配色上，但不逐条复刻贴纸与小字。目的是让人一眼认出型号，不是当作涂装图纸。",
     outro:
       "每个查看器右下角都标注了该模型的复原依据。同一份几何数据同时驱动 3D 与 2D 等比剪影，所以对比页的尺寸比较是可信的。",
   },
@@ -189,7 +192,9 @@ const en: AboutCopy = {
     trusted:
       "What you can trust: the proportions of stage lengths and diameters, engine count and arrangement, booster configuration, fairing dimensions.",
     schematic:
-      "What is schematic: surface detail (plumbing, stringers, markings), internal structure, local surface transitions.",
+      "What is schematic: surface detail (plumbing, stringers), internal structure, local surface transitions.",
+    livery:
+      "Livery is reconstructed at feature level: orange foam, grey primer, cork, stainless steel and heatshield tiles are shown in their real material colour; flags, bands and vehicle names are placed and coloured from public photographs, but individual decals and small print are not reproduced. The aim is that you recognise the vehicle at a glance, not that you use it as a paint drawing.",
     outro:
       "Each viewer states the basis for its reconstruction in the corner. The same geometry drives both the 3D model and the 2D scale silhouettes, so the size comparisons on the comparison page are trustworthy.",
   },

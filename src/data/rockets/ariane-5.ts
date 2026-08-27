@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -58,6 +59,8 @@ const g = rocketGeometry()
     group: "core",
     shape: "cylinder",
     finish: "insulation-foam",
+    // EPC 芯级不刷漆，橙色是喷涂泡沫本色；蓝色型号字样直接印在泡沫上
+    livery: text("ariane 5", PAINT.esaBlue, 0.72, 0.85),
     height: 27.1,
     radius: 2.7,
     description:
@@ -81,6 +84,11 @@ const g = rocketGeometry()
     group: "payload",
     shape: "ogive",
     finish: "painted-white",
+    // 整流罩白色，根部一道 ESA 蓝，旁边是欧盟旗
+    livery: [
+      band(0.05, 0.08, PAINT.esaBlue),
+      flag("eu", 0.3, 0.85),
+    ],
     height: 17,
     radius: 2.7,
     description:
@@ -318,7 +326,7 @@ Ariane 6 的困境在于它的设计目标（降低成本、上面级可重启�
   geometry: g.build({
     fidelity: "schematic",
     modelNote:
-      "按 Ariane 5 用户手册的 ECA 长整流罩构型复原（总高约 53 m、芯级 5.4 m、EAP 3.05 m）。整流罩长度随构型在 12.7–17 m 之间变化，本模型取长罩版本。",
+      "按 Ariane 5 用户手册的 ECA 长整流罩构型复原（总高约 53 m、芯级 5.4 m、EAP 3.05 m）。整流罩长度随构型在 12.7–17 m 之间变化，本模型取长罩版本。涂装：EPC 为橙色泡沫本色，EAP 固推与整流罩白色，标识用 ESA/Arianespace 蓝。",
   }),
 
   sources: [

@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag, text } from "../livery";
 
 /** 按 A64 构型（四枚 P120C 助推器）建模。 */
 const g = rocketGeometry()
@@ -32,6 +33,7 @@ const g = rocketGeometry()
     group: "core",
     shape: "cylinder",
     finish: "insulation-foam",
+    livery: text("ariane 6", PAINT.esaBlue, 0.6, 0.85),
     height: 6.5,
     radius: 2.7,
     description: "液氧舱在上、液氢舱在下。芯级工作约 8 分钟，与助推器一起在起飞时点火。",
@@ -100,6 +102,10 @@ const g = rocketGeometry()
     group: "payload",
     shape: "ogive",
     finish: "painted-white",
+    livery: [
+      band(0.04, 0.07, PAINT.esaBlue),
+      flag("eu", 0.28, 0.85),
+    ],
     height: 20,
     radius: 2.7,
     description: "5.4 m 直径整流罩，有 14 m 与 20 m 两档。长罩构型下总高 63 m。",
@@ -351,7 +357,7 @@ $$\\text{每发节省} = C_{\\text{一级}} \\times \\eta_{\\text{复用率}} - 
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 A64 长罩构型复原：63 m 总高、5.4 m 芯级直径、四枚 P120C 固体助推器。",
+    modelNote: "按 A64 长罩构型复原：63 m 总高、5.4 m 芯级直径、四枚 P120C 固体助推器。涂装沿用阿丽亚娜五号的语言：橙色芯级泡沫本色 + 白色 P120C 与整流罩 + ESA 蓝标识。",
   }),
 
   sources: [

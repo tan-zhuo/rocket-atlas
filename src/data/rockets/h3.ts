@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, flag, text } from "../livery";
 
 /** 按 H3-24L 构型（两台 LE-9 + 四枚 SRB-3 + 长整流罩）建模。 */
 const g = rocketGeometry()
@@ -21,6 +22,11 @@ const g = rocketGeometry()
     group: "core",
     shape: "cylinder",
     finish: "insulation-foam",
+    // 沿用 H-IIA 的做法：橙色泡沫本色 + 蓝色型号字样 + 日之丸
+    livery: [
+      text("H3", PAINT.jaxaBlue, 0.76, 1.25),
+      flag("jp", 0.58, 0.95),
+    ],
     height: 32.5,
     radius: 2.635,
     description:
@@ -333,7 +339,7 @@ $$Q \\propto A_{\\text{壁}} \\propto D^2$$
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 H3-24L 构型复原：63 m 总高、5.27 m 芯级直径、四枚 SRB-3 固体助推器与长整流罩。",
+    modelNote: "按 H3-24L 构型复原：63 m 总高、5.27 m 芯级直径、四枚 SRB-3 固体助推器与长整流罩。涂装：芯级橙色泡沫绝热层本色，SRB-3 与整流罩白色。",
   }),
 
   sources: [

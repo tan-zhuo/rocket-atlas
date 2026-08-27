@@ -18,10 +18,13 @@ export function StudioEnvironment() {
     c.height = 128;
     const ctx = c.getContext("2d")!;
     const g = ctx.createLinearGradient(0, 0, 0, 128);
-    g.addColorStop(0, "#9fb4d4");
-    g.addColorStop(0.45, "#556076");
-    g.addColorStop(0.62, "#2b3140");
-    g.addColorStop(1, "#12151c");
+    g.addColorStop(0, "#a8bcda");
+    g.addColorStop(0.44, "#6d7789");
+    g.addColorStop(0.52, "#8d939c");
+    // 下半球是地面：发射场是大片混凝土，不是黑的。
+    // 抛光不锈钢（半人马座、星舰）几乎只反射下半球，天球底部涂黑会让它整段发暗发蓝。
+    g.addColorStop(0.7, "#9a968f");
+    g.addColorStop(1, "#6f7178");
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, 8, 128);
     const t = new THREE.CanvasTexture(c);
@@ -49,6 +52,11 @@ export function StudioEnvironment() {
       <mesh position={[0, 18, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <planeGeometry args={[4, 40]} />
         <meshBasicMaterial color="#dce6f5" />
+      </mesh>
+      {/* 地面反光板：混凝土把阳光弹回箭体下腹，抛光金属尤其吃这一口光 */}
+      <mesh position={[0, -14, 2]} rotation={[Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[46, 46]} />
+        <meshBasicMaterial color="#b9b3a8" />
       </mesh>
     </group>
   );

@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -56,6 +57,11 @@ const g = rocketGeometry()
     group: "core",
     shape: "cylinder",
     finish: "painted-white",
+    // 白漆芯级 + ISRO 橙红字样 + 印度三色旗
+    livery: [
+      text("LVM3", PAINT.isro, 0.72, 1.0),
+      flag("in", 0.52, 0.95),
+    ],
     height: 21,
     radius: 2,
     description:
@@ -89,6 +95,7 @@ const g = rocketGeometry()
     group: "payload",
     shape: "ogive",
     finish: "painted-white",
+    livery: band(0.03, 0.06, PAINT.isro),
     height: 5.7,
     radius: 2.5,
     description: "5 m 直径整流罩。载人构型下这里换成加甘扬飞船与逃逸系统，总高相应变化。",
@@ -360,7 +367,7 @@ GSLV Mk II 的国产低温级（CUS）2010 年 4 月首次飞行即失败（涡�
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 43.5 m 总高、4 m 芯级直径、两枚 3.2 m 固体助推器的公开构型复原。",
+    modelNote: "按 43.5 m 总高、4 m 芯级直径、两枚 3.2 m 固体助推器的公开构型复原。涂装：白漆箭体，ISRO 橙红标识与印度三色旗位于 L110 芯级。",
   }),
 
   sources: [

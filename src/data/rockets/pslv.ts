@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag, text } from "../livery";
 
 /** 按 PSLV-XL 构型（六枚加长捆绑固体助推器）建模。 */
 const g = rocketGeometry()
@@ -20,6 +21,12 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "solid-booster",
+    // S139 固体一级白壳，尾裙深灰；ISRO 字样与三色旗在上段
+    livery: [
+      band(0.0, 0.04, PAINT.darkGrey),
+      text("PSLV", PAINT.isro, 0.8, 0.9),
+      flag("in", 0.66, 0.85),
+    ],
     height: 18,
     radius: 1.4,
     description:
@@ -407,7 +414,7 @@ ISRO 后来还把 PS4 做成了一个**在轨实验平台**：任务结束后，
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 PSLV-XL 构型复原：44.4 m 总高、2.8 m 一级直径、六枚 1 m 直径捆绑助推器。",
+    modelNote: "按 PSLV-XL 构型复原：44.4 m 总高、2.8 m 一级直径、六枚 1 m 直径捆绑助推器。涂装：白色壳体，ISRO 橙红标识与印度三色旗；PS4 上面级包多层隔热金箔。",
   }),
 
   sources: [

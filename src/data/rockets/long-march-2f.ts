@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -55,7 +56,11 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "painted-white",
-    livery: { kind: "text", text: "CZ-2F", color: "#b4231d" },
+    // 白漆箭体 + 中国航天正红的型号字样 + 五星红旗
+    livery: [
+      text("CZ-2F", PAINT.casc, 0.74, 1.0),
+      flag("cn", 0.56, 0.95),
+    ],
     height: 21.5,
     radius: 1.675,
     description:
@@ -335,7 +340,7 @@ export const longMarch2F: Rocket = {
   geometry: g.build({
     fidelity: "schematic",
     modelNote:
-      "按 CZ-2F 载人构型的 58.34 m 总高、3.35 m 芯级直径、2.25 m 助推器与 3.8 m 整流罩复原。逃逸塔的桁架结构为示意。",
+      "按 CZ-2F 载人构型的 58.34 m 总高、3.35 m 芯级直径、2.25 m 助推器与 3.8 m 整流罩复原。逃逸塔的桁架结构为示意。涂装：白漆箭体，红色型号字样与五星红旗位于芯一级上段。",
   }),
 
   sources: [

@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { band, flag, PAINT } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -8,7 +9,9 @@ const g = rocketGeometry()
     nameEn: "Strap-on boosters",
     group: "booster",
     shape: "frustum",
-    finish: "painted-white",
+    // 联盟号不刷白漆：壳体是灰色底漆，助推器根部一道橙箍
+    finish: "grey-primer",
+    livery: band(0.0, 0.1, PAINT.soyuzOrange),
     height: 19.6,
     radius: 1.34,
     radiusTop: 0.5,
@@ -45,7 +48,12 @@ const g = rocketGeometry()
     name: "芯级（Блок А）",
     group: "core",
     shape: "cylinder",
-    finish: "painted-white",
+    // 芯级同为灰色底漆；尾段（发动机舱外壳）是那一圈标志性的橙
+    finish: "grey-primer",
+    livery: [
+      band(0.0, 0.07, PAINT.soyuzOrange),
+      flag("ru", 0.82, 0.9),
+    ],
     height: 24.2,
     radius: 1.475,
     description:
@@ -69,7 +77,7 @@ const g = rocketGeometry()
     nameEn: "Blok-I third stage",
     group: "stage-3",
     shape: "cylinder",
-    finish: "painted-white",
+    finish: "grey-primer",
     height: 6.6,
     radius: 1.35,
     description:
@@ -280,7 +288,7 @@ Soyuz-2 曾经的核心优势——单价约 4,000–5,000 万美元、极高的
   geometry: g.build({
     fidelity: "schematic",
     modelNote:
-      "按 Soyuz-2.1b 带 4.11 m 整流罩构型的公开尺寸复原（总高 46.3 m）。载人构型顶部为飞船 + 逃逸塔，外形与此不同。",
+      "按 Soyuz-2.1b 带 4.11 m 整流罩构型的公开尺寸复原（总高 46.3 m）。载人构型顶部为飞船 + 逃逸塔，外形与此不同。涂装取标准配色：灰色壳体、橙色尾段与助推器橙箍、白色整流罩。",
   }),
 
   sources: [
@@ -304,6 +312,13 @@ Soyuz-2 曾经的核心优势——单价约 4,000–5,000 万美元、极高的
       publisher: "NASA / Roscosmos",
       confidence: "medium",
       note: "助推器分离异常的调查结论。",
+    },
+    {
+      title: "Soyuz rocket with special paint scheme rolls out to Baikonur launch pad",
+      url: "https://spaceflightnow.com/2021/03/18/soyuz-rocket-with-special-paint-scheme-rolls-out-to-baikonur-launch-pad/",
+      publisher: "Spaceflight Now",
+      confidence: "medium",
+      note: "标准涂装的文字描述：白色头锥、灰色过渡段、橙色尾段、灰色一二级壳体、助推器橙箍——本站 3D 涂装依此还原。",
     },
     {
       title: "Soyuz-2 — Wikipedia",

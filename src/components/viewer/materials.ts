@@ -1,7 +1,7 @@
 "use client";
 
 import * as THREE from "three";
-import type { RocketPart } from "@/data/types";
+import type { PartLivery, RocketPart } from "@/data/types";
 import { partFinish, type FinishSpec } from "@/data/geometry";
 
 /**
@@ -20,6 +20,15 @@ const cache = new Map<string, THREE.Texture>();
 
 const TEX_W = 512;
 const TEX_H = 512;
+
+/**
+ * 字样与旗标的周向落点：三处，互隔 120°。
+ *
+ * 相机一次只看得到略小于半个周向。贴两处时某些转角下两处都被接缝切开，
+ * 字会断成「CAN … V」；贴四处又太密，同屏出现「VULCAN/VUL」。
+ * 三处是唯一能保证「任何角度都完整看到一处、且不挤」的间距。
+ */
+const MARK_U = [1 / 6, 3 / 6, 5 / 6];
 
 function hex(c: string) {
   return new THREE.Color(c);
@@ -153,17 +162,140 @@ function drawTiles(ctx: CanvasRenderingContext2D, color: string) {
   ctx.fillRect(u0 - 18, 0, 36, TEX_H);
 }
 
-function drawText(ctx: CanvasRenderingContext2D, text: string, color: string) {
+function drawText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  color: string,
+  at = 0.7,
+  scale = 1,
+) {
   ctx.save();
   ctx.fillStyle = color;
-  ctx.font = `bold ${Math.round(TEX_H * 0.085)}px "Helvetica Neue", Arial, sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  // 两个相对的方位角各写一次
-  [0.25, 0.75].forEach((u) => {
-    ctx.fillText(text, u * TEX_W, TEX_H * 0.3);
+
+  const maxW = TEX_W * 0.22;
+  let size = Math.round(TEX_H * 0.062 * scale);
+  const font = (px: number) => `bold ${px}px "Helvetica Neue", Arial, sans-serif`;
+  ctx.font = font(size);
+  const w = ctx.measureText(text).width;
+  if (w > maxW) {
+    size = Math.max(10, Math.floor((size * maxW) / w));
+    ctx.font = font(size);
+  }
+  // v 轴向下，所以 at=1（顶部）对应 y=0
+  MARK_U.forEach((u) => {
+    ctx.fillText(text, u * TEX_W, (1 - at) * TEX_H);
   });
   ctx.restore();
+}
+
+/**
+ * 程序化国旗。
+ *
+ * 箭体上的国旗不是装饰：它是发射国的法定标识，位置几乎总在一级或芯级的上段、
+ * 与承包商标识同高。这里按「横条 + 可选圆盘 + 可选左上角方块」拼，
+ * 足以覆盖俄、日、韩、印、中、美、欧这几种在本站出现的旗面结构。
+ */
+function drawFlag(ctx: CanvasRenderingContext2D, lv: PartLivery, at = 0.5, scale = 1) {
+  const f = lv.flag;
+  if (!f || !f.stripes.length) return;
+
+  const w = TEX_W * 0.085 * scale;
+  const h = w * 0.66;
+  const cy = (1 - at) * TEX_H;
+
+  // 与字样同样的三处落点
+  for (const u of MARK_U) {
+    const x0 = u * TEX_W - w / 2;
+    const y0 = cy - h / 2;
+
+    f.stripes.forEach((c, i) => {
+      ctx.fillStyle = c;
+      if (f.vertical) {
+        ctx.fillRect(x0 + (w * i) / f.stripes.length, y0, w / f.stripes.length + 0.5, h);
+      } else {
+        ctx.fillRect(x0, y0 + (h * i) / f.stripes.length, w, h / f.stripes.length + 0.5);
+      }
+    });
+
+    if (f.canton) {
+      ctx.fillStyle = f.canton;
+      ctx.fillRect(x0, y0, w * (f.cantonW ?? 0.4), h * (f.cantonH ?? 0.5));
+    }
+
+    if (f.disc) {
+      const [top, bottom] = f.disc;
+      const r = h * 0.3;
+      if (bottom) {
+        // 太极：上下两个半圆
+        ctx.fillStyle = top;
+        ctx.beginPath();
+        ctx.arc(x0 + w / 2, y0 + h / 2, r, Math.PI, 0);
+        ctx.fill();
+        ctx.fillStyle = bottom;
+        ctx.beginPath();
+        ctx.arc(x0 + w / 2, y0 + h / 2, r, 0, Math.PI);
+        ctx.fill();
+      } else {
+        ctx.fillStyle = top;
+        ctx.beginPath();
+        ctx.arc(x0 + w / 2, y0 + h / 2, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    ctx.strokeStyle = "rgba(0,0,0,0.28)";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, w, h);
+  }
+}
+
+/** 竖向色条：沿箭体轴线跑的那一道（火神、宇宙神的机身条） */
+function drawStripe(ctx: CanvasRenderingContext2D, color: string, scale = 1) {
+  const w = TEX_W * 0.055 * scale;
+  ctx.fillStyle = color;
+  for (const u of [0.25, 0.75]) {
+    ctx.fillRect(u * TEX_W - w / 2, 0, w, TEX_H);
+  }
+}
+
+/** livery 允许写成单个对象或数组，这里统一成数组 */
+function liveryLayers(part: RocketPart): PartLivery[] {
+  const lv = part.livery;
+  if (!lv) return [];
+  return Array.isArray(lv) ? lv : [lv];
+}
+
+function drawLivery(ctx: CanvasRenderingContext2D, lv: PartLivery) {
+  const c = lv.color ?? "#15171c";
+  switch (lv.kind) {
+    case "roll-pattern":
+      drawRollPattern(ctx, c);
+      break;
+    case "checker":
+      drawChecker(ctx, c);
+      break;
+    case "tiles":
+      drawTiles(ctx, lv.color ?? "#24272e");
+      break;
+    case "bands":
+      for (const b of lv.bands ?? []) {
+        ctx.fillStyle = b.color;
+        const y0 = (1 - b.to) * TEX_H;
+        ctx.fillRect(0, y0, TEX_W, (b.to - b.from) * TEX_H);
+      }
+      break;
+    case "text":
+      if (lv.text) drawText(ctx, lv.text, c, lv.at ?? 0.7, lv.scale ?? 1);
+      break;
+    case "flag":
+      drawFlag(ctx, lv, lv.at ?? 0.5, lv.scale ?? 1);
+      break;
+    case "stripe":
+      drawStripe(ctx, c, lv.scale ?? 1);
+      break;
+  }
 }
 
 export function surfaceTexture(part: RocketPart): THREE.Texture | null {
@@ -199,6 +331,39 @@ export function surfaceTexture(part: RocketPart): THREE.Texture | null {
     drawStringers(ctx, spec.color, 72, 1.2);
     drawRingSeams(ctx, spec.color, part.height * 3, 0.6);
   }
+  if (finish === "solid-booster") {
+    // 固体发动机是分段运输、现场对接的，段间的场接头是壳体上最醒目的一圈凸起
+    const segs = Math.max(2, Math.round(part.height / 8));
+    for (let i = 1; i < segs; i++) {
+      const y = (i / segs) * TEX_H;
+      ctx.fillStyle = shade(spec.color, -0.13);
+      ctx.fillRect(0, y - 3, TEX_W, 6);
+      ctx.fillStyle = shade(spec.color, 0.1);
+      ctx.fillRect(0, y + 3, TEX_W, 2);
+    }
+  }
+  if (finish === "gold-foil") {
+    // MLI 是皱的，靠随机折痕而不是规则缝线出效果
+    ctx.lineWidth = 1.2;
+    for (let i = 0; i < 160; i++) {
+      const x = Math.random() * TEX_W;
+      const y = Math.random() * TEX_H;
+      ctx.strokeStyle = shade(spec.color, (Math.random() - 0.45) * 0.5);
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + (Math.random() - 0.5) * 60, y + (Math.random() - 0.5) * 90);
+      ctx.stroke();
+    }
+  }
+  if (finish === "cork-ablative") {
+    // 软木的颗粒感
+    for (let i = 0; i < 900; i++) {
+      const x = Math.random() * TEX_W;
+      const y = Math.random() * TEX_H;
+      ctx.fillStyle = shade(spec.color, (Math.random() - 0.5) * 0.3);
+      ctx.fillRect(x, y, 3 + Math.random() * 4, 2 + Math.random() * 3);
+    }
+  }
   if (finish === "insulation-foam" || finish === "scorched") {
     // 泡沫喷涂的斑驳感
     for (let i = 0; i < 220; i++) {
@@ -221,25 +386,13 @@ export function surfaceTexture(part: RocketPart): THREE.Texture | null {
   }
 
   // ── 涂装标识 ────────────────────────────────────────────
-  const lv = part.livery;
-  if (lv) {
-    const c = lv.color ?? "#15171c";
-    if (lv.kind === "roll-pattern") drawRollPattern(ctx, c);
-    if (lv.kind === "checker") drawChecker(ctx, c);
-    if (lv.kind === "tiles") drawTiles(ctx, lv.color ?? "#24272e");
-    if (lv.kind === "bands" && lv.bands) {
-      for (const b of lv.bands) {
-        ctx.fillStyle = b.color;
-        const y0 = (1 - b.to) * TEX_H;
-        ctx.fillRect(0, y0, TEX_W, (b.to - b.from) * TEX_H);
-      }
-    }
-    if (lv.kind === "text" && lv.text) drawText(ctx, lv.text, c);
-  }
+  // 一个部件可以叠多层：先铺色带，再压字样与旗标（数组顺序即绘制顺序）
+  const layers = liveryLayers(part);
+  for (const lv of layers) drawLivery(ctx, lv);
 
   // 极轻微的模糊：把图案的硬边高频压掉一点。
   // 圆柱侧影处 u 方向被压缩上百倍，硬边在采样不足时会摩尔纹化成条码状条纹。
-  if (lv) {
+  if (layers.length) {
     ctx.filter = "blur(0.7px)";
     ctx.drawImage(canvas, 0, 0);
     ctx.filter = "none";

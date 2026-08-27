@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag, text } from "../livery";
 
 /** 按 Atlas V 551 构型（五枚固推 + 5 m 长整流罩）建模，这是运力最大的一档。 */
 const g = rocketGeometry()
@@ -22,6 +23,12 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "painted-white",
+    // 通用芯级白漆，尾裙深灰；ULA 蓝色型号字样与星条旗在同一带上
+    livery: [
+      band(0.0, 0.05, PAINT.darkGrey),
+      text("ATLAS V", PAINT.ulaBlue, 0.72, 0.9),
+      flag("us", 0.55, 0.9),
+    ],
     height: 29.5,
     radius: 1.905,
     description:
@@ -93,6 +100,7 @@ const g = rocketGeometry()
     group: "payload",
     shape: "cylinder",
     finish: "painted-white",
+    livery: band(0.02, 0.05, PAINT.ulaBlue),
     height: 15,
     radius: 2.69,
     description: "5.4 m 外径的复合材料整流罩，有 20.7 / 23.4 / 26.5 m 三档长度。另有 4 m 直径的金属整流罩构型，用于较小载荷。",
@@ -328,7 +336,7 @@ Atlas V 剩余的箭体已全部售出（主要给亚马逊的 Kuiper 星座与�
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 ULA 用户手册的 551 构型复原：62.2 m 总高、3.81 m 芯级、5.4 m 整流罩、五枚 AJ-60A。",
+    modelNote: "按 ULA 用户手册的 551 构型复原：62.2 m 总高、3.81 m 芯级、5.4 m 整流罩、五枚 AJ-60A。涂装：白漆箭体、深灰尾裙、不锈钢半人马座裸箱，型号字样为 ULA 蓝。",
   }),
 
   sources: [

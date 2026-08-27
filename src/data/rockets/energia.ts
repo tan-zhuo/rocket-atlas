@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, bands } from "../livery";
 
 /** 能源号是并联构型：7.75 m 氢氧芯级 + 四个天顶号一级作助推器；载荷挂在芯级侧面。 */
 const g = rocketGeometry()
@@ -65,6 +66,11 @@ const g = rocketGeometry()
     group: "booster",
     shape: "cylinder",
     finish: "painted-white",
+    // 天顶级助推器白壳，尾段与上段各一道深灰箍
+    livery: bands([
+      { from: 0.0, to: 0.06, color: PAINT.darkGrey },
+      { from: 0.72, to: 0.76, color: PAINT.darkGrey },
+    ]),
     height: 28,
     radius: 1.95,
     cluster: { count: 4, offset: 5.9, phase: 45 },
@@ -364,7 +370,7 @@ export const energia: Rocket = {
   geometry: g.build({
     fidelity: "schematic",
     modelNote:
-      "按 58.8 m 总高、7.75 m 芯级直径、20 m 跨距复原，载荷按暴风雪号构型侧挂；机翼用两片后掠面近似。",
+      "按 58.8 m 总高、7.75 m 芯级直径、20 m 跨距复原，载荷按暴风雪号构型侧挂；机翼用两片后掠面近似。涂装：芯级为橙褐色泡沫绝热层本色（与航天飞机外贮箱同类），四枚助推器白色。",
   }),
 
   sources: [

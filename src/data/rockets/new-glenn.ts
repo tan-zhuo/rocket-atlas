@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -32,7 +33,12 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "painted-white",
-    livery: { kind: "text", text: "NEW GLENN", color: "#2b2f38" },
+    // 白漆箭体 + Blue Origin 深蓝字样与尾箍
+    livery: [
+      text("NEW GLENN", PAINT.blueOrigin, 0.8, 0.8),
+      flag("us", 0.66, 0.85),
+      band(0.0, 0.04, PAINT.blueOrigin),
+    ],
     height: 52.5,
     radius: 3.5,
     description:
@@ -264,7 +270,7 @@ Blue Origin 能接受这个复杂度，是因为它同时在做 New Shepard（BE
   geometry: g.build({
     fidelity: "schematic",
     modelNote:
-      "按 Blue Origin 公开的 98 m 总高、7 m 直径与 7 台 BE-4 布局复原。各段长度分配与着陆腿、气动翼形状为示意。",
+      "按 Blue Origin 公开的 98 m 总高、7 m 直径与 7 台 BE-4 布局复原。各段长度分配与着陆腿、气动翼形状为示意。涂装：白漆箭体、黑色碳纤维级间段，字样与尾箍用 Blue Origin 深蓝。",
   }),
 
   sources: [

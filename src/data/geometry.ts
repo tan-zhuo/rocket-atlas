@@ -82,9 +82,10 @@ export const FINISH: Record<PartFinish, FinishSpec> = {
     labelZh: "泡沫绝热层",
   },
   scorched: {
-    color: "#8a6242",
-    metalness: 0.05,
-    roughness: 0.88,
+    // 与 insulation-foam 同源，只是偏暗——熏黑的是同一层橙色泡沫，不是另一种材料
+    color: "#b0602c",
+    metalness: 0.04,
+    roughness: 0.91,
     labelZh: "燎黑绝热层",
   },
   carbon: {
@@ -117,6 +118,28 @@ export const FINISH: Record<PartFinish, FinishSpec> = {
     metalness: 0.03,
     roughness: 0.9,
     labelZh: "隔热瓦",
+  },
+  "grey-primer": {
+    // 联盟号的一二级不刷白漆，是一层灰色防腐底漆
+    color: "#9aa2ac",
+    metalness: 0.16,
+    roughness: 0.66,
+    labelZh: "灰色底漆",
+  },
+  "cork-ablative": {
+    // 软木颗粒压制的烧蚀层，粘在级间段与整流罩根部，颜色是天然软木的浅棕
+    color: "#b98a5e",
+    metalness: 0.02,
+    roughness: 0.93,
+    labelZh: "软木烧蚀层",
+  },
+  "gold-foil": {
+    // 多层隔热组件（MLI）：镀铝聚酰亚胺膜，看上去是皱的金箔
+    color: "#c2962c",
+    metalness: 0.82,
+    roughness: 0.38,
+    clearcoat: 0.2,
+    labelZh: "多层隔热金箔",
   },
 };
 

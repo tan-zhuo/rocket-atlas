@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, bands, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -20,6 +21,8 @@ const g = rocketGeometry()
     group: "booster",
     shape: "cylinder",
     finish: "solid-booster",
+    // GEM-63XL 白壳，根部一道红箍与芯级呼应
+    livery: bands([{ from: 0.06, to: 0.09, color: PAINT.ulaRed }]),
     height: 20,
     radius: 0.8,
     cluster: { count: 6, offset: 3.5 },
@@ -43,7 +46,15 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "painted-white",
-    livery: { kind: "bands", bands: [{ from: 0.02, to: 0.07, color: "#b4231d" }] },
+    // ULA 公布的红/白/灰三色：灰色尾裙 + 红箍 + 白箭体
+    livery: [
+      bands([
+        { from: 0.0, to: 0.05, color: PAINT.darkGrey },
+        { from: 0.05, to: 0.1, color: PAINT.ulaRed },
+      ]),
+      text("VULCAN", PAINT.ulaRed, 0.72, 0.95),
+      flag("us", 0.55, 0.9),
+    ],
     height: 33.6,
     radius: 2.7,
     description:
@@ -272,10 +283,17 @@ ULA 的数据是：一级中发动机约占 65% 的成本，而整个一级约�
   geometry: g.build({
     fidelity: "schematic",
     modelNote:
-      "按 VC6S 构型（6 枚固体助推器 + 短整流罩）复原，总高约 61.6 m。助推器数量在实际任务中为 0–6 枚可变。",
+      "按 VC6S 构型（6 枚固体助推器 + 短整流罩）复原，总高约 61.6 m。助推器数量在实际任务中为 0–6 枚可变。涂装依据 ULA 公开的火神红/白/灰配色。",
   }),
 
   sources: [
+    {
+      title: "Vulcan-Centaur Rolls to Pad, Completes Last Major Pre-Launch Milestone",
+      url: "https://www.americaspace.com/2024/01/05/vulcan-centaur-rolls-to-pad-completes-last-major-pre-launch-milestone/",
+      publisher: "AmericaSpace",
+      confidence: "medium",
+      note: "芯级采用红/白/灰三色涂装的描述，本站 3D 涂装依此还原。",
+    },
     {
       title: "Vulcan Centaur Launch Vehicle — Rocket Guide",
       url: "https://www.ulalaunch.com/rockets/vulcan-centaur",

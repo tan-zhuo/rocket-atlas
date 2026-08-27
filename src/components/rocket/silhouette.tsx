@@ -1,4 +1,4 @@
-import type { RocketGeometry, RocketPart } from "@/data/types";
+import type { PartLivery, RocketGeometry, RocketPart } from "@/data/types";
 import { partFinish } from "@/data/geometry";
 import { cn } from "@/lib/utils";
 
@@ -134,6 +134,46 @@ function PartShapeEl({ p, mode, xOffset }: { p: RocketPart; mode: Mode; xOffset:
   }
 }
 
+/**
+ * 涂装色带在剪影里的落点。
+ *
+ * 3D 贴图里的字样/旗标在剪影这个尺度上只会糊成一个点，所以 2D 只取色带——
+ * 联盟号的橙色尾段、火神的红环、土星五号的黑白块在侧视图里恰恰是最可辨识的特征。
+ */
+function PartBands({ p, xOffset }: { p: RocketPart; xOffset: number }) {
+  if (p.shape !== "cylinder" && p.shape !== "frustum") return null;
+
+  const layers: PartLivery[] = p.livery ? (Array.isArray(p.livery) ? p.livery : [p.livery]) : [];
+  const bands = layers.flatMap((l) => (l.kind === "bands" ? (l.bands ?? []) : []));
+  if (!bands.length) return null;
+
+  const r = p.radius;
+  const rt = p.radiusTop ?? r;
+
+  return (
+    <>
+      {bands.map((b, i) => {
+        // 锥段上按高度插值出该处半径，色带才不会飘出轮廓
+        const rAt = (t: number) => r + (rt - r) * t;
+        const y0 = p.bottom + p.height * b.from;
+        const hh = p.height * (b.to - b.from);
+        const w = Math.min(rAt(b.from), rAt(b.to));
+        return (
+          <rect
+            key={i}
+            x={xOffset - w}
+            y={y0}
+            width={w * 2}
+            height={hh}
+            fill={b.color}
+            opacity={0.92}
+          />
+        );
+      })}
+    </>
+  );
+}
+
 export function Silhouette({
   geometry,
   /** 统一的 y 轴刻度（m→px）。对比页传入同一个值即可等比并排。 */
@@ -174,7 +214,10 @@ export function Silhouette({
         {ordered.map((p) => {
           const offsets = p.cluster ? [-p.cluster.offset, p.cluster.offset] : [0];
           return offsets.map((o, i) => (
-            <PartShapeEl key={`${p.id}-${i}`} p={p} mode={mode} xOffset={o} />
+            <g key={`${p.id}-${i}`}>
+              <PartShapeEl p={p} mode={mode} xOffset={o} />
+              {mode === "solid" ? <PartBands p={p} xOffset={o} /> : null}
+            </g>
           ));
         })}
       </g>

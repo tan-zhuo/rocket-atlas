@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, bands, flag, text } from "../livery";
 
 /** 按 Block 1 载人构型（4 台 RS-25 + 两枚五段固推 + ICPS + 猎户座）建模。 */
 const g = rocketGeometry()
@@ -32,7 +33,13 @@ const g = rocketGeometry()
     name: "五段固体助推器（2 枚）",
     group: "booster",
     shape: "cylinder",
-    finish: "painted-white",
+    finish: "solid-booster",
+    // 五段式固推的场接头，在白壳上是三道明显的深色环
+    livery: bands([
+      { from: 0.3, to: 0.315, color: PAINT.darkGrey },
+      { from: 0.55, to: 0.565, color: PAINT.darkGrey },
+      { from: 0.78, to: 0.795, color: PAINT.darkGrey },
+    ]),
     height: 46.8,
     radius: 1.855,
     cluster: { count: 2, offset: 6.2, phase: 90 },
@@ -56,6 +63,11 @@ const g = rocketGeometry()
     group: "core",
     shape: "cylinder",
     finish: "insulation-foam",
+    // 芯级不刷漆——橙色就是喷涂泡沫本色；上面直接印红色蠕虫标与星条旗
+    livery: [
+      text("NASA", PAINT.nasaRed, 0.78, 1.15),
+      flag("us", 0.6, 1.1),
+    ],
     height: 34,
     radius: 4.2,
     description:
@@ -375,7 +387,7 @@ $$\\text{单价} \\propto \\frac{1}{\\text{年产量}^{\\alpha}}$$
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 Block 1 载人构型复原：98.1 m 总高、8.4 m 芯级、两枚 54 m 五段固推、ICPS 与猎户座飞船。",
+    modelNote: "按 Block 1 载人构型复原：98.1 m 总高、8.4 m 芯级、两枚 54 m 五段固推、ICPS 与猎户座飞船。涂装：芯级为泡沫绝热层本色（橙），固推白色带场接头环，NASA 蠕虫标与星条旗位于芯级液氢箱侧面。",
   }),
 
   sources: [

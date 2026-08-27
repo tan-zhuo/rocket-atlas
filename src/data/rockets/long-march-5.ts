@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -9,6 +10,7 @@ const g = rocketGeometry()
     group: "booster",
     shape: "cylinder",
     finish: "painted-white",
+    livery: band(0.02, 0.05, PAINT.casc),
     height: 23.4,
     radius: 1.675,
     cluster: { count: 4, offset: 4.2, phase: 45 },
@@ -59,7 +61,11 @@ const g = rocketGeometry()
     group: "core",
     shape: "cylinder",
     finish: "painted-white",
-    livery: { kind: "text", text: "CZ-5", color: "#b4231d" },
+    // 白漆箭体 + 中国航天正红的型号字样 + 五星红旗
+    livery: [
+      text("CZ-5", PAINT.casc, 0.74, 1.0),
+      flag("cn", 0.56, 0.95),
+    ],
     height: 31.2,
     radius: 2.5,
     description:
@@ -293,7 +299,7 @@ export const longMarch5: Rocket = {
   geometry: g.build({
     fidelity: "schematic",
     modelNote:
-      "按 CASC 公开资料的 56.97 m 总高、5 m 芯级直径、3.35 m 助推器与 5.2 m 整流罩复原。助推器长度与头锥形状为示意，实际助推器头部为斜切构型。",
+      "按 CASC 公开资料的 56.97 m 总高、5 m 芯级直径、3.35 m 助推器与 5.2 m 整流罩复原。助推器长度与头锥形状为示意，实际助推器头部为斜切构型。涂装：白漆箭体，红色型号字样与五星红旗位于芯一级上段。",
   }),
 
   sources: [

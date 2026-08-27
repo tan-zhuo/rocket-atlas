@@ -71,6 +71,7 @@ export default async function AboutPage() {
         <ul className="my-4 space-y-2">
           <li>{c.model.trusted}</li>
           <li>{c.model.schematic}</li>
+          <li>{c.model.livery}</li>
         </ul>
         <p>{c.model.outro}</p>
       </Section>

@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -20,6 +21,12 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "painted-white",
+    // 白漆箭体 + 蓝箭航天的蓝色标识 + 五星红旗
+    livery: [
+      band(0.0, 0.05, PAINT.landspace),
+      text("ZQ-2", PAINT.landspace, 0.74, 0.95),
+      flag("cn", 0.58, 0.9),
+    ],
     height: 24,
     radius: 1.675,
     description:
@@ -251,7 +258,7 @@ export const zhuque2: Rocket = {
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按蓝箭航天公开的 49.5 m 总高、3.35 m 直径复原（标准型构型）。各段长度分配为示意。",
+    modelNote: "按蓝箭航天公开的 49.5 m 总高、3.35 m 直径复原（标准型构型）。各段长度分配为示意。涂装：白漆箭体，蓝色企业标识与五星红旗位于一级上段。",
   }),
 
   sources: [

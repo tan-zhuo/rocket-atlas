@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag, text } from "../livery";
 
 /** A5 构型：一个 URM-1 作芯级，四个同样的 URM-1 作助推器，上面是 URM-2 与微风-M。 */
 const g = rocketGeometry()
@@ -22,6 +23,12 @@ const g = rocketGeometry()
     group: "core",
     shape: "cylinder",
     finish: "painted-white",
+    // URM-1 通用模块白漆 + 蓝色型号字样；四枚助推与芯级是同一种模块，涂装也相同
+    livery: [
+      band(0.0, 0.05, PAINT.darkGrey),
+      text("ANGARA", "#1f4e9c", 0.76, 0.85),
+      flag("ru", 0.6, 0.9),
+    ],
     height: 22.1,
     radius: 1.45,
     description:
@@ -45,6 +52,7 @@ const g = rocketGeometry()
     group: "booster",
     shape: "cylinder",
     finish: "painted-white",
+    livery: band(0.0, 0.05, PAINT.darkGrey),
     height: 22.1,
     radius: 1.45,
     cluster: { count: 4, offset: 2.95, phase: 45 },
@@ -78,7 +86,7 @@ const g = rocketGeometry()
     name: "微风-M 上面级",
     group: "stage-3",
     shape: "cylinder",
-    finish: "painted-white",
+    finish: "gold-foil",
     height: 2.6,
     radius: 1.9,
     internal: true,
@@ -353,7 +361,7 @@ KVTK 至今没有飞。原因是研制经费与优先级：氢氧上面级需要
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 A5 构型复原：55.4 m 总高、2.9 m 模块直径、8.86 m 跨距，五个完全相同的 URM-1 模块。",
+    modelNote: "按 A5 构型复原：55.4 m 总高、2.9 m 模块直径、8.86 m 跨距，五个完全相同的 URM-1 模块。涂装：URM-1 模块白漆、深灰尾段，蓝色型号字样与俄罗斯三色旗。",
   }),
 
   sources: [

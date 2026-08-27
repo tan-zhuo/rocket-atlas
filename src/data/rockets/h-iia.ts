@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, flag, text } from "../livery";
 
 /** 按 H-IIA 202 构型（两枚 SRB-A3）建模，这是飞得最多的一档。 */
 const g = rocketGeometry()
@@ -21,6 +22,11 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "insulation-foam",
+    // 一级不刷漆，橙色是泡沫绝热层本色；蓝色型号字样与日之丸直接印在上面
+    livery: [
+      text("H-IIA", PAINT.jaxaBlue, 0.74, 1.0),
+      flag("jp", 0.56, 0.95),
+    ],
     height: 33,
     radius: 2,
     description:
@@ -76,6 +82,7 @@ const g = rocketGeometry()
     group: "payload",
     shape: "ogive",
     finish: "painted-white",
+    livery: text("JAXA", PAINT.jaxaBlue, 0.42, 0.85),
     height: 4.2,
     radius: 2.05,
     description: "4 m 与 5 m 两种直径、多档长度。5S 型整流罩用于大型 GEO 卫星与探测器。",
@@ -338,7 +345,7 @@ JAXA 的应对不是打补丁，而是**重新设计 SRB-A 的喷管**（改为 
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 H-IIA 202 构型复原：53 m 总高、4 m 一级直径、两枚 SRB-A3 固体助推器。",
+    modelNote: "按 H-IIA 202 构型复原：53 m 总高、4 m 一级直径、两枚 SRB-A3 固体助推器。涂装：一级为橙色泡沫绝热层本色，SRB-A 与整流罩白色，型号字样与日之丸为蓝红两色。",
   }),
 
   sources: [

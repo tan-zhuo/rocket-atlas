@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -20,9 +21,13 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "painted-white",
+    // 白漆箭体 + 中国航天正红的型号字样 + 五星红旗
+    livery: [
+      text("CZ-3B", PAINT.casc, 0.74, 1.0),
+      flag("cn", 0.56, 0.95),
+    ],
     height: 20.3,
     radius: 1.675,
-    livery: { kind: "text", text: "CZ-3B", color: "#c8102e" },
     description:
       "3.35 m 直径——**这是中国老一代火箭的通用直径，由铁路隧道限界决定的。**从酒泉、太原到西昌，箭体全部靠铁路运输，隧道断面卡死了 3.35 m 这个数字。要突破它只有一个办法：把发射场建在海边，用船运——这正是海南文昌发射场与长征五号的由来。",
   })
@@ -400,7 +405,7 @@ YF-75 可以在关机后重新点火。这带来的能力是：
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 54.8 m 总高、3.35 m 芯级直径、四枚 2.25 m 液体助推器的公开构型复原。",
+    modelNote: "按 54.8 m 总高、3.35 m 芯级直径、四枚 2.25 m 液体助推器的公开构型复原。涂装：白漆箭体，红色型号字样与五星红旗位于芯一级上段。",
   }),
 
   sources: [

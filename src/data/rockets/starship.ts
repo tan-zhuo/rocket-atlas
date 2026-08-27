@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -22,6 +23,8 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "stainless",
+    // 不锈钢不刷漆，只在上段有一处黑色字样
+    livery: text("SpaceX", PAINT.black, 0.9, 0.7),
     height: 64.4,
     radius: 4.5,
     description:

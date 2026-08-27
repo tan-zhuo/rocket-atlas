@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -20,6 +21,12 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "painted-white",
+    // 白漆箭体，一级上段贴太极旗——这是누리호最好认的一处标识
+    livery: [
+      band(0.0, 0.05, PAINT.kariBlue),
+      text("KSLV-II", PAINT.kariBlue, 0.74, 0.85),
+      flag("kr", 0.58, 0.95),
+    ],
     height: 18.1,
     radius: 1.75,
     description:
@@ -324,7 +331,7 @@ KRE-075 有两个版本：一级用海平面型（四台并联），二级用真
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 47.2 m 总高、3.5 m 一二级直径与三级串联构型复原。",
+    modelNote: "按 47.2 m 总高、3.5 m 一二级直径与三级串联构型复原。涂装：白漆箭体，一级上段为太极旗与 KARI 蓝色标识。",
   }),
 
   sources: [

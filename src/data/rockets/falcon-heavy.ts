@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -21,7 +22,11 @@ const g = rocketGeometry()
     group: "core",
     shape: "cylinder",
     finish: "painted-white",
-    livery: { kind: "text", text: "SPACEX", color: "#2b2f38" },
+    // 白漆箭体上只有黑色字样与星条旗；复飞的一级下段会带明显的燎黑
+    livery: [
+      text("SPACEX", PAINT.black, 0.78, 0.85),
+      flag("us", 0.62, 0.85),
+    ],
     height: 37.9,
     radius: 1.85,
     description:
@@ -46,6 +51,7 @@ const g = rocketGeometry()
     group: "booster",
     shape: "cylinder",
     finish: "painted-white",
+    livery: flag("us", 0.72, 0.85),
     height: 37.9,
     radius: 1.85,
     cluster: { count: 2, offset: 4.27, phase: 90 },

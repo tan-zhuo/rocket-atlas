@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -21,6 +22,11 @@ const g = rocketGeometry()
     group: "core",
     shape: "cylinder",
     finish: "insulation-foam",
+    // 橙色同样是泡沫本色；德尔塔四重型点火时氢焰会把箭体下段燎黑，见 scorched
+    livery: [
+      text("DELTA IV", PAINT.ulaBlue, 0.78, 0.85),
+      flag("us", 0.62, 0.85),
+    ],
     height: 36.8,
     radius: 2.55,
     description:
@@ -259,7 +265,7 @@ export const deltaIVHeavy: Rocket = {
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 ULA 用户手册的 72 m 总高、5.1 m CBC 直径与 19.8 m 长整流罩构型复原。",
+    modelNote: "按 ULA 用户手册的 72 m 总高、5.1 m CBC 直径与 19.8 m 长整流罩构型复原。涂装：三枚 CBC 为橙色泡沫绝热层本色（侧芯下段带点火燎黑），锥形头罩与整流罩白色。",
   }),
 
   sources: [

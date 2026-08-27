@@ -118,7 +118,10 @@ export type PartFinish =
   | "engine-metal" // 发动机舱与喷管
   | "copper-nozzle" // 再生冷却铜合金喷管
   | "heatshield" // 隔热瓦 / 烧蚀层
-  | "scorched"; // 被氢焰燎黑的泡沫（Delta IV Heavy）
+  | "scorched" // 被氢焰燎黑的泡沫（Delta IV Heavy）
+  | "grey-primer" // 灰色底漆（联盟号的一二级壳体、质子号下段）
+  | "cork-ablative" // 软木烧蚀防热层（级间段、整流罩根部）
+  | "gold-foil"; // 多层隔热组件（上面级与航天器的金箔）
 
 /**
  * 涂装图案 —— 在部件表面用程序化贴图叠加的标识。
@@ -131,14 +134,36 @@ export interface PartLivery {
     | "checker" // 黑白格（V-2 的试验涂装）
     | "bands" // 横向色带
     | "tiles" // 隔热瓦阵列（只覆盖迎风面）
-    | "text"; // 侧面字样（USA、CZ-5 等）
+    | "text" // 侧面字样（USA、CZ-5 等）
+    | "flag" // 国旗/旗标块
+    | "stripe"; // 竖向色条（沿箭体轴向，如宇宙神/火神的机身条）
   /** bands: 每条带的位置（0=底 1=顶）与颜色 */
   bands?: { from: number; to: number; color: string }[];
   /** text: 竖排/横排字样 */
   text?: string;
   /** 图案主色（默认取自 finish） */
   color?: string;
+  /**
+   * flag: 程序化国旗。stripes 自下而上；vertical 为竖条旗（法/意/印的竖版另说）。
+   * disc 画居中圆盘（日之丸、太极），canton 画左上角方块（星条旗、五星红旗）。
+   */
+  flag?: {
+    stripes: string[];
+    vertical?: boolean;
+    disc?: [string, string?];
+    canton?: string;
+    /** canton 方块占旗面的宽/高比例，默认 0.4 / 0.5 */
+    cantonW?: number;
+    cantonH?: number;
+  };
+  /** 图案中心在部件上的相对高度（0=底 1=顶）；默认 text 0.7 / flag 0.5 */
+  at?: number;
+  /** 图案尺度倍率，1 为默认大小 */
+  scale?: number;
 }
+
+/** 一个部件可以同时有多层涂装（色带 + 字样 + 国旗）。 */
+export type PartLiverySpec = PartLivery | PartLivery[];
 
 /** 部件在爆炸视图中的归组；也用于「按级高亮」。 */
 export type PartGroup =
@@ -165,8 +190,8 @@ export interface RocketPart {
   color?: string;
   /** 表面处理，决定材质质感；缺省时按分组与形状推断 */
   finish?: PartFinish;
-  /** 程序化涂装图案 */
-  livery?: PartLivery;
+  /** 程序化涂装图案；可以给一个数组叠多层 */
+  livery?: PartLiverySpec;
   /** 绕轴周向阵列：助推器、尾翼、栅格舵 */
   cluster?: { count: number; offset: number; phase?: number };
   /** shape==='engines' 时的喷管布局 */

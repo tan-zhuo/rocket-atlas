@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -22,7 +23,12 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "painted-white",
-    livery: { kind: "roll-pattern", color: "#15171c" },
+    // 黑白滚动块供地面光学跟踪判读滚转角；USA 字样与星条旗在同一高度带上
+    livery: [
+      { kind: "roll-pattern", color: "#15171c" },
+      text("USA", PAINT.black, 0.62, 1.1),
+      flag("us", 0.44, 1.1),
+    ],
     height: 38.4,
     radius: 5.05,
     description:
@@ -349,7 +355,7 @@ export const saturnV: Rocket = {
   geometry: g.build({
     fidelity: "schematic",
     modelNote:
-      "按 NASA SP-4206 与 Saturn V Flight Manual 公开尺寸复原的示意模型：各级长度、直径、F-1 布局与真实值一致，表面细节（管路、蒙皮桁条、滚转标识）为示意。",
+      "按 NASA SP-4206 与 Saturn V Flight Manual 公开尺寸复原的示意模型：各级长度、直径、F-1 布局与真实值一致，表面细节（管路、蒙皮桁条、滚转标识）为示意。涂装按阿波罗时期照片：黑白滚动标识、S-IC 侧面的 USA 字样与星条旗。",
   }),
 
   sources: [

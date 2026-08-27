@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT } from "../livery";
 
 /**
  * N1 是纯圆锥堆叠：三级都是截锥，没有等径段。
@@ -36,7 +37,9 @@ const g = rocketGeometry()
     nameEn: "Block A",
     group: "stage-1",
     shape: "frustum",
-    finish: "bare-metal",
+    finish: "grey-primer",
+    // N1 不刷白漆，是灰色底漆 + 深色滚动标识——同样为了地面判读滚转角
+    livery: { kind: "roll-pattern", color: PAINT.darkGrey },
     height: 26,
     radius: 8.5,
     radiusTop: 5.15,
@@ -60,7 +63,7 @@ const g = rocketGeometry()
     name: "二级 Block B",
     group: "stage-2",
     shape: "frustum",
-    finish: "bare-metal",
+    finish: "grey-primer",
     height: 17,
     radius: 5.15,
     radiusTop: 3.8,
@@ -83,7 +86,7 @@ const g = rocketGeometry()
     name: "三级 Block V",
     group: "stage-3",
     shape: "frustum",
-    finish: "bare-metal",
+    finish: "grey-primer",
     height: 9.5,
     radius: 3.8,
     radiusTop: 2.9,
@@ -416,7 +419,7 @@ export const n1: Rocket = {
   geometry: g.build({
     fidelity: "schematic",
     modelNote:
-      "按公开的 105.3 m 总高、17 m 底部直径与三级截锥外形复原；30 台发动机按外圈 24 + 内圈 6 布置。L3 复合体各舱段为示意。",
+      "按公开的 105.3 m 总高、17 m 底部直径与三级截锥外形复原；30 台发动机按外圈 24 + 内圈 6 布置。L3 复合体各舱段为示意。涂装按 1969—1972 年拜科努尔的公开照片：灰色底漆壳体与深色滚动标识。",
   }),
 
   sources: [

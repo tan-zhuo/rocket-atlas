@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -19,6 +20,8 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "solid-booster",
+    // P120C 白壳；型号字样用 ESA/Avio 蓝
+    livery: text("VEGA C", PAINT.esaBlue, 0.72, 0.85),
     height: 11,
     radius: 1.7,
     description:
@@ -29,7 +32,7 @@ const g = rocketGeometry()
     name: "一二级级间段",
     group: "stage-2",
     shape: "frustum",
-    finish: "painted-white",
+    finish: "cork-ablative",
     height: 1,
     radius: 1.7,
     radiusTop: 1.15,
@@ -51,7 +54,7 @@ const g = rocketGeometry()
     name: "二三级级间段",
     group: "stage-3",
     shape: "frustum",
-    finish: "painted-white",
+    finish: "cork-ablative",
     height: 1,
     radius: 1.15,
     radiusTop: 0.95,
@@ -74,7 +77,7 @@ const g = rocketGeometry()
       nameEn: "Attitude & Vernier Upper Module",
       group: "payload",
       shape: "cylinder",
-      finish: "painted-white",
+      finish: "gold-foil",
       height: 2,
       radius: 0.95,
       internal: true,
@@ -88,6 +91,11 @@ const g = rocketGeometry()
       group: "payload",
       shape: "ogive",
       finish: "painted-white",
+      // 意大利主导研制，整流罩上通常有意大利与欧盟标识
+      livery: [
+      band(0.04, 0.07, PAINT.esaBlue),
+      flag("it", 0.28, 0.8),
+    ],
       height: 7.8,
       radius: 1.4,
       description: "3.3 m 直径整流罩，比初代织女星加大，容积提升约 40%，可容纳更大的单星或更多的小卫星分配器。",
@@ -351,7 +359,7 @@ VV22 上的喉衬用的是碳-碳复合材料，供应商是乌克兰的 Yuzhnoy
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 34.8 m 总高、3.4 m 第一级直径与逐级收缩的四级构型复原。",
+    modelNote: "按 34.8 m 总高、3.4 m 第一级直径与逐级收缩的四级构型复原。涂装：白色固体级壳体、软木烧蚀层的级间段、金箔包裹的 AVUM，标识用 ESA/Avio 蓝。",
   }),
 
   sources: [

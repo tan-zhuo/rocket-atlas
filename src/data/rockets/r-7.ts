@@ -8,7 +8,7 @@ const g = rocketGeometry()
     nameEn: "Strap-on boosters",
     group: "booster",
     shape: "frustum",
-    finish: "bare-metal",
+    finish: "grey-primer",
     height: 19,
     radius: 1.53,
     radiusTop: 0.55,
@@ -47,7 +47,7 @@ const g = rocketGeometry()
     nameEn: "Core stage (Block A)",
     group: "core",
     shape: "cylinder",
-    finish: "bare-metal",
+    finish: "grey-primer",
     height: 23.1,
     radius: 1.475,
     description:
@@ -232,7 +232,7 @@ R-7 的家族此后从未中断：Vostok、Voskhod、Molniya、Soyuz、Soyuz-U�
   geometry: g.build({
     fidelity: "schematic",
     modelNote:
-      "按 8K71PS（Sputnik 发射型）公开尺寸复原：总高 29.167 m、芯级直径 2.95 m、最大横向 10.3 m。助推器的锥形轮廓与游机喷管为示意简化。",
+      "按 8K71PS（Sputnik 发射型）公开尺寸复原：总高 29.167 m、芯级直径 2.95 m、最大横向 10.3 m。助推器的锥形轮廓与游机喷管为示意简化。涂装：1957 年的 8K71 不作涂装，壳体为灰色底漆本色。",
   }),
 
   sources: [

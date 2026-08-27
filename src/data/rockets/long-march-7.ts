@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, flag, text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -20,9 +21,13 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "painted-white",
+    // 白漆箭体 + 中国航天正红的型号字样 + 五星红旗
+    livery: [
+      text("CZ-7", PAINT.casc, 0.74, 1.0),
+      flag("cn", 0.56, 0.95),
+    ],
     height: 23.8,
     radius: 1.675,
-    livery: { kind: "text", text: "CZ-7", color: "#c8102e" },
     description:
       "3.35 m 直径的煤油/液氧一级。直径与老一代长征相同，但内部完全不同：低温贮箱、新的增压系统、新的发动机。**保留 3.35 m 是为了让它仍能用铁路运输**——长征七号在酒泉与文昌都能发射，前者只能陆运。",
   })
@@ -318,7 +323,7 @@ LEO 任务不需要第三级。级数越少，分离事件越少，可靠性越�
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 53.1 m 总高、3.35 m 芯级直径、四枚 2.25 m 液体助推器的公开构型复原。",
+    modelNote: "按 53.1 m 总高、3.35 m 芯级直径、四枚 2.25 m 液体助推器的公开构型复原。涂装：白漆箭体，红色型号字样与五星红旗位于芯一级上段。",
   }),
 
   sources: [

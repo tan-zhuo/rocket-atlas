@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { text } from "../livery";
 
 const g = rocketGeometry()
   .at(0, {
@@ -20,6 +21,8 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "carbon",
+    // 电子号不刷漆：碳纤维缠绕壳体本色就是黑的，只有白色字样
+    livery: text("ROCKET LAB", "#e8ecf2", 0.72, 0.8),
     height: 10.5,
     radius: 0.6,
     description:
@@ -273,7 +276,7 @@ Electron 能活下来，靠的是那些**不能拼车的客户**：
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 Rocket Lab 用户手册的 18 m 总高、1.2 m 直径复原。各段长度分配为示意。",
+    modelNote: "按 Rocket Lab 用户手册的 18 m 总高、1.2 m 直径复原。各段长度分配为示意。涂装：碳纤维本色（黑）+ 白色字样；踢腿级包多层隔热金箔。",
   }),
 
   sources: [

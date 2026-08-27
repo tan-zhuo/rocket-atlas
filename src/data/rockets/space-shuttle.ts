@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, flag, text } from "../livery";
 
 /**
  * 航天飞机是本库里唯一一个「载荷不在顶端」的构型，
@@ -104,6 +105,11 @@ const g = rocketGeometry()
     group: "payload",
     shape: "cylinder",
     finish: "painted-white",
+    // 轨道器上表面白色防热毡，机身侧面印 United States 与星条旗
+    livery: [
+      text("United States", PAINT.black, 0.66, 0.62),
+      flag("us", 0.5, 0.8),
+    ],
     height: 25.7,
     radius: 2.3,
     cluster: { count: 1, offset: 6.8, phase: 0 },
@@ -430,7 +436,7 @@ RS-25 的技术指标至今仍是标杆：
   geometry: g.build({
     fidelity: "schematic",
     modelNote:
-      "按 56.1 m 堆栈高度、8.4 m 外贮箱直径、3.71 m 固推直径与 23.8 m 翼展复原。轨道器为并联挂载，机翼用两片后掠面近似，机身细节简化。",
+      "按 56.1 m 堆栈高度、8.4 m 外贮箱直径、3.71 m 固推直径与 23.8 m 翼展复原。轨道器为并联挂载，机翼用两片后掠面近似，机身细节简化。涂装：外贮箱橙色泡沫本色（STS-3 起不再刷白漆），固推白色，轨道器上白下黑瓦。",
   }),
 
   sources: [

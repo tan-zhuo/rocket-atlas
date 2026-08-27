@@ -1,5 +1,6 @@
 import type { Rocket } from "../types";
 import { rocketGeometry } from "../geometry";
+import { PAINT, band, flag } from "../livery";
 
 /**
  * 质子号的一级外形很特别：中央是一个 4.1 m 的氧化剂箱，
@@ -26,6 +27,8 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "painted-white",
+    // 六个外挂燃料箱白色，尾段深灰
+    livery: band(0.0, 0.08, PAINT.darkGrey),
     height: 17.3,
     radius: 0.81,
     cluster: { count: 6, offset: 2.65 },
@@ -38,6 +41,7 @@ const g = rocketGeometry()
     group: "stage-1",
     shape: "cylinder",
     finish: "painted-white",
+    livery: flag("ru", 0.8, 0.9),
     height: 20.5,
     radius: 2.05,
     description:
@@ -71,7 +75,7 @@ const g = rocketGeometry()
     nameEn: "Briz-M",
     group: "payload",
     shape: "cylinder",
-    finish: "painted-white",
+    finish: "gold-foil",
     height: 2.6,
     radius: 2.05,
     internal: true,
@@ -352,7 +356,7 @@ export const protonM: Rocket = {
 
   geometry: g.build({
     fidelity: "schematic",
-    modelNote: "按 58.2 m 总高、4.1 m 中央箱直径、7.4 m 底部跨距复原；六个外挂燃料箱不分离，与中央箱同属一级。",
+    modelNote: "按 58.2 m 总高、4.1 m 中央箱直径、7.4 m 底部跨距复原；六个外挂燃料箱不分离，与中央箱同属一级。涂装：白色箭体与深灰尾段，Briz-M 上面级包多层隔热金箔。",
   }),
 
   sources: [
